@@ -1,0 +1,2 @@
+export const TRANSACTION_HASH = '0x25e24315ee128278bb9c87b1cc0b9941a136f1ace1cedb4c5e843b54c344e21a'
+export const PRIVATE_KEY = '0x0149e9704dd1cfc9bb0fb2558575fc5f49fc3f2ee51e54f11b090cbfbc2d0856'
