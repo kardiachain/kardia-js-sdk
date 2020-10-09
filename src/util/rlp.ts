@@ -9,66 +9,66 @@
 // | 248 to 255 | HEX(length_of_length_of_node + 128 + 55) + HEX(length_of_node) + HEX(node) |
 
 const encode = (tree: any[]) => {
-    const padEven = (str: any) => (str.length % 2 === 0 ? str : '0' + str);
+  const padEven = (str: any) => (str.length % 2 === 0 ? str : '0' + str);
 
-    const uint = (num: any) => padEven(num.toString(16));
+  const uint = (num: any) => padEven(num.toString(16));
 
-    const length = (len: number, add: any) =>
-        len < 56
-            ? uint(add + len)
-            : uint(add + uint(len).length / 2 + 55) + uint(len);
+  const length = (len: number, add: any) =>
+    len < 56
+      ? uint(add + len)
+      : uint(add + uint(len).length / 2 + 55) + uint(len);
 
-    const dataTree = (tree: any): any => {
-        if (typeof tree === 'string') {
-            const hex = tree.slice(2);
-            const pre =
-                hex.length !== 2 || hex >= '80' ? length(hex.length / 2, 128) : '';
-            return pre + hex;
-        } else {
-            const hex = tree.map(dataTree).join('');
-            const pre = length(hex.length / 2, 192);
-            return pre + hex;
-        }
-    };
+  const dataTree = (tree: any): any => {
+    if (typeof tree === 'string') {
+      const hex = tree.slice(2);
+      const pre =
+        hex.length !== 2 || hex >= '80' ? length(hex.length / 2, 128) : '';
+      return pre + hex;
+    } else {
+      const hex = tree.map(dataTree).join('');
+      const pre = length(hex.length / 2, 192);
+      return pre + hex;
+    }
+  };
 
-    return '0x' + dataTree(tree);
+  return '0x' + dataTree(tree);
 };
 
 const decode = (hex: string) => {
-    let i = 2;
+  let i = 2;
 
-    const parseTree = (): any => {
-        if (i >= hex.length) throw new Error('');
-        const head = hex.slice(i, i + 2);
-        return head < '80'
-            ? ((i += 2), '0x' + head)
-            : head < 'c0'
-                ? parseHex()
-                : parseList();
-    };
+  const parseTree = (): any => {
+    if (i >= hex.length) throw new Error('');
+    const head = hex.slice(i, i + 2);
+    return head < '80'
+      ? ((i += 2), '0x' + head)
+      : head < 'c0'
+      ? parseHex()
+      : parseList();
+  };
 
-    const parseLength = () => {
-        const len = parseInt(hex.slice(i, (i += 2)), 16) % 64;
-        return len < 56 ? len : parseInt(hex.slice(i, (i += (len - 55) * 2)), 16);
-    };
+  const parseLength = () => {
+    const len = parseInt(hex.slice(i, (i += 2)), 16) % 64;
+    return len < 56 ? len : parseInt(hex.slice(i, (i += (len - 55) * 2)), 16);
+  };
 
-    const parseHex = () => {
-        const len = parseLength();
-        return '0x' + hex.slice(i, (i += len * 2));
-    };
+  const parseHex = () => {
+    const len = parseLength();
+    return '0x' + hex.slice(i, (i += len * 2));
+  };
 
-    const parseList = () => {
-        const lim = parseLength() * 2 + i;
-        let list = [];
-        while (i < lim) list.push(parseTree());
-        return list;
-    };
+  const parseList = () => {
+    const lim = parseLength() * 2 + i;
+    let list = [];
+    while (i < lim) list.push(parseTree());
+    return list;
+  };
 
-    try {
-        return parseTree();
-    } catch (e) {
-        return [];
-    }
+  try {
+    return parseTree();
+  } catch (e) {
+    return [];
+  }
 };
 
 export { encode, decode };
