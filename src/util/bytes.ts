@@ -66,8 +66,7 @@ const toNumber = (hex: string) => parseInt(hex.slice(2), 16);
 
 const concat = (a: string, b: string) => a.concat(b.slice(2));
 
-const fromNat = (bn: string) => {
-    console.log(bn)
+const fromNat = (bn: any) => {
     return bn === '0x0' ? '0x' : bn.length % 2 === 0 ? bn : '0x0' + bn.slice(2);
 }
 

@@ -1,9 +1,10 @@
 import { Client } from "@open-rpc/client-js"
 import {decodeSignature, makeEven, sign, trimLeadingZero} from '../util/account';
 import { fromNat } from '../util/bytes';
-import {keccak256} from 'js-sha3';
+// import {keccak256} from 'js-sha3';
+import { keccak256 } from '../util/hash'
 import { decode, encode } from '../util/rlp';
-import { isHexStrict } from '../util/string';
+import { isHexStrict, toHex } from '../util/string';
 
 interface KardiaTransactionProps {
     client: Client
@@ -54,8 +55,6 @@ class KardiaTransaction {
             value: tx.value,
             data: '0x' + tx.data.toLowerCase().replace('0x', '')
         };
-
-        console.log(transaction)
     
         const rlpEncoded = encode([
             fromNat(transaction.nonce),
@@ -101,14 +100,15 @@ class KardiaTransaction {
             gasPrice: isHexStrict(gasPrice) ? gasPrice : toHex(gasPrice),
             gas: isHexStrict(gas) ? gas : toHex(gas),
             value: isHexStrict(amount) ? amount : toHex(amount),
-            data: data
+            data: '0x' + data.toLowerCase().replace(/^0x/i, '')
         }
     };
 
     public async sendTransaction(data: any, privateKey: string) {
-        const signedTx = await this.signTransaction(this.generateTransaction(data), privateKey)
+        const generatedTx = await this.generateTransaction(data)
+        const signedTx = await this.signTransaction(generatedTx, privateKey)
         return await this._rpcClient.request({
-            method: 'tx_getTransactionReceipt',
+            method: 'tx_sendRawTransaction',
             params: [signedTx.rawTransaction]
         })
     }

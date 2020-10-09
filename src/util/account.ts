@@ -1,12 +1,13 @@
 import elliptic from 'elliptic';
-import { keccak256, keccak256s } from './hash';
+// import { keccak256, keccak256s } from './hash';
 import { fromString } from './nat';
 import Bytes from './bytes';
+import { keccak256 } from 'js-sha3';
 
 const secp256k1 = new elliptic.ec('secp256k1');
 
 const toChecksum = (address: string) => {
-    const addressHash = keccak256s(address.slice(2));
+    const addressHash = keccak256(address.slice(2));
     let checksumAddress = '0x';
     for (let i = 0; i < 40; i++)
       checksumAddress +=

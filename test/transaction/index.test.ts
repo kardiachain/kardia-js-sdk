@@ -1,8 +1,8 @@
 import KardiaClient from '../../src';
 import { keccak256 } from '../../src/util/hash';
-import { ADDRESS, ADDRESS_2 } from '../account/config';
 import {ENDPOINT} from '../config'
-import { TRANSACTION_HASH, PRIVATE_KEY } from './config';
+import { ACCOUNT1, ACCOUNT2 } from '../config/account';
+import { TRANSACTION_HASH } from './config';
 
 describe('Transaction module test', () => {
     const kardiaClient = new KardiaClient({endpoint: ENDPOINT})
@@ -32,16 +32,17 @@ describe('Transaction module test', () => {
     })
 
     it('should send transaction successfully', async () => {
+        const nonce = await kardiaClient.account.getNonce(ACCOUNT1.address)
         const txData = {
-            from: ADDRESS,
-            to: ADDRESS_2,
-            gas: 1,
-            nonce: 1,
+            receiver: ACCOUNT2.address,
+            gas: 21000,
+            nonce,
             gasPrice: 1,
-            value: 1,
+            amount: 4,
             data: keccak256('123456')
         };
-        const result = await kardiaClient.transaction.sendTransaction(txData, PRIVATE_KEY)
+
+        const result = await kardiaClient.transaction.sendTransaction(txData, ACCOUNT1.privateKey)
         expect(result).toBeTruthy()
     })
 });

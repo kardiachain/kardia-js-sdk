@@ -9,11 +9,11 @@
 // | 248 to 255 | HEX(length_of_length_of_node + 128 + 55) + HEX(length_of_node) + HEX(node) |
 
 const encode = (tree: any[]) => {
-    const padEven = (str: string) => (str.length % 2 === 0 ? str : '0' + str);
+    const padEven = (str: any) => (str.length % 2 === 0 ? str : '0' + str);
 
-    const uint = (num: number) => padEven(num.toString(16));
+    const uint = (num: any) => padEven(num.toString(16));
 
-    const length = (len: number, add: number) =>
+    const length = (len: number, add: any) =>
         len < 56
             ? uint(add + len)
             : uint(add + uint(len).length / 2 + 55) + uint(len);
