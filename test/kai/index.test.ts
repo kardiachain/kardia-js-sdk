@@ -26,7 +26,9 @@ describe('KAI module test', () => {
   });
 
   it('should get block by block number successfully', async () => {
-    const block = await kardiaClient.kaiChain.getBlockByBlockNumber(BLOCK_NUMBER);
+    const block = await kardiaClient.kaiChain.getBlockByBlockNumber(
+      BLOCK_NUMBER
+    );
     expect(block).toBeTruthy();
     expect(block.height).toEqual(BLOCK_NUMBER);
   });

@@ -15,4 +15,3 @@ export const ACCOUNT2 = {
   privateKey:
     '0xc07bed6441a92d0c8b99da1c4a63a2ff1c6e233729e3bf9428eeee25b8b60996',
 };
-

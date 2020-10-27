@@ -27,13 +27,14 @@ describe('Transaction module test', () => {
       ACCOUNT.privateKey
     );
     expect(txHash).toBeTruthy();
-    
+
     const pendingTransactions = await kardiaClient.transaction.getPendingTransaction();
     expect(pendingTransactions).toBeTruthy();
     expect(Array.isArray(pendingTransactions)).toEqual(true);
 
-    const txDetail = pendingTransactions.filter((tx: any) => tx.hash === txHash)
-    expect(txDetail).toBeTruthy()
-
+    const txDetail = pendingTransactions.filter(
+      (tx: any) => tx.hash === txHash
+    );
+    expect(txDetail).toBeTruthy();
   });
 });
