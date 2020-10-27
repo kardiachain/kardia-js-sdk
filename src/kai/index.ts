@@ -3,7 +3,7 @@ interface KAIProps {
   client: Client;
 }
 
-class KAI {
+class KAIChain {
   private _rpcClient: Client;
   constructor({ client }: KAIProps) {
     this._rpcClient = client;
@@ -88,4 +88,4 @@ class KAI {
   // }
 }
 
-export default KAI;
+export default KAIChain;

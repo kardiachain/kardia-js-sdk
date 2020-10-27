@@ -1,7 +1,7 @@
 import KardiaClient from '../../src';
 import { ENDPOINT } from '../config';
-import { ACCOUNT1, ACCOUNT2 } from '../config/account';
-import { BLOCK_HASH, BLOCK_HEIGHT } from './config';
+import { ACCOUNT, ACCOUNT2 } from '../config/account';
+import { BLOCK_HEIGHT } from './config';
 
 describe('Account module test', () => {
   const kardiaClient = new KardiaClient({ endpoint: ENDPOINT });
@@ -11,19 +11,19 @@ describe('Account module test', () => {
   });
 
   it('should get balance successfully', async () => {
-    const balance = await kardiaClient.account.getBalance(ACCOUNT1.address);
+    const balance = await kardiaClient.account.getBalance(ACCOUNT.address);
     expect(balance).toBeTruthy();
   });
 
-  it('should get balance with block hash successfully', async () => {
-    const balance = await kardiaClient.account.getBalance(ACCOUNT1.address, {
-      blockHash: BLOCK_HASH,
-    });
-    expect(balance).toBeTruthy();
-  });
+  // it('should get balance with block hash successfully', async () => {
+  //   const balance = await kardiaClient.account.getBalance(ACCOUNT.address, {
+  //     blockHash: BLOCK_HASH,
+  //   });
+  //   expect(balance).toBeTruthy();
+  // });
 
   it('should get balance with block height successfully', async () => {
-    const balance = await kardiaClient.account.getBalance(ACCOUNT1.address, {
+    const balance = await kardiaClient.account.getBalance(ACCOUNT.address, {
       blockHeight: BLOCK_HEIGHT,
     });
     expect(balance).toBeTruthy();
