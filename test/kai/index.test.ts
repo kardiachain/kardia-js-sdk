@@ -1,9 +1,11 @@
 import KardiaClient from '../../src';
 import { BLOCK_NUMBER } from './config';
-import { ENDPOINT } from '../config';
+import { ENDPOINT, ENDPOINT_PUBLIC } from '../config';
+
+const endpoint = process.env.TEST_ENV === 'prod' ? ENDPOINT_PUBLIC : ENDPOINT
 
 describe('KAI module test', () => {
-  const kardiaClient = new KardiaClient({ endpoint: ENDPOINT });
+  const kardiaClient = new KardiaClient({ endpoint });
 
   it('should be initialized with Kardia client', () => {
     expect(kardiaClient.kaiChain).toBeTruthy();
