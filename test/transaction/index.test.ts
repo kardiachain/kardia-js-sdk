@@ -20,7 +20,7 @@ describe('Transaction module test', () => {
       nonce,
       gasPrice: 1,
       amount: 1,
-      data: keccak256('12345'),
+      data: keccak256(Date.now().toString()),
     };
 
     // Use new sdk
