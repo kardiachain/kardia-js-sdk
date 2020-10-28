@@ -16,7 +16,7 @@ const sha3 = (value: string) => {
   //     value = hexToBytes(value);
   // }
 
-  var returnValue = keccak256(value); // jshint ignore:line
+  const returnValue = keccak256(value); // jshint ignore:line
 
   if (returnValue === SHA3_NULL_S) {
     return null;
@@ -50,10 +50,10 @@ export const utf8ToHex = (str: string) => {
     .reverse()
     .join('');
 
-  for (var i = 0; i < str.length; i++) {
-    let code = str.charCodeAt(i);
+  for (let i = 0; i < str.length; i++) {
+    const code = str.charCodeAt(i);
     // if (code !== 0) {
-    let n = code.toString(16);
+    const n = code.toString(16);
     hex += n.length < 2 ? '0' + n : n;
     // }
   }
@@ -66,7 +66,7 @@ const checkAddressChecksum = (address: string) => {
   address = address.replace(/^0x/i, '');
   const sha3Result = sha3(address.toLowerCase());
   if (sha3Result === null) return false;
-  let addressHash = sha3Result.replace(/^0x/i, '');
+  const addressHash = sha3Result.replace(/^0x/i, '');
 
   for (let i = 0; i < 40; i++) {
     // the nth letter should be uppercase if the nth digit of casemap is 1
@@ -115,8 +115,8 @@ export const numberToHex = (value: any) => {
     throw new Error('Given input "' + value + '" is not a number.');
   }
 
-  var number = toBN(value);
-  var result = number.toString(16);
+  const number = toBN(value);
+  const result = number.toString(16);
 
   return number.lt(new BN(0)) ? '-0x' + result.substr(1) : '0x' + result;
 };

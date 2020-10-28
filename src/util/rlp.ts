@@ -59,7 +59,7 @@ const decode = (hex: string) => {
 
   const parseList = () => {
     const lim = parseLength() * 2 + i;
-    let list = [];
+    const list = [];
     while (i < lim) list.push(parseTree());
     return list;
   };

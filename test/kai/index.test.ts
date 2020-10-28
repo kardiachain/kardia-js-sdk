@@ -2,7 +2,7 @@ import KardiaClient from '../../src';
 import { BLOCK_NUMBER } from './config';
 import { ENDPOINT, ENDPOINT_PUBLIC } from '../config';
 
-const endpoint = process.env.TEST_ENV === 'prod' ? ENDPOINT_PUBLIC : ENDPOINT
+const endpoint = process.env.TEST_ENV === 'prod' ? ENDPOINT_PUBLIC : ENDPOINT;
 
 describe('KAI module test', () => {
   const kardiaClient = new KardiaClient({ endpoint });

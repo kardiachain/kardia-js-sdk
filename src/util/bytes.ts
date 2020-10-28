@@ -39,7 +39,7 @@ const padRight = (l: number, hex: string): string =>
   hex.length === l * 2 + 2 ? hex : padRight(l, hex + '0');
 
 const toArray = (hex: string) => {
-  let arr = [];
+  const arr = [];
   for (let i = 2, l = hex.length; i < l; i += 2)
     arr.push(parseInt(hex.slice(i, i + 2), 16));
   return arr;
@@ -48,7 +48,7 @@ const toArray = (hex: string) => {
 const fromArray = (arr: any[]) => {
   let hex = '0x';
   for (let i = 0, l = arr.length; i < l; ++i) {
-    let b = arr[i];
+    const b = arr[i];
     hex += (b < 16 ? '0' : '') + b.toString(16);
   }
   return hex;
@@ -59,7 +59,7 @@ const toUint8Array = (hex: string) => new Uint8Array(toArray(hex));
 const fromUint8Array = (arr: any) => fromArray([].slice.call(arr, 0));
 
 const fromNumber = (num: number) => {
-  let hex = num.toString(16);
+  const hex = num.toString(16);
   return hex.length % 2 === 0 ? '0x' + hex : '0x0' + hex;
 };
 
@@ -105,7 +105,7 @@ const fromString = (s: string) => {
     } else {
       if (c > 0xd7ff && c < 0xdc00) {
         if (++ci === s.length) return null;
-        let c2 = s.charCodeAt(ci);
+        const c2 = s.charCodeAt(ci);
         if (c2 < 0xdc00 || c2 > 0xdfff) return null;
         c = 0x10000 + ((c & 0x03ff) << 10) + (c2 & 0x03ff);
         bytes += makeByte((c >> 18) | 240);
@@ -124,7 +124,7 @@ const fromString = (s: string) => {
 const toString = (bytes: string) => {
   let s = '';
   let i = 0;
-  let l = length(bytes);
+  const l = length(bytes);
   while (i < l) {
     let c = at(bytes, i++);
     if (c > 127) {

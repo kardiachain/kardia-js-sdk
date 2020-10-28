@@ -87,13 +87,13 @@ const Keccak = (bits: number) => ({
 });
 
 const update = (state: any, message: string | number[]) => {
-  let length = message.length,
+  const length = message.length,
     blocks = state.blocks,
     byteCount = state.blockCount << 2,
     blockCount = state.blockCount,
     outputBlocks = state.outputBlocks,
-    s = state.s,
-    index = 0,
+    s = state.s;
+  let index = 0,
     i,
     code;
 
