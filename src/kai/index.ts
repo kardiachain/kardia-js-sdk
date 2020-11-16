@@ -65,27 +65,6 @@ class KAIChain {
       params: [blockHash],
     });
   }
-
-  public async getBasicBlockByNumber(blockNumber: number) {
-    if (blockNumber < 0) {
-      throw new Error('Invalid block number');
-    }
-    return await this._rpcClient.request({
-      method: 'kai_getBasicBlockByNumber',
-      params: [blockNumber],
-    });
-  }
-
-  public async getBasicBlockByHash(blockHash: string) {
-    return await this._rpcClient.request({
-      method: 'kai_getBasicBlockByHash',
-      params: [blockHash],
-    });
-  }
-
-  // public async call(smc: string) {
-
-  // }
 }
 
 export default KAIChain;

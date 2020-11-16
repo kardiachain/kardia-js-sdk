@@ -1,4 +1,4 @@
-import { Client } from '@open-rpc/client-js';
+import { Client, HTTPTransport, RequestManager } from '@open-rpc/client-js';
 import {
   decodeSignature,
   makeEven,
@@ -12,13 +12,21 @@ import { decode, encode } from '../util/rlp';
 import { isHexStrict, toHex } from '../util/string';
 
 interface KardiaTransactionProps {
-  client: Client;
+  client?: Client;
+  provider?: string;
 }
 
 class KardiaTransaction {
   private _rpcClient: Client;
-  constructor({ client }: KardiaTransactionProps) {
-    this._rpcClient = client;
+  constructor({ client, provider }: KardiaTransactionProps) {
+    if (client) {
+      this._rpcClient = client;
+    } else if (provider) {
+      const transport = new HTTPTransport(provider);
+      this._rpcClient = new Client(new RequestManager([transport]));
+    } else {
+      throw new Error('Either [client] or [provider] must be provided')
+    }
   }
 
   public async getTransaction(txHash: string) {
@@ -91,7 +99,7 @@ class KardiaTransaction {
     return result;
   }
 
-  private async generateTransaction({
+  async generateTransaction({
     receiver = '0x',
     amount = '0xff',
     nonce = '0x0',

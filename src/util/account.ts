@@ -1,8 +1,8 @@
 import elliptic from 'elliptic';
-// import { keccak256, keccak256s } from './hash';
+import { keccak256 } from './hash';
 import { fromString } from './nat';
 import Bytes from './bytes';
-import { keccak256 } from 'js-sha3';
+// import { keccak256 } from 'js-sha3';
 
 const secp256k1 = new elliptic.ec('secp256k1');
 
@@ -23,6 +23,7 @@ export const fromPrivate = (privateKey: string) => {
   const publicKey = '0x' + ecKey.getPublic(false, 'hex').slice(2);
   const publicHash = keccak256(publicKey);
   const address = toChecksum('0x' + publicHash.slice(-40));
+
   return {
     address: address,
     privateKey: privateKey,

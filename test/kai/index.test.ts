@@ -21,11 +21,12 @@ describe('KAI module test', () => {
     expect(typeof isValidator === 'boolean').toBeTruthy();
   });
 
-  it('should get validators list successfully', async () => {
-    const validators = await kardiaClient.kaiChain.getValidators();
-    expect(validators).toBeTruthy();
-    expect(Array.isArray(validators)).toEqual(true);
-  });
+  // TODO: check this case when method [kai_validators] is available
+  // it('should get validators list successfully', async () => {
+  //   const validators = await kardiaClient.kaiChain.getValidators();
+  //   expect(validators).toBeTruthy();
+  //   expect(Array.isArray(validators)).toEqual(true);
+  // });
 
   it('should get block by block number successfully', async () => {
     const block = await kardiaClient.kaiChain.getBlockByBlockNumber(
@@ -53,19 +54,5 @@ describe('KAI module test', () => {
   //   const blockHeader = await kardiaClient.kaiChain.getBlockHeaderByHash(BLOCK_HASH);
   //   expect(blockHeader).toBeTruthy();
   //   expect(blockHeader.hash).toEqual(BLOCK_HASH);
-  // });
-
-  it('should get basic block by number successfully', async () => {
-    const basicBlock = await kardiaClient.kaiChain.getBasicBlockByNumber(
-      BLOCK_NUMBER
-    );
-    expect(basicBlock).toBeTruthy();
-    expect(basicBlock.height).toEqual(BLOCK_NUMBER);
-  });
-
-  // it('should get basic block by hash successfully', async () => {
-  //   const basicBlock = await kardiaClient.kaiChain.getBasicBlockByHash(BLOCK_HASH);
-  //   expect(basicBlock).toBeTruthy();
-  //   expect(basicBlock.hash).toEqual(BLOCK_HASH);
   // });
 });

@@ -20,14 +20,10 @@ class KardiaAccount {
 
     if (options && options.blockHash) {
       params.push(options.blockHash);
-    } else {
-      params.push(null);
-    }
-
-    if (options && options.blockHeight) {
+    } if (options && options.blockHeight) {
       params.push(options.blockHeight);
     } else {
-      params.push(null);
+      params.push("latest");
     }
 
     return await this._rpcClient.request({

@@ -1,6 +1,6 @@
 import KardiaClient from '../../src';
 import { ENDPOINT, ENDPOINT_PUBLIC } from '../config';
-import { ACCOUNT, ACCOUNT2 } from '../config/account';
+import { ACCOUNT } from '../config/account';
 import { BLOCK_HEIGHT } from './config';
 
 const endpoint = process.env.TEST_ENV === 'prod' ? ENDPOINT_PUBLIC : ENDPOINT;
@@ -32,7 +32,7 @@ describe('Account module test', () => {
   });
 
   it('should get nonce successfully', async () => {
-    const nonce = await kardiaClient.account.getNonce(ACCOUNT2.address);
+    const nonce = await kardiaClient.account.getNonce(ACCOUNT.address);
     expect(nonce).toBeTruthy();
   });
 });

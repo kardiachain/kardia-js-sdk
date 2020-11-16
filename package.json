@@ -18,6 +18,7 @@
     "test-account": "tsdx test ./test/account",
     "test-transaction": "TEST_ENV=prod tsdx test ./test/transaction",
     "test-kai-chain": "tsdx test ./test/kai",
+    "test-smc": "tsdx test ./test/smc",
     "test-coverage": "tsdx test --coverage",
     "lint": "tsdx lint",
     "prepare": "tsdx build",

@@ -3,9 +3,104 @@ import BN from 'bn.js';
 import utf8 from 'utf8';
 import numberToBN from 'number-to-bn';
 import { isString, isNumber, isBoolean, isObject } from 'lodash';
+import { intToBuffer } from './number';
+
+/**
+ * Is the string a hex string.
+ *
+ * @method check if string is hex string of specific length
+ * @param {String} value
+ * @param {Number} length
+ * @returns {Boolean} output the string is a hex string
+ */
+export const isHexString = (value: string, length?: number) => {
+  if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
+    return false;
+  }
+
+  if (length && value.length !== 2 + 2 * length) {
+    return false;
+  }
+
+  return true;
+};
 
 export const isHexStrict = (hex: string) => {
   return (isString(hex) || isNumber(hex)) && /^(-)?0x[0-9a-f]*$/i.test(hex);
+};
+
+export const isHexPrefixed = (str: string) => {
+  if (typeof str !== 'string') {
+    return false;
+  }
+
+  return str.slice(0, 2) === '0x';
+}
+
+export const stripHexPrefix = (str: string) => (isHexPrefixed(str) ? str.slice(2) : str);
+
+const toBuffer = (v: any) => {
+  if (!Buffer.isBuffer(v)) {
+    if (Array.isArray(v)) {
+      v = Buffer.from(v);
+    } else if (typeof v === 'string') {
+      if (isHexString(v)) {
+        v = Buffer.from(padToEven(stripHexPrefix(v)), 'hex');
+      } else {
+        v = Buffer.from(v);
+      }
+    } else if (typeof v === 'number') {
+      v = intToBuffer(v);
+    } else if (v === null || v === undefined) {
+      v = Buffer.allocUnsafe(0);
+    } else if (BN.isBN(v)) {
+      v = v.toArrayLike(Buffer);
+    } else if (v.toArray) {
+      // converts a BN to a Buffer
+      v = Buffer.from(v.toArray());
+    } else {
+      throw new Error('invalid type');
+    }
+  }
+  return v;
+};
+
+export const padToEven = (value: string) => {
+  if (typeof value !== 'string') {
+    throw new Error(
+      `while padding to even, value must be string, is currently [${typeof value}], while padToEven.`,
+    );
+  }
+
+  if (value.length % 2) {
+    return `0${value}`;
+  }
+
+  return value;
+};
+
+const zeros = (bytes: number) => Buffer.allocUnsafe(bytes).fill(0);
+
+const setLength = (msg: any, length: number, right: boolean) => {
+  const buf = zeros(length);
+  msg = toBuffer(msg);
+  if (right) {
+    if (msg.length < length) {
+      msg.copy(buf);
+      return buf;
+    }
+    return msg.slice(0, length);
+  } else {
+    if (msg.length < length) {
+      msg.copy(buf, length - msg.length);
+      return buf;
+    }
+    return msg.slice(-length);
+  }
+};
+
+export const setLengthRight = (msg: any, length: number) => {
+  return setLength(msg, length, true);
 };
 
 const SHA3_NULL_S =
