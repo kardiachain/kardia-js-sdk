@@ -1,5 +1,6 @@
 import Bytes from '../bytes';
 import BN from 'bn.js';
+import abiJs from 'ethereumjs-abi';
 import { parseNumber, parseTypeArray, parseTypeNxM } from './parser';
 import { fromNumber as natFromNumber } from '../nat';
 import { isHexStrict, setLengthRight, toHex } from '../string';
@@ -134,6 +135,43 @@ export const methodData = (method: Record<string, any>, params: any[]) => {
         }
     }
     return Bytes.flatten([methodHash, headBlock, dataBlock]);
+};
+
+export const decodeOutput = (outputTypes: any[], outputData: any) => {
+    if (outputTypes.length === 1) {
+        const type = outputTypes[0].type;
+        return decodeSingleOutput(type, outputData[0]);
+    }
+    return outputTypes.reduce((obj, data, index) => {
+        const key = data.name || index.toString();
+        const type = data.type;
+        obj[key] = decodeSingleOutput(type, outputData[index]);
+        return obj;
+    }, {});
+};
+
+const decodeSingleOutput = (outputType: string, outputData: string): any => {
+    if (!outputData || outputData === '0x') {
+        return outputData;
+    }
+    if (isArray(outputType)) {
+        const type = outputType.replace(/[]/g, '');
+        const arrayData = outputData.split(',');
+        return arrayData.map((data) => decodeSingleOutput(type, data));
+    }
+    if (outputType === 'address') {
+        return `0x${outputData.replace('0x', '')}`;
+    }
+    if (outputType.startsWith('uint') || outputType.startsWith('int')) {
+        return parseInt(outputData);
+    }
+    if (outputType === 'bool') {
+        return outputData === 'true';
+    }
+    if (outputType.startsWith('byte')) {
+        return `0x${outputData.replace('0x', '')}`;
+    }
+    return outputData;
 };
 
 export const parseEvent = (currentAbi: any[], eventObject: Record<string, any>) => {

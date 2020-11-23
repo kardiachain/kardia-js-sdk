@@ -50,8 +50,16 @@ describe('KAI module test', () => {
         expect(preDeploy.txData()).toBeTruthy()
 
         expect(preDeploy.send).toBeTruthy()
-        const smcHash = await preDeploy.send(ACCOUNT.privateKey)
-        expect(smcHash).toBeTruthy()
+        const smc = await preDeploy.send(ACCOUNT.privateKey)
+        expect(smc).toBeTruthy()
         // expect(estimatedGas > 0).toEqual(true)
+
+        // console.log(smcHash)
+
+        const deployedContract = myContract.invokeContract('retrieve', [])
+        const result = await deployedContract.call(smc.contractAddress, {}, "latest")
+
+        // console.log(result)
+        expect(result).toEqual(DEFAULT_PARAM)
     })
 });

@@ -1,5 +1,29 @@
 import BN from 'bn.js';
+import abiJs from 'ethereumjs-abi';
+import { decodeOutput } from '.';
 import { isHexPrefixed, stripHexPrefix } from '../string';
+
+export const parseOutput = (outputs: any[], result: string) => {
+    const outputTypes = outputs.map((output) => output.type);
+    const outputBuffer = Buffer.from(result.replace('0x', ''), 'hex');
+    const decodeResult = abiJs.rawDecode(outputTypes, outputBuffer);
+    const rawOutput = decodeResult.map((decode, index) => {
+        if (outputTypes[index].endsWith(']')) {
+            const resultItems = decode.map((item: any) => {
+                if (outputTypes[index].startsWith('byte')) {
+                    return item.toString('hex');
+                }
+                return item.toString();
+            });
+            return resultItems;
+        }
+        if (outputTypes[index].startsWith('byte')) {
+            return decode.toString('hex');
+        }
+        return decode.toString();
+    });
+    return decodeOutput(outputs, rawOutput);
+};
 
 export const parseNumber = (arg: any) => {
     let type = typeof arg;

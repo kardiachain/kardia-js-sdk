@@ -2,6 +2,7 @@ import { Client, RequestManager, HTTPTransport } from '@open-rpc/client-js';
 import KardiaAccount from '../account';
 import KardiaTransaction from '../transaction';
 import { deployData, encodeArray, findFunctionFromAbi, methodData, parseEvent } from '../util/abi';
+import { parseOutput } from '../util/abi/parser';
 import { fromPrivate } from '../util/account';
 import { isHexStrict, toHex } from '../util/string';
 interface KardiaContractProps {
@@ -101,7 +102,8 @@ class KardiaContract {
                     data
                 }, privateKey)
 
-                return result;
+                const txData = await transaction.getTransactionReceipt(result)
+                return txData;
             },
         };
     }
@@ -146,7 +148,7 @@ class KardiaContract {
                 };
                 return result;
             },
-            call: async (contractAddress: string, txPayload: Record<string, any> = {}, blockHeight = 0) => {
+            call: async (contractAddress: string, txPayload: Record<string, any> = {}, blockHeight: any = 0) => {
                 const callObject = {
                     from: txPayload.from || '0x',
                     to: contractAddress,
@@ -155,7 +157,12 @@ class KardiaContract {
                     gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE,
                     gas: txPayload.gas || DEFAULT_GAS,
                 };
-                const result = await api.callSmartContract(callObject, blockHeight);
+                // const result = await api.callSmartContract(callObject, blockHeight);
+                const result = await this._rpcClient.request({
+                    method: 'kai_kardiaCall',
+                    params: [callObject, blockHeight],
+                });
+                console.log(result)
                 return parseOutput(functionFromAbi.outputs, result);
             },
         };
