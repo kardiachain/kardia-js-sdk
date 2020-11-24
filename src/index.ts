@@ -1,6 +1,7 @@
 import { RequestManager, HTTPTransport, Client } from '@open-rpc/client-js';
 import KardiaAccount from './account';
 import KAIChain from './kai';
+import KardiaContract from './smc';
 import KardiaTransaction from './transaction';
 
 interface KardiaClientProps {
@@ -12,6 +13,7 @@ class KardiaClient {
   public account: KardiaAccount;
   public transaction: KardiaTransaction;
   public kaiChain: KAIChain;
+  public contract: KardiaContract;
   constructor({ endpoint }: KardiaClientProps) {
     // Init RPC client
     const transport = new HTTPTransport(endpoint);
@@ -21,6 +23,7 @@ class KardiaClient {
     this.account = new KardiaAccount({ client: this._rpcClient });
     this.transaction = new KardiaTransaction({ client: this._rpcClient });
     this.kaiChain = new KAIChain({ client: this._rpcClient });
+    this.contract = new KardiaContract({ client: this._rpcClient })
   }
 }
 
