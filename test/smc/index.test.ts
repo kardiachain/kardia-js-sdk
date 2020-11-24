@@ -7,7 +7,6 @@ const endpoint = process.env.TEST_ENV === 'prod' ? ENDPOINT_PUBLIC : ENDPOINT;
 
 describe('KAI module test', () => {
     let myContract: KardiaContract;
-
     beforeEach(() => {
         myContract = new KardiaContract({ provider: endpoint });
     })
@@ -37,6 +36,7 @@ describe('KAI module test', () => {
     })
 
     it('should deploy contract and interact successfully', async () => {
+        jest.setTimeout(50000);
         myContract.updateAbi(ABI)
         myContract.updateByteCode(BYTECODES)
 
@@ -50,16 +50,12 @@ describe('KAI module test', () => {
         expect(preDeploy.txData()).toBeTruthy()
 
         expect(preDeploy.send).toBeTruthy()
-        const smc = await preDeploy.send(ACCOUNT.privateKey)
-        expect(smc).toBeTruthy()
-        // expect(estimatedGas > 0).toEqual(true)
-
-        // console.log(smcHash)
+        const smcData = await preDeploy.send(ACCOUNT.privateKey)
+        expect(smcData).toBeTruthy()
 
         const deployedContract = myContract.invokeContract('retrieve', [])
-        const result = await deployedContract.call(smc.contractAddress, {}, "latest")
+        const result = await deployedContract.call(smcData.contractAddress, {}, "latest")
 
-        // console.log(result)
         expect(result).toEqual(DEFAULT_PARAM)
     })
 });

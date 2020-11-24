@@ -100,10 +100,9 @@ class KardiaContract {
                     gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE,
                     gas: txPayload.gas || DEFAULT_GAS,
                     data
-                }, privateKey)
+                }, privateKey, true)
 
-                const txData = await transaction.getTransactionReceipt(result)
-                return txData;
+                return result;
             },
         };
     }
@@ -162,7 +161,7 @@ class KardiaContract {
                     method: 'kai_kardiaCall',
                     params: [callObject, blockHeight],
                 });
-                console.log(result)
+                
                 return parseOutput(functionFromAbi.outputs, result);
             },
         };

@@ -25,8 +25,17 @@ jobs:
       - name: Lint
         run: yarn lint
 
-      - name: Test
-        run: yarn test-public --ci --coverage --maxWorkers=2
+      - name: Test account module
+        run: yarn test-account --ci --coverage --maxWorkers=2
+
+      - name: Test transaction module
+        run: yarn test-transaction --ci --coverage --maxWorkers=2
+
+      - name: Test kai-chain module
+        run: yarn test-kai-chain --ci --coverage --maxWorkers=2
+
+      - name: Test SMC module
+        run: yarn test-smc --ci --coverage --maxWorkers=2
 
       - name: Build
         run: yarn build

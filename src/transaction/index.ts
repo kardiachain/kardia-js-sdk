@@ -10,6 +10,8 @@ import { fromNat } from '../util/bytes';
 import { keccak256 } from '../util/hash';
 import { decode, encode } from '../util/rlp';
 import { isHexStrict, toHex } from '../util/string';
+import { sleep } from '../util/time';
+import { WAIT_TIMEOUT } from './config';
 
 interface KardiaTransactionProps {
   client?: Client;
@@ -117,13 +119,30 @@ class KardiaTransaction {
     };
   }
 
-  public async sendTransaction(data: any, privateKey: string) {
+  public async sendTransaction(data: any, privateKey: string, waitUntilMined: boolean = false) {
     const generatedTx = await this.generateTransaction(data);
     const signedTx = await this.signTransaction(generatedTx, privateKey);
-    return await this._rpcClient.request({
+    const txHash = await this._rpcClient.request({
       method: 'tx_sendRawTransaction',
       params: [signedTx.rawTransaction],
     });
+    if (!waitUntilMined) return txHash;
+
+    const breakTimeout = Date.now() + WAIT_TIMEOUT;
+    while (Date.now() < breakTimeout) {
+      try {
+        const receipt = await this.getTransactionReceipt(txHash)
+        if (receipt) {
+          return receipt;
+        } else {
+          await sleep(1000);
+        }
+      } catch (err) {
+        await sleep(1000);
+      }
+    }
+
+    throw new Error(`Timeout: cannot get receipt after ${WAIT_TIMEOUT}ms`);
   }
 }
 
