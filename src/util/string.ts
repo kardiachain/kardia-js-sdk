@@ -35,9 +35,10 @@ export const isHexPrefixed = (str: string) => {
   }
 
   return str.slice(0, 2) === '0x';
-}
+};
 
-export const stripHexPrefix = (str: string) => (isHexPrefixed(str) ? str.slice(2) : str);
+export const stripHexPrefix = (str: string) =>
+  isHexPrefixed(str) ? str.slice(2) : str;
 
 const toBuffer = (v: any) => {
   if (!Buffer.isBuffer(v)) {
@@ -68,7 +69,7 @@ const toBuffer = (v: any) => {
 export const padToEven = (value: string) => {
   if (typeof value !== 'string') {
     throw new Error(
-      `while padding to even, value must be string, is currently [${typeof value}], while padToEven.`,
+      `while padding to even, value must be string, is currently [${typeof value}], while padToEven.`
     );
   }
 

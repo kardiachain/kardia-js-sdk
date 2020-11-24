@@ -27,7 +27,7 @@ class KardiaTransaction {
       const transport = new HTTPTransport(provider);
       this._rpcClient = new Client(new RequestManager([transport]));
     } else {
-      throw new Error('Either [client] or [provider] must be provided')
+      throw new Error('Either [client] or [provider] must be provided');
     }
   }
 
@@ -119,7 +119,11 @@ class KardiaTransaction {
     };
   }
 
-  public async sendTransaction(data: any, privateKey: string, waitUntilMined: boolean = false) {
+  public async sendTransaction(
+    data: any,
+    privateKey: string,
+    waitUntilMined: boolean = false
+  ) {
     const generatedTx = await this.generateTransaction(data);
     const signedTx = await this.signTransaction(generatedTx, privateKey);
     const txHash = await this._rpcClient.request({
@@ -131,7 +135,7 @@ class KardiaTransaction {
     const breakTimeout = Date.now() + WAIT_TIMEOUT;
     while (Date.now() < breakTimeout) {
       try {
-        const receipt = await this.getTransactionReceipt(txHash)
+        const receipt = await this.getTransactionReceipt(txHash);
         if (receipt) {
           return receipt;
         } else {

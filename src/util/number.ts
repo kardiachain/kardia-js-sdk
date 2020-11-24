@@ -6,9 +6,9 @@ import { padToEven } from './string';
  * @return {Buffer}
  */
 export const intToBuffer = (i: number) => {
-    const hex = intToHex(i);
+  const hex = intToHex(i);
 
-    return Buffer.from(padToEven(hex.slice(2)), 'hex');
+  return Buffer.from(padToEven(hex.slice(2)), 'hex');
 };
 
 /**
@@ -19,5 +19,5 @@ export const intToBuffer = (i: number) => {
 export const intToHex = (i: number) => {
     let hex = i.toString(16); // eslint-disable-line
 
-    return `0x${hex}`;
+  return `0x${hex}`;
 };

@@ -1,1 +1,1 @@
-export const WAIT_TIMEOUT = 10000
+export const WAIT_TIMEOUT = 10000;
