@@ -1,5 +1,5 @@
 import KardiaClient from '../../src';
-import { BLOCK_NUMBER } from './config';
+import { BLOCK_NUMBER, VALIDATOR_ADDRESS } from './config';
 import { ENDPOINT, ENDPOINT_PUBLIC } from '../config';
 
 const endpoint = process.env.TEST_ENV === 'prod' ? ENDPOINT_PUBLIC : ENDPOINT;
@@ -17,7 +17,7 @@ describe('KAI module test', () => {
   });
 
   it("should check current node's validator status", async () => {
-    const isValidator = await kardiaClient.kaiChain.isValidator();
+    const isValidator = await kardiaClient.kaiChain.isValidator(VALIDATOR_ADDRESS);
     expect(typeof isValidator === 'boolean').toBeTruthy();
   });
 

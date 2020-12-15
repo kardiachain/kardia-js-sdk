@@ -16,10 +16,10 @@ class KAIChain {
     });
   }
 
-  public async isValidator() {
+  public async isValidator(address: string) {
     const result = await this._rpcClient.request({
       method: 'kai_validator',
-      params: [],
+      params: [address, false],
     });
     if (result) return true;
     return false;
