@@ -1,9 +1,10 @@
-import { removeTrailingZeros } from './string';
+import { isAddress, removeTrailingZeros } from './string';
 import * as EthUtil from 'ethereumjs-util';
 import EtherWallet, {hdkey} from 'ethereumjs-wallet';
 import * as Bip39 from 'bip39';
 
 export const KardiaUtil = {
+  // Value utility
   weiToKAI: (value: any): number => {
     if (!value || value === '0') {
       return 0;
@@ -30,6 +31,7 @@ export const KardiaUtil = {
     cellString = `${numberStr}${decimalStr || ''}`;
     return cellString;
   },
+  // Wallet utility
   getWalletFromPK: (privateKey: string) => {
     const privateKeyBuffer = EthUtil.toBuffer(privateKey);
     return EtherWallet.fromPrivateKey(privateKeyBuffer);
@@ -52,5 +54,6 @@ export const KardiaUtil = {
       console.error(error);
       return false;
     }
-  }
+  },
+  isAddress: isAddress
 };
