@@ -29,5 +29,5 @@ class KardiaClient {
   }
 }
 
-export { KardiaTransaction, KardiaAccount, KAIChain };
+export { KardiaTransaction, KardiaAccount, KAIChain, KardiaUtil };
 export default KardiaClient;
