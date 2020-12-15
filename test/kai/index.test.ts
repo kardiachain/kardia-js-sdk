@@ -17,7 +17,9 @@ describe('KAI module test', () => {
   });
 
   it("should check current node's validator status", async () => {
-    const isValidator = await kardiaClient.kaiChain.isValidator(VALIDATOR_ADDRESS);
+    const isValidator = await kardiaClient.kaiChain.isValidator(
+      VALIDATOR_ADDRESS
+    );
     expect(typeof isValidator === 'boolean').toBeTruthy();
   });
 
