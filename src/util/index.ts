@@ -1,6 +1,6 @@
 import { isAddress, removeTrailingZeros } from './string';
 import * as EthUtil from 'ethereumjs-util';
-import EtherWallet, {hdkey} from 'ethereumjs-wallet';
+import EtherWallet, { hdkey } from 'ethereumjs-wallet';
 import * as Bip39 from 'bip39';
 
 export const KardiaUtil = {
@@ -9,14 +9,14 @@ export const KardiaUtil = {
     if (!value || value === '0') {
       return 0;
     }
-  
-    value = value.toLocaleString('en-US', {useGrouping: false});
-  
+
+    value = value.toLocaleString('en-US', { useGrouping: false });
+
     const cellString = value.toString().padStart(36, '0');
     const kaiNumString = parseInt(cellString.slice(0, 18), 10);
     const kaiDecimalString = cellString.slice(-18);
     return Number(
-      `${removeTrailingZeros(`${kaiNumString}.${kaiDecimalString}`)}`,
+      `${removeTrailingZeros(`${kaiNumString}.${kaiDecimalString}`)}`
     );
   },
   cellValue: (kaiValue: any) => {
@@ -37,7 +37,7 @@ export const KardiaUtil = {
     return EtherWallet.fromPrivateKey(privateKeyBuffer);
   },
   getWalletFromMnemonic: async (
-    mnemonic: string,
+    mnemonic: string
   ): Promise<Record<string, any> | boolean> => {
     try {
       const seed = await Bip39.mnemonicToSeed(mnemonic);
@@ -55,5 +55,5 @@ export const KardiaUtil = {
       return false;
     }
   },
-  isAddress: isAddress
+  isAddress: isAddress,
 };

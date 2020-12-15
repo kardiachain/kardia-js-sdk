@@ -25,7 +25,7 @@ class KardiaClient {
     this.account = new KardiaAccount({ client: this._rpcClient });
     this.transaction = new KardiaTransaction({ client: this._rpcClient });
     this.kaiChain = new KAIChain({ client: this._rpcClient });
-    this.contract = new KardiaContract({ client: this._rpcClient })
+    this.contract = new KardiaContract({ client: this._rpcClient });
   }
 }
 
