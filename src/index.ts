@@ -3,7 +3,6 @@ import KardiaAccount from './account';
 import KAIChain from './kai';
 import KardiaContract from './smc';
 import KardiaTransaction from './transaction';
-import { KardiaUtil } from './util';
 
 interface KardiaClientProps {
   endpoint: string;
@@ -15,7 +14,6 @@ class KardiaClient {
   public transaction: KardiaTransaction;
   public kaiChain: KAIChain;
   public contract: KardiaContract;
-  public util = KardiaUtil;
   constructor({ endpoint }: KardiaClientProps) {
     // Init RPC client
     const transport = new HTTPTransport(endpoint);
@@ -29,5 +27,5 @@ class KardiaClient {
   }
 }
 
-export { KardiaTransaction, KardiaAccount, KAIChain, KardiaUtil };
+export { KardiaTransaction, KardiaAccount, KAIChain };
 export default KardiaClient;

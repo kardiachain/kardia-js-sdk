@@ -33,6 +33,6 @@ describe('Account module test', () => {
 
   it('should get nonce successfully', async () => {
     const nonce = await kardiaClient.account.getNonce(ACCOUNT.address);
-    expect(nonce).toBeTruthy();
+    expect(nonce).not.toBeUndefined();
   });
 });

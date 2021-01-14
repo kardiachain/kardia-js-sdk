@@ -13,9 +13,9 @@ describe('Transaction module test', () => {
   });
 
   it('should send transaction successfully', async () => {
-    const nonce = await kardiaClient.account.getNonce(ACCOUNT.address);
+    const nonce = await kardiaClient.account.getNonce(ACCOUNT2.address);
     const txData = {
-      receiver: ACCOUNT2.address,
+      receiver: ACCOUNT.address,
       gas: 50000,
       nonce,
       gasPrice: 1,
@@ -23,10 +23,9 @@ describe('Transaction module test', () => {
       data: keccak256(Date.now().toString()),
     };
 
-    // Use new sdk
     const txHash = await kardiaClient.transaction.sendTransaction(
       txData,
-      ACCOUNT.privateKey
+      ACCOUNT2.privateKey
     );
     expect(txHash).toBeTruthy();
 

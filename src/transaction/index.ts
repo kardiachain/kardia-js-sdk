@@ -18,6 +18,15 @@ interface KardiaTransactionProps {
   provider?: string;
 }
 
+interface TxParams {
+  nonce: any;
+  to: string;
+  gasPrice: any;
+  gas: any;
+  value: string;
+  data: string;
+}
+
 class KardiaTransaction {
   private _rpcClient: Client;
   constructor({ client, provider }: KardiaTransactionProps) {
@@ -52,7 +61,7 @@ class KardiaTransaction {
     });
   }
 
-  private async signTransaction(tx: any, privateKey: string) {
+  public async signTransaction(tx: TxParams, privateKey: string) {
     // const account = fromPrivate(privateKey);
     if (!tx.gas) {
       throw new Error('"gas" is missing');
@@ -101,20 +110,29 @@ class KardiaTransaction {
     return result;
   }
 
-  async generateTransaction({
+  public generateTransaction({
+    // Receiver alias
     receiver = '0x',
-    amount = '0xff',
+    to = '0x',
+    // Amount alias
+    amount = '0x0',
+    value = '0x0',
     nonce = '0x0',
     gasPrice = '0xff',
+    // Gas limit alias
     gas = '0xff',
+    gasLimit = '0xff',
     data = '0x',
-  }) {
+  }: any): TxParams {
+    const _gasLimit = gas || gasLimit
+    const _value = amount || value
+
     return {
       nonce: isHexStrict(nonce) ? nonce : toHex(nonce),
-      to: receiver,
+      to: receiver || to,
       gasPrice: isHexStrict(gasPrice) ? gasPrice : toHex(gasPrice),
-      gas: isHexStrict(gas) ? gas : toHex(gas),
-      value: isHexStrict(amount) ? amount : toHex(amount),
+      gas: isHexStrict(_gasLimit) ? _gasLimit : toHex(_gasLimit),
+      value: isHexStrict(_value) ? _value : toHex(_value),
       data: '0x' + data.toLowerCase().replace(/^0x/i, ''),
     };
   }

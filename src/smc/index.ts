@@ -111,7 +111,6 @@ class KardiaContract {
           privateKey,
           true
         );
-
         return result;
       },
     };
@@ -165,6 +164,7 @@ class KardiaContract {
           ...txResult,
         };
         return result;
+        return txResult
       },
       call: async (
         contractAddress: string,

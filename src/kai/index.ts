@@ -1,4 +1,5 @@
 import { Client } from '@open-rpc/client-js';
+import { removeTrailingZeros } from '../util/string';
 interface KAIProps {
   client: Client;
 }
@@ -64,6 +65,36 @@ class KAIChain {
       method: 'kai_getBlockHeaderByHash',
       params: [blockHash],
     });
+  }
+
+  // Static utility method
+
+  public static weiToKAI(value: any): number {
+    if (!value || value === '0') {
+      return 0;
+    }
+
+    value = value.toLocaleString('en-US', { useGrouping: false });
+
+    const cellString = value.toString().padStart(36, '0');
+    const kaiNumString = parseInt(cellString.slice(0, 18), 10);
+    const kaiDecimalString = cellString.slice(-18);
+    return Number(
+      `${removeTrailingZeros(`${kaiNumString}.${kaiDecimalString}`)}`
+    );
+  }
+
+  public static cellValue(kaiValue: any) {
+    let cellString = removeTrailingZeros(kaiValue);
+    let decimalStr = cellString.split('.')[1];
+    let numberStr = cellString.split('.')[0];
+    if (!decimalStr) {
+      numberStr = numberStr.padEnd(18 + numberStr.length, '0');
+    } else {
+      decimalStr = decimalStr.padEnd(18, '0');
+    }
+    cellString = `${numberStr}${decimalStr || ''}`;
+    return cellString;
   }
 }
 

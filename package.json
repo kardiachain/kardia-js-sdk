@@ -73,6 +73,7 @@
     "elliptic": "^6.5.3",
     "ethereumjs-abi": "^0.6.8",
     "ethereumjs-wallet": "^1.0.1",
+    "ethers": "^5.0.26",
     "js-sha3": "^0.8.0",
     "lodash": "^4.17.20",
     "number-to-bn": "^1.7.0",
