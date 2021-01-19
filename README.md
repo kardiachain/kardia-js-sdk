@@ -38,6 +38,11 @@ Javascript library to interact with Kardia Chain.
 
 ## Install
 
+### from source (recommended)
+```bash
+  npm install https://github.com/kardiachain/kardia-js-sdk
+```
+
 ### npm
 
 ```bash
