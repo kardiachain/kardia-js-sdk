@@ -91,3 +91,41 @@ const account = kardiaClient.account;
 const contract = kardiaClient.contract;
 
 ```
+
+## Example
+
+### Get account balance
+
+```js
+import KardiaClient from 'kardia-dx';
+const kardiaClient = new KardiaClient({ endpoint: 'http://<host>:port' });
+
+const latestBalance = await kardiaClient.account.getBalance(ADDRESS);
+
+const balanceAtHeight = await kardiaClient.account.getBalance(ADDRESS, {blockHeight: 1});
+
+const balanceAtHash = await kardiaClient.account.getBalance(ADDRESS, {blockHash: BLOCK_HASH});
+
+```
+
+### Create a transaction
+
+```js
+import KardiaClient from 'kardia-dx';
+const kardiaClient = new KardiaClient({ endpoint: 'http://<host>:port' });
+
+const nonce = await kardiaClient.account.getNonce(ADDRESS);
+
+const txData = {
+  receiver: RECEIVING_ADDRESS,
+  gas: 50000, // Gas limit
+  nonce,
+  gasPrice: 1,
+  amount: '1000000000000000000' // Value in Wei (1 KAI = 1 * 10^18 Wei)
+};
+
+const txHash = await kardiaClient.transaction.sendTransaction(
+  txData,
+  PRIVATE_KEY,
+);
+```
