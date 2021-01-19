@@ -24,8 +24,7 @@ class KardiaAccount {
 
     if (options && options.blockHash) {
       params.push(options.blockHash);
-    }
-    if (options && options.blockHeight) {
+    } else if (options && options.blockHeight) {
       params.push(options.blockHeight);
     } else {
       params.push('latest');
