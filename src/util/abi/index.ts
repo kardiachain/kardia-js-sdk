@@ -150,14 +150,14 @@ export const decodeOutput = (outputTypes: any[], outputData: any) => {
   }, {});
 };
 
-const decodeSingleOutput = (outputType: string, outputData: string): any => {
+const decodeSingleOutput = (outputType: string, outputData: any): any => {
   if (!outputData || outputData === '0x') {
     return outputData;
   }
   if (isArray(outputType)) {
     const type = outputType.replace(/\[\]/g, '');
-    const arrayData = outputData.split(',');
-    return arrayData.map(data => decodeSingleOutput(type, data));
+    const arrayData = Array.isArray(outputData) ? outputData : outputData.split(',');
+    return arrayData.map((data: any) => decodeSingleOutput(type, data));
   }
   if (outputType === 'address') {
     return `0x${outputData.replace('0x', '')}`;
