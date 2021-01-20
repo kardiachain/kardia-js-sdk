@@ -16,7 +16,7 @@
     "test": "tsdx test",
     "test-public": "cross-env TEST_ENV=prod tsdx test",
     "test-account": "cross-env TEST_ENV=prod tsdx test ./test/account",
-    "test-transaction": "TEST_ENV=prod tsdx test ./test/transaction",
+    "test-transaction": "cross-env TEST_ENV=prod tsdx test ./test/transaction",
     "test-kai-chain": "cross-env TEST_ENV=prod tsdx test ./test/kai",
     "test-smc": "TEST_ENV=prod tsdx test ./test/smc",
     "test-coverage": "tsdx test --coverage",

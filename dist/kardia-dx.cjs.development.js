@@ -2321,27 +2321,30 @@ var KardiaTransaction = /*#__PURE__*/function () {
 
   _proto.signTransaction = /*#__PURE__*/function () {
     var _signTransaction = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(tx, privateKey) {
-      var transaction, rlpEncoded, hash, signature, decodeSign, rawTx, rawTransaction, values, result;
+      var _privateKey, transaction, rlpEncoded, hash, signature, decodeSign, rawTx, rawTransaction, values, result;
+
       return runtime_1.wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
+              _privateKey = "0x" + privateKey.replace('0x', '');
+
               if (tx.gas) {
-                _context4.next = 2;
+                _context4.next = 3;
                 break;
               }
 
               throw new Error('"gas" is missing');
 
-            case 2:
+            case 3:
               if (!(tx.nonce < 0 || tx.gas < 0 || tx.gasPrice < 0)) {
-                _context4.next = 4;
+                _context4.next = 5;
                 break;
               }
 
               throw new Error('Gas, gasPrice, nonce is lower than 0');
 
-            case 4:
+            case 5:
               transaction = {
                 nonce: tx.nonce,
                 gasPrice: tx.gasPrice,
@@ -2352,7 +2355,7 @@ var KardiaTransaction = /*#__PURE__*/function () {
               };
               rlpEncoded = encode([fromNat(transaction.nonce), fromNat(transaction.gasPrice), fromNat(transaction.gas), transaction.to.toLowerCase(), fromNat(transaction.value), transaction.data]);
               hash = keccak256(rlpEncoded);
-              signature = sign(hash, privateKey);
+              signature = sign(hash, _privateKey);
               decodeSign = decodeSignature(signature);
               rawTx = decode(rlpEncoded).concat(decodeSign);
               rawTx[6] = makeEven(trimLeadingZero(decodeSign[0]));
@@ -2369,7 +2372,7 @@ var KardiaTransaction = /*#__PURE__*/function () {
               };
               return _context4.abrupt("return", result);
 
-            case 17:
+            case 18:
             case "end":
               return _context4.stop();
           }

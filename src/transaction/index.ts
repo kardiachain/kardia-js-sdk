@@ -62,7 +62,7 @@ class KardiaTransaction {
   }
 
   public async signTransaction(tx: TxParams, privateKey: string) {
-    // const account = fromPrivate(privateKey);
+    const _privateKey = `0x${privateKey.replace('0x', '')}`;
     if (!tx.gas) {
       throw new Error('"gas" is missing');
     }
@@ -89,7 +89,7 @@ class KardiaTransaction {
       transaction.data,
     ]);
     const hash = keccak256(rlpEncoded);
-    const signature = sign(hash, privateKey);
+    const signature = sign(hash, _privateKey);
     const decodeSign = decodeSignature(signature);
 
     const rawTx = decode(rlpEncoded).concat(decodeSign);
