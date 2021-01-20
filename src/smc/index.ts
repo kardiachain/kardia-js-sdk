@@ -164,7 +164,7 @@ class KardiaContract {
           ...txResult,
         };
         return result;
-        return txResult
+        return txResult;
       },
       call: async (
         contractAddress: string,

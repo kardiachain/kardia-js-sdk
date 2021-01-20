@@ -1,0 +1,12 @@
+declare const fromString: (str: string) => string;
+declare const toEther: (wei: string) => number;
+declare const fromEther: (eth: number) => string;
+declare const toString: (a: string) => any;
+declare const fromNumber: (a: any) => string;
+declare const toNumber: (a: any) => any;
+declare const toUint256: (a: any) => any;
+declare const add: (a: string, b: string) => string;
+declare const mul: (a: string, b: string) => string;
+declare const div: (a: string, b: string) => string;
+declare const sub: (a: string, b: string) => string;
+export { toString, fromString, toNumber, fromNumber, toEther, fromEther, toUint256, add, mul, div, sub, };

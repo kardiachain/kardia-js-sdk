@@ -2,7 +2,7 @@ import { Client } from '@open-rpc/client-js';
 import * as EthUtil from 'ethereumjs-util';
 import EtherWallet from 'ethereumjs-wallet';
 import { isAddress } from '../util/string';
-import {ethers} from 'ethers';
+import { ethers } from 'ethers';
 
 interface KardiaAccountProps {
   client: Client;
@@ -50,14 +50,14 @@ class KardiaAccount {
     return EtherWallet.fromPrivateKey(privateKeyBuffer);
   }
 
-  public static async getWalletFromMnemonic (
+  public static async getWalletFromMnemonic(
     mnemonic: string
   ): Promise<Record<string, any> | boolean> {
     try {
       const wallet = ethers.Wallet.fromMnemonic(mnemonic.trim());
       const privateKey = wallet.privateKey;
       const addressStr = wallet.address;
-  
+
       return {
         address: addressStr,
         privateKey,
@@ -70,7 +70,7 @@ class KardiaAccount {
   }
 
   public static isAddress(address: string) {
-    return isAddress(address)
+    return isAddress(address);
   }
 }
 

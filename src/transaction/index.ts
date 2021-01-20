@@ -124,8 +124,8 @@ class KardiaTransaction {
     gasLimit = '0xff',
     data = '0x',
   }: any): TxParams {
-    const _gasLimit = gas || gasLimit
-    const _value = amount || value
+    const _gasLimit = gas || gasLimit;
+    const _value = amount || value;
 
     return {
       nonce: isHexStrict(nonce) ? nonce : toHex(nonce),

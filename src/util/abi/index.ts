@@ -156,7 +156,9 @@ const decodeSingleOutput = (outputType: string, outputData: any): any => {
   }
   if (isArray(outputType)) {
     const type = outputType.replace(/\[\]/g, '');
-    const arrayData = Array.isArray(outputData) ? outputData : outputData.split(',');
+    const arrayData = Array.isArray(outputData)
+      ? outputData
+      : outputData.split(',');
     return arrayData.map((data: any) => decodeSingleOutput(type, data));
   }
   if (outputType === 'address') {
