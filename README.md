@@ -38,6 +38,11 @@ Javascript library to interact with Kardia Chain.
 
 ## Install
 
+### from source (recommended)
+```bash
+  npm install https://github.com/kardiachain/kardia-js-sdk
+```
+
 ### npm
 
 ```bash
@@ -118,10 +123,10 @@ const nonce = await kardiaClient.account.getNonce(ADDRESS);
 
 const txData = {
   receiver: RECEIVING_ADDRESS,
-  gas: 50000, // Gas limit
+  gas: 29000, // Default gas limit is 29000
   nonce,
-  gasPrice: 1,
-  amount: '1000000000000000000' // Value in Wei (1 KAI = 1 * 10^18 Wei)
+  gasPrice: 1, // Default gas price 1
+  amount: '1000000000000000000' // Value in HYDRO (1 KAI = 1*10^18 HYDRO = 1*10^9 OXY)
 };
 
 const txHash = await kardiaClient.transaction.sendTransaction(
