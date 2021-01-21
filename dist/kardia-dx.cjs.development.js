@@ -2210,7 +2210,7 @@ var sleep = function sleep(ms) {
   });
 };
 
-var WAIT_TIMEOUT = 10000;
+var WAIT_TIMEOUT = 60000;
 
 var KardiaTransaction = /*#__PURE__*/function () {
   function KardiaTransaction(_ref) {
@@ -3180,15 +3180,15 @@ var KardiaContract = /*#__PURE__*/function () {
 
                 case 9:
                   txResult = _context5.sent;
-                  events = txResult.logs.map(function (item) {
+                  events = txResult.logs ? txResult.logs.map(function (item) {
                     return parseEvent(_this2.abi, item);
-                  });
+                  }) : [];
                   result = _extends({
                     events: events
                   }, txResult);
                   return _context5.abrupt("return", result);
 
-                case 14:
+                case 13:
                 case "end":
                   return _context5.stop();
               }

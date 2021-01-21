@@ -157,15 +157,14 @@ class KardiaContract {
           true
         );
 
-        const events = txResult.logs.map((item: any) =>
+        const events = txResult.logs ? txResult.logs.map((item: any) =>
           parseEvent(this.abi, item)
-        );
+        ) : [];
         const result = {
           events,
           ...txResult,
         };
         return result;
-        return txResult;
       },
       call: async (
         contractAddress: string,
