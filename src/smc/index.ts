@@ -136,7 +136,7 @@ class KardiaContract {
       send: async (
         privateKey: string,
         contractAddress: string,
-        txPayload: Record<string, any> = {}
+        txPayload: Record<string, any> = {},
       ) => {
         const senderAccount = fromPrivate(privateKey);
 
@@ -153,7 +153,8 @@ class KardiaContract {
             gas: txPayload.gas || DEFAULT_GAS,
             data,
           },
-          privateKey
+          privateKey,
+          true
         );
 
         const events = txResult.logs.map((item: any) =>

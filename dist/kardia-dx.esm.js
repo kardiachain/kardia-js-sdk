@@ -3170,7 +3170,7 @@ var KardiaContract = /*#__PURE__*/function () {
                     gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE,
                     gas: txPayload.gas || DEFAULT_GAS,
                     data: data
-                  }, privateKey);
+                  }, privateKey, true);
 
                 case 9:
                   txResult = _context5.sent;
