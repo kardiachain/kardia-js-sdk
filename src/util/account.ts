@@ -2,19 +2,66 @@ import elliptic from 'elliptic';
 import { keccak256 } from './hash';
 import { fromString } from './nat';
 import Bytes from './bytes';
-// import { keccak256 } from 'js-sha3';
+import { sha3 } from './string';
 
 const secp256k1 = new elliptic.ec('secp256k1');
 
-const toChecksum = (address: string) => {
-  const addressHash = keccak256(address.slice(2));
+export const toChecksum = (address: string) => {
+  if (typeof address === 'undefined') return '';
+
+  if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
+    throw new Error(
+      'Given address "' + address + '" is not a valid Kardiachain address.'
+    );
+  }
+
+  address = address.toLowerCase().replace(/^0x/i, '');
+  const addressHash = keccak256(address).replace(/^0x/i, '');
   let checksumAddress = '0x';
-  for (let i = 0; i < 40; i++)
+  for (let i = 0; i < address.length; i++)
     checksumAddress +=
-      parseInt(addressHash[i + 2], 16) > 7
-        ? address[i + 2].toUpperCase()
-        : address[i + 2];
+      parseInt(addressHash[i], 16) > 7 ? address[i].toUpperCase() : address[i];
   return checksumAddress;
+};
+
+export const checkAddressChecksum = (address: string) => {
+  try {
+    // Check each case
+    address = address.replace(/^0x/i, '');
+    const sha3Result = sha3(address.toLowerCase());
+    if (sha3Result === null) return false;
+    const addressHash = sha3Result.replace(/^0x/i, '');
+    for (let i = 0; i < 40; i++) {
+      // the nth letter should be uppercase if the nth digit of casemap is 1
+      if (
+        (parseInt(addressHash[i], 16) > 7 &&
+          address[i].toUpperCase() !== address[i]) ||
+        (parseInt(addressHash[i], 16) <= 7 &&
+          address[i].toLowerCase() !== address[i])
+      ) {
+        return false;
+      }
+    }
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const isAddress = (address: string) => {
+  // check if it has the basic requirements of an address
+  if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
+    return false;
+    // If it's ALL lowercase or ALL upppercase
+  } else if (
+    /^(0x|0X)?[0-9a-f]{40}$/.test(address) ||
+    /^(0x|0X)?[0-9A-F]{40}$/.test(address)
+  ) {
+    return true;
+    // Otherwise check each case
+  } else {
+    return checkAddressChecksum(address);
+  }
 };
 
 export const fromPrivate = (privateKey: string) => {
