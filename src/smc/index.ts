@@ -136,7 +136,7 @@ class KardiaContract {
       send: async (
         privateKey: string,
         contractAddress: string,
-        txPayload: Record<string, any> = {},
+        txPayload: Record<string, any> = {}
       ) => {
         const senderAccount = fromPrivate(privateKey);
 
@@ -157,9 +157,9 @@ class KardiaContract {
           true
         );
 
-        const events = txResult.logs ? txResult.logs.map((item: any) =>
-          parseEvent(this.abi, item)
-        ) : [];
+        const events = txResult.logs
+          ? txResult.logs.map((item: any) => parseEvent(this.abi, item))
+          : [];
         const result = {
           events,
           ...txResult,

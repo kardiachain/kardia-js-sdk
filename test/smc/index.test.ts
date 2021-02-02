@@ -1,7 +1,7 @@
 import KardiaContract from '../../src/smc';
 import { sleep } from '../../src/util/time';
 import { ENDPOINT, ENDPOINT_PUBLIC } from '../config';
-import { ACCOUNT2 } from '../config/account';
+import { DEPLOY_ACCOUNT } from './config';
 import { ABI, BYTECODES, DEFAULT_PARAM } from './config';
 
 const endpoint = process.env.TEST_ENV === 'prod' ? ENDPOINT_PUBLIC : ENDPOINT;
@@ -52,7 +52,7 @@ describe('KAI module test', () => {
     expect(preDeploy.txData()).toBeTruthy();
 
     expect(preDeploy.send).toBeTruthy();
-    const smcData = await preDeploy.send(ACCOUNT2.privateKey);
+    const smcData = await preDeploy.send(DEPLOY_ACCOUNT.privateKey);
     expect(smcData).toBeTruthy();
 
     const deployedContract = myContract.invokeContract('retrieve', []);
