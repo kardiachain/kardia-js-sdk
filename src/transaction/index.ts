@@ -124,12 +124,13 @@ class KardiaTransaction {
     gasLimit = '0xff',
     data = '0x',
   }: any): TxParams {
-    const _gasLimit = gas || gasLimit;
-    const _value = amount || value;
+    const _gasLimit = gas === '0xff' ? gasLimit : gas;
+    const _value = amount === '0x0' ? value : amount;
+    const _receiver = receiver === '0x' ? to : receiver
 
     return {
       nonce: isHexStrict(nonce) ? nonce : toHex(nonce),
-      to: receiver || to,
+      to: _receiver,
       gasPrice: isHexStrict(gasPrice) ? gasPrice : toHex(gasPrice),
       gas: isHexStrict(_gasLimit) ? _gasLimit : toHex(_gasLimit),
       value: isHexStrict(_value) ? _value : toHex(_value),

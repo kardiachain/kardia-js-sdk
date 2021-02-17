@@ -6,7 +6,7 @@ import { ABI, BYTECODES, DEFAULT_PARAM } from './config';
 
 const endpoint = process.env.TEST_ENV === 'prod' ? ENDPOINT_PUBLIC : ENDPOINT;
 
-describe('KAI module test', () => {
+describe('SMC module test', () => {
   let myContract: KardiaContract;
   beforeEach(() => {
     myContract = new KardiaContract({ provider: endpoint });
