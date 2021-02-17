@@ -138,10 +138,18 @@ class KardiaTransaction {
     };
   }
 
+  /**
+   * 
+   * @param data transaction params
+   * @param privateKey Private key used to sign transaction
+   * @param waitUntilMined wait for transaction to complete or not
+   * @param waitTimeOut Time (in milliseconds) to wait for transaction to complete 
+   */
   public async sendTransaction(
     data: any,
     privateKey: string,
-    waitUntilMined: boolean = false
+    waitUntilMined: boolean = false,
+    waitTimeOut: number = 0,
   ) {
     const generatedTx = await this.generateTransaction(data);
     const signedTx = await this.signTransaction(generatedTx, privateKey);
@@ -151,7 +159,8 @@ class KardiaTransaction {
     });
     if (!waitUntilMined) return txHash;
 
-    const breakTimeout = Date.now() + WAIT_TIMEOUT;
+    const _waitTimeOut = waitTimeOut || WAIT_TIMEOUT
+    const breakTimeout = Date.now() + _waitTimeOut;
     while (Date.now() < breakTimeout) {
       try {
         const receipt = await this.getTransactionReceipt(txHash);
