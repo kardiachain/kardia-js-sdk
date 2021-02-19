@@ -15,11 +15,11 @@ describe('Transaction module test', () => {
   it('should send transaction successfully', async () => {
     const nonce = await kardiaClient.account.getNonce(ACCOUNT2.address);
     const txData = {
-      receiver: ACCOUNT.address,
+      to: ACCOUNT.address,
       gas: 50000,
       nonce,
       gasPrice: 1,
-      amount: 22093,
+      value: 22093,
       data: keccak256(Date.now().toString()),
     };
 
