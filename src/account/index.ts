@@ -72,6 +72,18 @@ class KardiaAccount {
   public static isAddress(address: string) {
     return isAddress(address);
   }
+
+  public static generateWallet() {
+    const wallet = ethers.Wallet.createRandom();
+    const privateKey = wallet.privateKey;
+    const addressStr = wallet.address;
+
+    return {
+      address: addressStr,
+      privateKey,
+      balance: 0,
+    };
+  }
 }
 
 export default KardiaAccount;
