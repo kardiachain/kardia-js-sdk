@@ -126,7 +126,7 @@ class KardiaTransaction {
   }: any): TxParams {
     const _gasLimit = gas === '0xff' ? gasLimit : gas;
     const _value = amount === '0x0' ? value : amount;
-    const _receiver = receiver === '0x' ? to : receiver
+    const _receiver = receiver === '0x' ? to : receiver;
 
     return {
       nonce: isHexStrict(nonce) ? nonce : toHex(nonce),
@@ -139,17 +139,17 @@ class KardiaTransaction {
   }
 
   /**
-   * 
+   *
    * @param data transaction params
    * @param privateKey Private key used to sign transaction
    * @param waitUntilMined wait for transaction to complete or not
-   * @param waitTimeOut Time (in milliseconds) to wait for transaction to complete 
+   * @param waitTimeOut Time (in milliseconds) to wait for transaction to complete
    */
   public async sendTransaction(
     data: any,
     privateKey: string,
     waitUntilMined: boolean = false,
-    waitTimeOut: number = 0,
+    waitTimeOut: number = 0
   ) {
     const generatedTx = await this.generateTransaction(data);
     const signedTx = await this.signTransaction(generatedTx, privateKey);
@@ -159,7 +159,7 @@ class KardiaTransaction {
     });
     if (!waitUntilMined) return txHash;
 
-    const _waitTimeOut = waitTimeOut || WAIT_TIMEOUT
+    const _waitTimeOut = waitTimeOut || WAIT_TIMEOUT;
     const breakTimeout = Date.now() + _waitTimeOut;
     while (Date.now() < breakTimeout) {
       try {
