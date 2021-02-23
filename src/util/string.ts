@@ -4,6 +4,7 @@ import utf8 from 'utf8';
 import numberToBN from 'number-to-bn';
 import { isString, isNumber, isBoolean, isObject } from 'lodash';
 import { intToBuffer } from './number';
+import { isAddress } from './account';
 
 /**
  * Is the string a hex string.
@@ -107,10 +108,14 @@ export const setLengthRight = (msg: any, length: number) => {
 const SHA3_NULL_S =
   '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
 
-const sha3 = (value: string) => {
-  // if (isHexStrict(value) && /^0x/i.test(value.toString())) {
-  //     value = hexToBytes(value);
-  // }
+export const sha3 = (value: any) => {
+  if (isBN(value)) {
+    value = value.toString();
+  }
+
+  if (isHexStrict(value) && /^0x/i.test(value.toString())) {
+    value = hexToBytes(value);
+  }
 
   const returnValue = keccak256(value); // jshint ignore:line
 
@@ -119,6 +124,32 @@ const sha3 = (value: string) => {
   } else {
     return returnValue;
   }
+};
+
+/**
+ * Convert a hex string to a byte array
+ *
+ * Note: Implementation from crypto-js
+ *
+ * @method hexToBytes
+ * @param {string} hex
+ * @return {Array} the byte array
+ */
+const hexToBytes = (hex: any) => {
+  hex = hex.toString(16);
+
+  if (!isHexStrict(hex)) {
+    throw new Error('Given value "' + hex + '" is not a valid hex string.');
+  }
+
+  hex = hex.replace(/^0x/i, '');
+
+  const bytes = [];
+  for (let c = 0; c < hex.length; c += 2) {
+    bytes.push(parseInt(hex.substr(c, 2), 16));
+  }
+
+  return bytes;
 };
 
 export const isBN = (object: any) =>
@@ -155,43 +186,6 @@ export const utf8ToHex = (str: string) => {
   }
 
   return '0x' + hex;
-};
-
-const checkAddressChecksum = (address: string) => {
-  // Check each case
-  address = address.replace(/^0x/i, '');
-  const sha3Result = sha3(address.toLowerCase());
-  if (sha3Result === null) return false;
-  const addressHash = sha3Result.replace(/^0x/i, '');
-
-  for (let i = 0; i < 40; i++) {
-    // the nth letter should be uppercase if the nth digit of casemap is 1
-    if (
-      (parseInt(addressHash[i], 16) > 7 &&
-        address[i].toUpperCase() !== address[i]) ||
-      (parseInt(addressHash[i], 16) <= 7 &&
-        address[i].toLowerCase() !== address[i])
-    ) {
-      return false;
-    }
-  }
-  return true;
-};
-
-export const isAddress = (address: string) => {
-  // check if it has the basic requirements of an address
-  if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
-    return false;
-    // If it's ALL lowercase or ALL upppercase
-  } else if (
-    /^(0x|0X)?[0-9a-f]{40}$/.test(address) ||
-    /^(0x|0X)?[0-9A-F]{40}$/.test(address)
-  ) {
-    return true;
-    // Otherwise check each case
-  } else {
-    return checkAddressChecksum(address);
-  }
 };
 
 export const toBN = (number: any) => {
@@ -264,4 +258,30 @@ export const removeTrailingZeros = (value: any) => {
     after = '0' + after;
   }
   return after ? after : 0;
+};
+
+export const numberToString = (arg: any) => {
+  if (typeof arg === 'string') {
+    if (!arg.match(/^-?[0-9.]+$/)) {
+      throw new Error(
+        `while converting number to string, invalid number value '${arg}', should be a number matching (^-?[0-9.]+).`
+      );
+    }
+    return arg;
+  } else if (typeof arg === 'number') {
+    return String(arg);
+  } else if (
+    typeof arg === 'object' &&
+    arg.toString &&
+    (arg.toTwos || arg.dividedToIntegerBy)
+  ) {
+    if (arg.toPrecision) {
+      return String(arg.toPrecision());
+    } else {
+      return arg.toString(10);
+    }
+  }
+  throw new Error(
+    `while converting number to string, invalid number value '${arg}' type ${typeof arg}.`
+  );
 };

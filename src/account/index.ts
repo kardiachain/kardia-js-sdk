@@ -1,8 +1,8 @@
 import { Client } from '@open-rpc/client-js';
 import * as EthUtil from 'ethereumjs-util';
 import EtherWallet from 'ethereumjs-wallet';
-import { isAddress } from '../util/string';
 import { ethers } from 'ethers';
+import { isAddress } from '../util/account';
 
 interface KardiaAccountProps {
   client: Client;
