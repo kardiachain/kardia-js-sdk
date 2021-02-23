@@ -37,7 +37,7 @@ const getValueOfUnit = (unitInput: string) => {
  * @param unit
  *
  */
-export const fromHydro = (input: any, unit: string) => {
+export const fromHydro = (input: any, unit: 'hydro' | 'oxy' | 'kai') => {
   try {
     let oxy = numberToBN(input);
     const negative = oxy.lt(zero);

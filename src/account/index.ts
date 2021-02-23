@@ -47,26 +47,26 @@ class KardiaAccount {
 
   public static getWalletFromPK(privateKey: string) {
     const privateKeyBuffer = EthUtil.toBuffer(privateKey);
-    return EtherWallet.fromPrivateKey(privateKeyBuffer);
+    const wallet = EtherWallet.fromPrivateKey(privateKeyBuffer);
+    const addressStr = wallet.getChecksumAddressString();
+    return {
+      address: addressStr,
+      privateKey,
+      balance: 0,
+    };
   }
 
   public static async getWalletFromMnemonic(
     mnemonic: string
   ): Promise<Record<string, any> | boolean> {
-    try {
-      const wallet = ethers.Wallet.fromMnemonic(mnemonic.trim());
-      const privateKey = wallet.privateKey;
-      const addressStr = wallet.address;
-
-      return {
-        address: addressStr,
-        privateKey,
-        balance: 0,
-      };
-    } catch (error) {
-      console.error(error);
-      return false;
-    }
+    const wallet = ethers.Wallet.fromMnemonic(mnemonic.trim());
+    const privateKey = wallet.privateKey;
+    const addressStr = wallet.address;
+    return {
+      address: addressStr,
+      privateKey,
+      balance: 0,
+    };
   }
 
   public static isAddress(address: string) {

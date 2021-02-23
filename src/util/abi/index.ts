@@ -277,9 +277,9 @@ export const deployData = (bytecode: string, method: any, params: any[]) => {
   let headBlock = '0x';
   let dataBlock = '0x';
   if (params && method) {
-    const encodedParams = params.map((param, i) =>
-      encode(method.inputs[i].type, param)
-    );
+    const encodedParams = params.map((param, i) =>{
+      return encode(method.inputs[i].type, param)
+    });
     for (let i = 0; i < encodedParams.length; ++i) {
       if (encodedParams[i].dynamic) {
         const dataLoc = encodedParams.length * 32 + Bytes.length(dataBlock);

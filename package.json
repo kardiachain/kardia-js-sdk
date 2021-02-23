@@ -19,7 +19,7 @@
     "test-transaction": "cross-env TEST_ENV=prod tsdx test ./test/transaction",
     "test-kai-chain": "cross-env TEST_ENV=prod tsdx test ./test/kai",
     "test-smc": "TEST_ENV=prod tsdx test ./test/smc",
-    "test-coverage": "tsdx test --coverage",
+    "test-coverage": "cross-env TEST_ENV=prod tsdx test --coverage",
     "lint": "tsdx lint",
     "prepare": "tsdx build",
     "size": "size-limit",

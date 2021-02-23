@@ -11,7 +11,7 @@ import { keccak256 } from '../util/hash';
 import { decode, encode } from '../util/rlp';
 import { isHexStrict, toHex } from '../util/string';
 import { sleep } from '../util/time';
-import { WAIT_TIMEOUT } from './config';
+import { DEFAULT_GAS_PRICE, WAIT_TIMEOUT } from './config';
 
 interface KardiaTransactionProps {
   client?: Client;
@@ -151,8 +151,13 @@ class KardiaTransaction {
     waitUntilMined: boolean = false,
     waitTimeOut: number = 0
   ) {
+    if (!data.gas) {
+      const estimatedGas = await this.estimateGas(data, data.data);
+      data.gas = estimatedGas * 10;
+    }
     const generatedTx = await this.generateTransaction(data);
     const signedTx = await this.signTransaction(generatedTx, privateKey);
+
     const txHash = await this._rpcClient.request({
       method: 'tx_sendRawTransaction',
       params: [signedTx.rawTransaction],
@@ -175,6 +180,20 @@ class KardiaTransaction {
     }
 
     throw new Error(`Timeout: cannot get receipt after ${WAIT_TIMEOUT}ms`);
+  }
+
+  public async estimateGas(txPayload: any, data: string) {
+    const txObject = {
+      from: txPayload.from || '0x',
+      to: txPayload.to || '0x',
+      data,
+      value: txPayload.value || 0,
+      gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE,
+    };
+    return await this._rpcClient.request({
+      method: 'kai_estimateGas',
+      params: [txObject, "latest"],
+    });
   }
 }
 

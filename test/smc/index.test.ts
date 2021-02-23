@@ -1,8 +1,8 @@
 import KardiaContract from '../../src/smc';
+// import { DEFAULT_GAS_PRICE } from '../../src/transaction/config';
 import { sleep } from '../../src/util/time';
 import { ENDPOINT, ENDPOINT_PUBLIC } from '../config';
-import { DEPLOY_ACCOUNT } from './config';
-import { ABI, BYTECODES, DEFAULT_PARAM } from './config';
+import { DEPLOY_ACCOUNT, SMC1, SMC2, SMC3 } from './config';
 
 const endpoint = process.env.TEST_ENV === 'prod' ? ENDPOINT_PUBLIC : ENDPOINT;
 
@@ -12,23 +12,36 @@ describe('SMC module test', () => {
     myContract = new KardiaContract({ provider: endpoint });
   });
 
-  it('should be initialized successfullt', () => {
+  it('should be initialized successfully', () => {
     expect(myContract).toBeTruthy();
   });
 
+  it('should throw error when initialized without client and provider', () => {
+    expect(() => {
+      new KardiaContract({});
+    }).toThrowError('Either [client] or [provider] must be provided');
+  });
+
+  it('should throw error when initialized with invalid ABI', () => {
+    expect(() => {
+      // @ts-ignore
+      new KardiaContract({ provider: endpoint, abi: 'abc'});
+    }).toThrowError('Invalid [abi]');
+  });
+
   it('should update ABI successfully', () => {
-    myContract.updateAbi(ABI);
-    expect(myContract.abi).toEqual(ABI);
+    myContract.updateAbi(SMC1.ABI);
+    expect(myContract.abi).toEqual(SMC1.ABI);
   });
 
   it('should update bytecodes successfully', () => {
-    myContract.updateByteCode(BYTECODES);
-    expect(myContract.bytecodes).toEqual(BYTECODES);
+    myContract.updateByteCode(SMC1.BYTECODES);
+    expect(myContract.bytecodes).toEqual(SMC1.BYTECODES);
   });
 
   it('should get info successfullt', () => {
-    myContract.updateAbi(ABI);
-    myContract.updateByteCode(BYTECODES);
+    myContract.updateAbi(SMC1.ABI);
+    myContract.updateByteCode(SMC1.BYTECODES);
     const info = myContract.info();
 
     expect(info).toBeTruthy();
@@ -37,31 +50,45 @@ describe('SMC module test', () => {
   });
 
   it('should deploy contract and interact successfully', async () => {
-    jest.setTimeout(50000);
-    sleep(10000);
-    myContract.updateAbi(ABI);
-    myContract.updateByteCode(BYTECODES);
+    jest.setTimeout(150000);
 
-    const preDeploy = myContract.deploy({
-      params: [DEFAULT_PARAM],
-    });
+    const SMC_TO_TEST = [SMC1, SMC2, SMC3];
+    // const SMC_TO_TEST = [SMC3];
+    // const SMC_TO_TEST = [SMC1];
+    for (let index = 0; index < SMC_TO_TEST.length; index++) {
+      sleep(20000);
+      const smc = SMC_TO_TEST[index];
+      myContract.updateAbi(smc.ABI);
+      myContract.updateByteCode(smc.BYTECODES);
 
-    expect(preDeploy).toBeTruthy();
+      const preDeploy = myContract.deploy({
+        params: smc.DEFAULT_PARAM,
+      });
 
-    expect(preDeploy.txData).toBeTruthy();
-    expect(preDeploy.txData()).toBeTruthy();
+      expect(preDeploy).toBeTruthy();
 
-    expect(preDeploy.send).toBeTruthy();
-    const smcData = await preDeploy.send(DEPLOY_ACCOUNT.privateKey);
-    expect(smcData).toBeTruthy();
+      expect(preDeploy.txData).toBeTruthy();
+      expect(preDeploy.txData()).toBeTruthy();
 
-    const deployedContract = myContract.invokeContract('retrieve', []);
-    const result = await deployedContract.call(
-      smcData.contractAddress,
-      {},
-      'latest'
-    );
+      expect(preDeploy.send).toBeTruthy();
 
-    expect(result).toEqual(DEFAULT_PARAM);
+      const defaultPayload = preDeploy.getDefaultTxPayload();
+      const estimatedGas = await preDeploy.estimateGas(defaultPayload);
+      expect(estimatedGas).toBeTruthy();
+
+      const smcData = await preDeploy.send(DEPLOY_ACCOUNT.privateKey, {
+        gas: estimatedGas * 10
+      });
+      expect(smcData).toBeTruthy();
+
+      const deployedContract = myContract.invokeContract(smc.FUNCTION_TO_TEST.name, smc.FUNCTION_TO_TEST.param);
+      const result = await deployedContract.call(
+        smcData.contractAddress,
+        {},
+        'latest'
+      );
+
+      expect(result).toEqual(smc.EXPECTED_RESULT);
+    }
   });
 });

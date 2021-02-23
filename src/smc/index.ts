@@ -25,12 +25,13 @@ interface SMCDeployObject {
 }
 
 const DEFAULT_GAS = 900000;
-const DEFAULT_GAS_PRICE = 1;
+const DEFAULT_GAS_PRICE = 1000000000;
 
 class KardiaContract {
   private _rpcClient: Client;
   public bytecodes: string;
   public abi: any[];
+  private txModule: KardiaTransaction
   constructor({ client, bytecodes, abi, provider }: KardiaContractProps) {
     if (client) {
       this._rpcClient = client;
@@ -40,6 +41,8 @@ class KardiaContract {
     } else {
       throw new Error('Either [client] or [provider] must be provided');
     }
+
+    this.txModule = new KardiaTransaction({ client: this._rpcClient })
 
     this.bytecodes = bytecodes || '';
     if (abi && !Array.isArray(abi)) throw new Error('Invalid [abi]');
@@ -58,21 +61,6 @@ class KardiaContract {
       abi: this.abi,
     };
   }
-  async estimateGas(txPayload: any, data: string) {
-    const txObject = {
-      from: txPayload.from || '0x',
-      to: txPayload.to || '0x',
-      data,
-      value: txPayload.value || '0x',
-      gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE,
-      gas: txPayload.gas || DEFAULT_GAS,
-    };
-
-    return await this._rpcClient.request({
-      method: 'kai_estimateGas',
-      params: [txObject],
-    });
-  }
   deploy({ params }: SMCDeployObject) {
     const bytecode = this.bytecodes;
     const abi = this.abi;
@@ -90,8 +78,16 @@ class KardiaContract {
     const data = deployData(decorBycode, constructorAbi, paramsDecorate);
     return {
       txData: () => data,
+      getDefaultTxPayload: () => {
+        return {
+          amount: 0,
+          data,
+          gasPrice: DEFAULT_GAS_PRICE,
+          gas: DEFAULT_GAS,
+        }
+      },
       estimateGas: async (txPayload: Record<string, any> = {}) => {
-        return await this.estimateGas(txPayload, data);
+        return await this.txModule.estimateGas(txPayload, data);
       },
       send: async (privateKey: string, txPayload: Record<string, any> = {}) => {
         const senderAccount = fromPrivate(privateKey);
@@ -130,8 +126,17 @@ class KardiaContract {
     const data = methodData(functionFromAbi, paramsDecorate);
     return {
       txData: () => data,
-      estimateGas: async (txPayload = {}) => {
-        return await this.estimateGas(txPayload, data);
+      getDefaultTxPayload: (contractAddress: string) => {
+        return {
+          receiver: contractAddress,
+          amount: 0,
+          gasPrice: DEFAULT_GAS_PRICE,
+          gas: DEFAULT_GAS,
+          data,
+        }
+      },
+      estimateGas: async (txPayload: Record<string, any>) => {
+        return await this.txModule.estimateGas(txPayload, data);
       },
       send: async (
         privateKey: string,
