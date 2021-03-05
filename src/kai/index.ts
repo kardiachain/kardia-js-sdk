@@ -70,6 +70,63 @@ class KAIChain {
     });
   }
 
+  public async newFilter(fromBlock?: 'latest' | number, toBlock?: 'latest' | number, address?: string, topics?: []) {
+    return await this._rpcClient.request({
+      method: 'kai_newFilter',
+      params: [
+        {
+          fromBlock: fromBlock,
+          toBlock: toBlock,
+          address: address,
+          topics: topics
+        }
+      ],
+    });
+  }
+
+  public async newBlockFilter(){
+    return await this._rpcClient.request({
+      method: 'kai_newBlockFilter',
+      params: []
+    })
+  }
+
+  public async uninstallFilter(filterId: string){
+    return await this._rpcClient.request({
+      method: 'kai_uninstallFilter',
+      params: [filterId]
+    })
+  }
+
+  public async getFilterChanges(filterId: string){
+    return await this._rpcClient.request({
+      method: 'kai_getFilterChanges',
+      params: [filterId]
+    })
+  }
+
+  public async getFilterLogs(filterId: string){
+    return await this._rpcClient.request({
+      method: 'kai_getFilterLogs',
+      params: [filterId]
+    })
+  }
+
+  public async getLogs(fromBlock?: 'latest' | number, toBlock?: 'latest' | number, address?: string, topics?: [], blockhash?: any){
+    return await this._rpcClient.request({
+      method: 'kai_getLogs',
+      params: [
+        {
+          fromBlock: fromBlock,
+          toBlock: toBlock,
+          address: address,
+          topics: topics,
+          blockhash: blockhash
+        }
+      ]
+    })
+  }
+
   // Static utility method
 
   public static KAIFromHydro(hydroValue: any): number {
