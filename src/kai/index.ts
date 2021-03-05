@@ -70,7 +70,12 @@ class KAIChain {
     });
   }
 
-  public async newFilter(fromBlock?: 'latest' | number, toBlock?: 'latest' | number, address?: string, topics?: []) {
+  public async newFilter(
+    fromBlock?: 'latest' | number,
+    toBlock?: 'latest' | number,
+    address?: string,
+    topics?: []
+  ) {
     return await this._rpcClient.request({
       method: 'kai_newFilter',
       params: [
@@ -78,41 +83,47 @@ class KAIChain {
           fromBlock: fromBlock,
           toBlock: toBlock,
           address: address,
-          topics: topics
-        }
+          topics: topics,
+        },
       ],
     });
   }
 
-  public async newBlockFilter(){
+  public async newBlockFilter() {
     return await this._rpcClient.request({
       method: 'kai_newBlockFilter',
-      params: []
-    })
+      params: [],
+    });
   }
 
-  public async uninstallFilter(filterId: string){
+  public async uninstallFilter(filterId: string) {
     return await this._rpcClient.request({
       method: 'kai_uninstallFilter',
-      params: [filterId]
-    })
+      params: [filterId],
+    });
   }
 
-  public async getFilterChanges(filterId: string){
+  public async getFilterChanges(filterId: string) {
     return await this._rpcClient.request({
       method: 'kai_getFilterChanges',
-      params: [filterId]
-    })
+      params: [filterId],
+    });
   }
 
-  public async getFilterLogs(filterId: string){
+  public async getFilterLogs(filterId: string) {
     return await this._rpcClient.request({
       method: 'kai_getFilterLogs',
-      params: [filterId]
-    })
+      params: [filterId],
+    });
   }
 
-  public async getLogs(fromBlock?: 'latest' | number, toBlock?: 'latest' | number, address?: string, topics?: [], blockhash?: any){
+  public async getLogs(
+    fromBlock?: 'latest' | number,
+    toBlock?: 'latest' | number,
+    address?: string,
+    topics?: [],
+    blockhash?: any
+  ) {
     return await this._rpcClient.request({
       method: 'kai_getLogs',
       params: [
@@ -121,10 +132,10 @@ class KAIChain {
           toBlock: toBlock,
           address: address,
           topics: topics,
-          blockhash: blockhash
-        }
-      ]
-    })
+          blockhash: blockhash,
+        },
+      ],
+    });
   }
 
   // Static utility method
