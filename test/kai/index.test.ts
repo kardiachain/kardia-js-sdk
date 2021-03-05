@@ -1,5 +1,11 @@
 import KardiaClient, { KAIChain } from '../../src';
-import { BLOCK_HASH, BLOCK_NUMBER, KAI_IN_HYDRO, NOT_VALIDATOR_ADDRESS, VALIDATOR_ADDRESS } from './config';
+import {
+  BLOCK_HASH,
+  BLOCK_NUMBER,
+  KAI_IN_HYDRO,
+  NOT_VALIDATOR_ADDRESS,
+  VALIDATOR_ADDRESS,
+} from './config';
 import { ENDPOINT, ENDPOINT_PUBLIC } from '../config';
 
 const endpoint = process.env.TEST_ENV === 'prod' ? ENDPOINT_PUBLIC : ENDPOINT;
@@ -35,7 +41,9 @@ describe('KAI module test', () => {
     expect(validators).toBeTruthy();
     expect(Array.isArray(validators)).toEqual(true);
 
-    const validatorsWithDelegator = await kardiaClient.kaiChain.getValidators(true);
+    const validatorsWithDelegator = await kardiaClient.kaiChain.getValidators(
+      true
+    );
     expect(validatorsWithDelegator).toBeTruthy();
     expect(Array.isArray(validatorsWithDelegator)).toEqual(true);
 
@@ -53,7 +61,7 @@ describe('KAI module test', () => {
 
     expect(async () => {
       await kardiaClient.kaiChain.getBlockByBlockNumber(-1);
-    }).rejects.toThrowError('Invalid block number')
+    }).rejects.toThrowError('Invalid block number');
   });
 
   it('should get block by hash successfully', async () => {
@@ -71,11 +79,13 @@ describe('KAI module test', () => {
 
     expect(async () => {
       await kardiaClient.kaiChain.getBlockHeaderByBlockNumber(-1);
-    }).rejects.toThrowError('Invalid block number')
+    }).rejects.toThrowError('Invalid block number');
   });
 
   it('should get block header by hash successfully', async () => {
-    const blockHeader = await kardiaClient.kaiChain.getBlockHeaderByHash(BLOCK_HASH);
+    const blockHeader = await kardiaClient.kaiChain.getBlockHeaderByHash(
+      BLOCK_HASH
+    );
     expect(blockHeader).toBeTruthy();
     expect(blockHeader.hash).toEqual(BLOCK_HASH);
   });
@@ -83,9 +93,9 @@ describe('KAI module test', () => {
   // Utility test
   it('should convert hydro to KAI correctly and vice versa', async () => {
     const kaiMount = KAIChain.KAIFromHydro(KAI_IN_HYDRO);
-    expect(kaiMount).toEqual('1')
+    expect(kaiMount).toEqual('1');
 
     const hydroAmount = KAIChain.HydroFromKAI('1');
-    expect(hydroAmount).toEqual(KAI_IN_HYDRO)
+    expect(hydroAmount).toEqual(KAI_IN_HYDRO);
   });
 });

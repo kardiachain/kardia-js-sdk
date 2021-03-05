@@ -192,7 +192,7 @@ class KardiaTransaction {
     };
     return await this._rpcClient.request({
       method: 'kai_estimateGas',
-      params: [txObject, "latest"],
+      params: [txObject, 'latest'],
     });
   }
 }

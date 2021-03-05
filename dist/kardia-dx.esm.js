@@ -1,13 +1,13 @@
 import { HTTPTransport, Client, RequestManager } from '@open-rpc/client-js';
 import { toBuffer as toBuffer$1 } from 'ethereumjs-util';
 import EtherWallet from 'ethereumjs-wallet';
+import { ethers } from 'ethers';
+import elliptic from 'elliptic';
 import { keccak256 as keccak256$1 } from 'js-sha3';
 import BN$1 from 'bn.js';
 import utf8 from 'utf8';
 import numberToBN from 'number-to-bn';
 import { isString, isNumber, isBoolean, isObject } from 'lodash-es';
-import { ethers } from 'ethers';
-import elliptic from 'elliptic';
 import abiJs from 'ethereumjs-abi';
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
@@ -818,675 +818,6 @@ try {
 }
 });
 
-/**
- * Converts an `Number` to a `Buffer`
- * @param {Number} i
- * @return {Buffer}
- */
-
-var intToBuffer = function intToBuffer(i) {
-  var hex = intToHex(i);
-  return Buffer.from(padToEven(hex.slice(2)), 'hex');
-};
-/**
- * Converts a `Number` into a hex `String`
- * @param {Number} i
- * @return {String}
- */
-
-var intToHex = function intToHex(i) {
-  var hex = i.toString(16); // eslint-disable-line
-
-  return "0x" + hex;
-};
-
-/**
- * Is the string a hex string.
- *
- * @method check if string is hex string of specific length
- * @param {String} value
- * @param {Number} length
- * @returns {Boolean} output the string is a hex string
- */
-
-var isHexString = function isHexString(value, length) {
-  if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
-    return false;
-  }
-
-  if (length && value.length !== 2 + 2 * length) {
-    return false;
-  }
-
-  return true;
-};
-var isHexStrict = function isHexStrict(hex) {
-  return (isString(hex) || isNumber(hex)) && /^(-)?0x[0-9a-f]*$/i.test(hex);
-};
-var isHexPrefixed = function isHexPrefixed(str) {
-  if (typeof str !== 'string') {
-    return false;
-  }
-
-  return str.slice(0, 2) === '0x';
-};
-var stripHexPrefix = function stripHexPrefix(str) {
-  return isHexPrefixed(str) ? str.slice(2) : str;
-};
-
-var toBuffer = function toBuffer(v) {
-  if (!Buffer.isBuffer(v)) {
-    if (Array.isArray(v)) {
-      v = Buffer.from(v);
-    } else if (typeof v === 'string') {
-      if (isHexString(v)) {
-        v = Buffer.from(padToEven(stripHexPrefix(v)), 'hex');
-      } else {
-        v = Buffer.from(v);
-      }
-    } else if (typeof v === 'number') {
-      v = intToBuffer(v);
-    } else if (v === null || v === undefined) {
-      v = Buffer.allocUnsafe(0);
-    } else if (BN$1.isBN(v)) {
-      v = v.toArrayLike(Buffer);
-    } else if (v.toArray) {
-      // converts a BN to a Buffer
-      v = Buffer.from(v.toArray());
-    } else {
-      throw new Error('invalid type');
-    }
-  }
-
-  return v;
-};
-
-var padToEven = function padToEven(value) {
-  if (typeof value !== 'string') {
-    throw new Error("while padding to even, value must be string, is currently [" + typeof value + "], while padToEven.");
-  }
-
-  if (value.length % 2) {
-    return "0" + value;
-  }
-
-  return value;
-};
-
-var zeros = function zeros(bytes) {
-  return Buffer.allocUnsafe(bytes).fill(0);
-};
-
-var setLength = function setLength(msg, length, right) {
-  var buf = zeros(length);
-  msg = toBuffer(msg);
-
-  if (right) {
-    if (msg.length < length) {
-      msg.copy(buf);
-      return buf;
-    }
-
-    return msg.slice(0, length);
-  } else {
-    if (msg.length < length) {
-      msg.copy(buf, length - msg.length);
-      return buf;
-    }
-
-    return msg.slice(-length);
-  }
-};
-
-var setLengthRight = function setLengthRight(msg, length) {
-  return setLength(msg, length, true);
-};
-var SHA3_NULL_S = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
-
-var sha3 = function sha3(value) {
-  // if (isHexStrict(value) && /^0x/i.test(value.toString())) {
-  //     value = hexToBytes(value);
-  // }
-  var returnValue = keccak256$1(value); // jshint ignore:line
-
-  if (returnValue === SHA3_NULL_S) {
-    return null;
-  } else {
-    return returnValue;
-  }
-};
-
-var isBN = function isBN(object) {
-  return object instanceof BN$1 || object && object.constructor && object.constructor.name === 'BN';
-};
-
-var isBigNumber = function isBigNumber(object) {
-  return object && (object instanceof BN$1 || object.constructor && object.constructor.name === 'BigNumber');
-};
-
-var utf8ToHex = function utf8ToHex(str) {
-  str = utf8.encode(str);
-  var hex = ''; // remove \u0000 padding from either side
-
-  str = str.replace(/^(?:\u0000)*/, '');
-  str = str.split('').reverse().join('');
-  str = str.replace(/^(?:\u0000)*/, '');
-  str = str.split('').reverse().join('');
-
-  for (var i = 0; i < str.length; i++) {
-    var code = str.charCodeAt(i); // if (code !== 0) {
-
-    var n = code.toString(16);
-    hex += n.length < 2 ? '0' + n : n; // }
-  }
-
-  return '0x' + hex;
-};
-
-var checkAddressChecksum = function checkAddressChecksum(address) {
-  // Check each case
-  address = address.replace(/^0x/i, '');
-  var sha3Result = sha3(address.toLowerCase());
-  if (sha3Result === null) return false;
-  var addressHash = sha3Result.replace(/^0x/i, '');
-
-  for (var i = 0; i < 40; i++) {
-    // the nth letter should be uppercase if the nth digit of casemap is 1
-    if (parseInt(addressHash[i], 16) > 7 && address[i].toUpperCase() !== address[i] || parseInt(addressHash[i], 16) <= 7 && address[i].toLowerCase() !== address[i]) {
-      return false;
-    }
-  }
-
-  return true;
-};
-
-var isAddress = function isAddress(address) {
-  // check if it has the basic requirements of an address
-  if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
-    return false; // If it's ALL lowercase or ALL upppercase
-  } else if (/^(0x|0X)?[0-9a-f]{40}$/.test(address) || /^(0x|0X)?[0-9A-F]{40}$/.test(address)) {
-    return true; // Otherwise check each case
-  } else {
-    return checkAddressChecksum(address);
-  }
-};
-var toBN = function toBN(number) {
-  try {
-    return numberToBN(number);
-  } catch (e) {
-    throw new Error(e + ' Given value: "' + number + '"');
-  }
-};
-var numberToHex = function numberToHex(value) {
-  if (value === null || value === undefined) {
-    return value;
-  }
-
-  if (!isFinite(value) && !isHexStrict(value)) {
-    throw new Error('Given input "' + value + '" is not a number.');
-  }
-
-  var number = toBN(value);
-  var result = number.toString(16);
-  return number.lt(new BN$1(0)) ? '-0x' + result.substr(1) : '0x' + result;
-};
-var toHex = function toHex(value, returnType) {
-  if (returnType === void 0) {
-    returnType = false;
-  }
-
-  /*jshint maxcomplexity: false */
-  if (isAddress(value)) {
-    return returnType ? 'address' : '0x' + value.toLowerCase().replace(/^0x/i, '');
-  }
-
-  if (isBoolean(value)) {
-    return returnType ? 'bool' : value ? '0x01' : '0x00';
-  }
-
-  if (isObject(value) && !isBigNumber(value) && !isBN(value)) {
-    return returnType ? 'string' : utf8ToHex(JSON.stringify(value));
-  } // if its a negative number, pass it through numberToHex
-
-
-  if (isString(value)) {
-    if (value.indexOf('-0x') === 0 || value.indexOf('-0X') === 0) {
-      return returnType ? 'int256' : numberToHex(value);
-    } else if (value.indexOf('0x') === 0 || value.indexOf('0X') === 0) {
-      return returnType ? 'bytes' : value;
-    }
-  }
-
-  return returnType ? value < 0 ? 'int256' : 'uint256' : numberToHex(value);
-};
-var removeTrailingZeros = function removeTrailingZeros(value) {
-  var regEx1 = /^[0]+/;
-  var regEx2 = /[0]+$/;
-  var regEx3 = /[.]$/;
-  var valueInString = value.toString();
-  var after = valueInString.replace(regEx1, ''); // Remove leading 0's
-
-  if (after.indexOf('.') > -1) {
-    after = after.replace(regEx2, ''); // Remove trailing 0's
-  }
-
-  after = after.replace(regEx3, ''); // Remove trailing decimal
-
-  if (after.indexOf('.') === 0) {
-    after = '0' + after;
-  }
-
-  return after ? after : 0;
-};
-
-var KardiaAccount = /*#__PURE__*/function () {
-  function KardiaAccount(_ref) {
-    var client = _ref.client;
-    this._rpcClient = client;
-  }
-
-  var _proto = KardiaAccount.prototype;
-
-  _proto.getBalance = /*#__PURE__*/function () {
-    var _getBalance = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee(address, options) {
-      var params;
-      return runtime_1.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              params = [address];
-
-              if (options && options.blockHash) {
-                params.push(options.blockHash);
-              } else if (options && options.blockHeight) {
-                params.push(options.blockHeight);
-              } else {
-                params.push('latest');
-              }
-
-              _context.next = 4;
-              return this._rpcClient.request({
-                method: 'account_balance',
-                params: params
-              });
-
-            case 4:
-              return _context.abrupt("return", _context.sent);
-
-            case 5:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee, this);
-    }));
-
-    function getBalance(_x, _x2) {
-      return _getBalance.apply(this, arguments);
-    }
-
-    return getBalance;
-  }();
-
-  _proto.getNonce = /*#__PURE__*/function () {
-    var _getNonce = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2(address) {
-      return runtime_1.wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.next = 2;
-              return this._rpcClient.request({
-                method: 'account_nonce',
-                params: [address]
-              });
-
-            case 2:
-              return _context2.abrupt("return", _context2.sent);
-
-            case 3:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2, this);
-    }));
-
-    function getNonce(_x3) {
-      return _getNonce.apply(this, arguments);
-    }
-
-    return getNonce;
-  }() // Static utility method
-  ;
-
-  KardiaAccount.getWalletFromPK = function getWalletFromPK(privateKey) {
-    var privateKeyBuffer = toBuffer$1(privateKey);
-    return EtherWallet.fromPrivateKey(privateKeyBuffer);
-  };
-
-  KardiaAccount.getWalletFromMnemonic = /*#__PURE__*/function () {
-    var _getWalletFromMnemonic = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3(mnemonic) {
-      var wallet, privateKey, addressStr;
-      return runtime_1.wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.prev = 0;
-              wallet = ethers.Wallet.fromMnemonic(mnemonic.trim());
-              privateKey = wallet.privateKey;
-              addressStr = wallet.address;
-              return _context3.abrupt("return", {
-                address: addressStr,
-                privateKey: privateKey,
-                balance: 0
-              });
-
-            case 7:
-              _context3.prev = 7;
-              _context3.t0 = _context3["catch"](0);
-              console.error(_context3.t0);
-              return _context3.abrupt("return", false);
-
-            case 11:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3, null, [[0, 7]]);
-    }));
-
-    function getWalletFromMnemonic(_x4) {
-      return _getWalletFromMnemonic.apply(this, arguments);
-    }
-
-    return getWalletFromMnemonic;
-  }();
-
-  KardiaAccount.isAddress = function isAddress$1(address) {
-    return isAddress(address);
-  };
-
-  return KardiaAccount;
-}();
-
-var KAIChain = /*#__PURE__*/function () {
-  function KAIChain(_ref) {
-    var client = _ref.client;
-    this._rpcClient = client;
-  }
-
-  var _proto = KAIChain.prototype;
-
-  _proto.getBlockNumber = /*#__PURE__*/function () {
-    var _getBlockNumber = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee() {
-      return runtime_1.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              _context.next = 2;
-              return this._rpcClient.request({
-                method: 'kai_blockNumber',
-                params: []
-              });
-
-            case 2:
-              return _context.abrupt("return", _context.sent);
-
-            case 3:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee, this);
-    }));
-
-    function getBlockNumber() {
-      return _getBlockNumber.apply(this, arguments);
-    }
-
-    return getBlockNumber;
-  }();
-
-  _proto.isValidator = /*#__PURE__*/function () {
-    var _isValidator = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2(address) {
-      var result;
-      return runtime_1.wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.next = 2;
-              return this._rpcClient.request({
-                method: 'kai_validator',
-                params: [address, false]
-              });
-
-            case 2:
-              result = _context2.sent;
-
-              if (!result) {
-                _context2.next = 5;
-                break;
-              }
-
-              return _context2.abrupt("return", true);
-
-            case 5:
-              return _context2.abrupt("return", false);
-
-            case 6:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2, this);
-    }));
-
-    function isValidator(_x) {
-      return _isValidator.apply(this, arguments);
-    }
-
-    return isValidator;
-  }();
-
-  _proto.getValidators = /*#__PURE__*/function () {
-    var _getValidators = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3() {
-      return runtime_1.wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.next = 2;
-              return this._rpcClient.request({
-                method: 'kai_validators',
-                params: []
-              });
-
-            case 2:
-              return _context3.abrupt("return", _context3.sent);
-
-            case 3:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3, this);
-    }));
-
-    function getValidators() {
-      return _getValidators.apply(this, arguments);
-    }
-
-    return getValidators;
-  }();
-
-  _proto.getBlockByBlockNumber = /*#__PURE__*/function () {
-    var _getBlockByBlockNumber = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(blockNumber) {
-      return runtime_1.wrap(function _callee4$(_context4) {
-        while (1) {
-          switch (_context4.prev = _context4.next) {
-            case 0:
-              if (!(blockNumber < 0)) {
-                _context4.next = 2;
-                break;
-              }
-
-              throw new Error('Invalid block number');
-
-            case 2:
-              _context4.next = 4;
-              return this._rpcClient.request({
-                method: 'kai_getBlockByNumber',
-                params: [blockNumber]
-              });
-
-            case 4:
-              return _context4.abrupt("return", _context4.sent);
-
-            case 5:
-            case "end":
-              return _context4.stop();
-          }
-        }
-      }, _callee4, this);
-    }));
-
-    function getBlockByBlockNumber(_x2) {
-      return _getBlockByBlockNumber.apply(this, arguments);
-    }
-
-    return getBlockByBlockNumber;
-  }();
-
-  _proto.getBlockByHash = /*#__PURE__*/function () {
-    var _getBlockByHash = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(blockHash) {
-      return runtime_1.wrap(function _callee5$(_context5) {
-        while (1) {
-          switch (_context5.prev = _context5.next) {
-            case 0:
-              _context5.next = 2;
-              return this._rpcClient.request({
-                method: 'kai_getBlockByHash',
-                params: [blockHash]
-              });
-
-            case 2:
-              return _context5.abrupt("return", _context5.sent);
-
-            case 3:
-            case "end":
-              return _context5.stop();
-          }
-        }
-      }, _callee5, this);
-    }));
-
-    function getBlockByHash(_x3) {
-      return _getBlockByHash.apply(this, arguments);
-    }
-
-    return getBlockByHash;
-  }();
-
-  _proto.getBlockHeaderByBlockNumber = /*#__PURE__*/function () {
-    var _getBlockHeaderByBlockNumber = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee6(blockNumber) {
-      return runtime_1.wrap(function _callee6$(_context6) {
-        while (1) {
-          switch (_context6.prev = _context6.next) {
-            case 0:
-              if (!(blockNumber < 0)) {
-                _context6.next = 2;
-                break;
-              }
-
-              throw new Error('Invalid block number');
-
-            case 2:
-              _context6.next = 4;
-              return this._rpcClient.request({
-                method: 'kai_getBlockHeaderByNumber',
-                params: [blockNumber]
-              });
-
-            case 4:
-              return _context6.abrupt("return", _context6.sent);
-
-            case 5:
-            case "end":
-              return _context6.stop();
-          }
-        }
-      }, _callee6, this);
-    }));
-
-    function getBlockHeaderByBlockNumber(_x4) {
-      return _getBlockHeaderByBlockNumber.apply(this, arguments);
-    }
-
-    return getBlockHeaderByBlockNumber;
-  }();
-
-  _proto.getBlockHeaderByHash = /*#__PURE__*/function () {
-    var _getBlockHeaderByHash = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(blockHash) {
-      return runtime_1.wrap(function _callee7$(_context7) {
-        while (1) {
-          switch (_context7.prev = _context7.next) {
-            case 0:
-              _context7.next = 2;
-              return this._rpcClient.request({
-                method: 'kai_getBlockHeaderByHash',
-                params: [blockHash]
-              });
-
-            case 2:
-              return _context7.abrupt("return", _context7.sent);
-
-            case 3:
-            case "end":
-              return _context7.stop();
-          }
-        }
-      }, _callee7, this);
-    }));
-
-    function getBlockHeaderByHash(_x5) {
-      return _getBlockHeaderByHash.apply(this, arguments);
-    }
-
-    return getBlockHeaderByHash;
-  }() // Static utility method
-  ;
-
-  KAIChain.weiToKAI = function weiToKAI(value) {
-    if (!value || value === '0') {
-      return 0;
-    }
-
-    value = value.toLocaleString('en-US', {
-      useGrouping: false
-    });
-    var cellString = value.toString().padStart(36, '0');
-    var kaiNumString = parseInt(cellString.slice(0, 18), 10);
-    var kaiDecimalString = cellString.slice(-18);
-    return Number("" + removeTrailingZeros(kaiNumString + "." + kaiDecimalString));
-  };
-
-  KAIChain.cellValue = function cellValue(kaiValue) {
-    var cellString = removeTrailingZeros(kaiValue);
-    var decimalStr = cellString.split('.')[1];
-    var numberStr = cellString.split('.')[0];
-
-    if (!decimalStr) {
-      numberStr = numberStr.padEnd(18 + numberStr.length, '0');
-    } else {
-      decimalStr = decimalStr.padEnd(18, '0');
-    }
-
-    cellString = "" + numberStr + (decimalStr || '');
-    return cellString;
-  };
-
-  return KAIChain;
-}();
-
 // This was ported from https://github.com/emn178/js-sha3, with some minor
 // modifications and pruning. It is licensed under MIT:
 //
@@ -2059,19 +1390,336 @@ var Bytes = {
   toUint8Array: toUint8Array
 };
 
-var secp256k1 = /*#__PURE__*/new elliptic.ec('secp256k1');
+/**
+ * Converts an `Number` to a `Buffer`
+ * @param {Number} i
+ * @return {Buffer}
+ */
 
+var intToBuffer = function intToBuffer(i) {
+  var hex = intToHex(i);
+  return Buffer.from(padToEven(hex.slice(2)), 'hex');
+};
+/**
+ * Converts a `Number` into a hex `String`
+ * @param {Number} i
+ * @return {String}
+ */
+
+var intToHex = function intToHex(i) {
+  var hex = i.toString(16); // eslint-disable-line
+
+  return "0x" + hex;
+};
+
+/**
+ * Is the string a hex string.
+ *
+ * @method check if string is hex string of specific length
+ * @param {String} value
+ * @param {Number} length
+ * @returns {Boolean} output the string is a hex string
+ */
+
+var isHexString = function isHexString(value, length) {
+  if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
+    return false;
+  }
+
+  if (length && value.length !== 2 + 2 * length) {
+    return false;
+  }
+
+  return true;
+};
+var isHexStrict = function isHexStrict(hex) {
+  return (isString(hex) || isNumber(hex)) && /^(-)?0x[0-9a-f]*$/i.test(hex);
+};
+var isHexPrefixed = function isHexPrefixed(str) {
+  if (typeof str !== 'string') {
+    return false;
+  }
+
+  return str.slice(0, 2) === '0x';
+};
+var stripHexPrefix = function stripHexPrefix(str) {
+  return isHexPrefixed(str) ? str.slice(2) : str;
+};
+
+var toBuffer = function toBuffer(v) {
+  if (!Buffer.isBuffer(v)) {
+    if (Array.isArray(v)) {
+      v = Buffer.from(v);
+    } else if (typeof v === 'string') {
+      if (isHexString(v)) {
+        v = Buffer.from(padToEven(stripHexPrefix(v)), 'hex');
+      } else {
+        v = Buffer.from(v);
+      }
+    } else if (typeof v === 'number') {
+      v = intToBuffer(v);
+    } else if (v === null || v === undefined) {
+      v = Buffer.allocUnsafe(0);
+    } else if (BN$1.isBN(v)) {
+      v = v.toArrayLike(Buffer);
+    } else if (v.toArray) {
+      // converts a BN to a Buffer
+      v = Buffer.from(v.toArray());
+    } else {
+      throw new Error('invalid type');
+    }
+  }
+
+  return v;
+};
+
+var padToEven = function padToEven(value) {
+  if (typeof value !== 'string') {
+    throw new Error("while padding to even, value must be string, is currently [" + typeof value + "], while padToEven.");
+  }
+
+  if (value.length % 2) {
+    return "0" + value;
+  }
+
+  return value;
+};
+
+var zeros = function zeros(bytes) {
+  return Buffer.allocUnsafe(bytes).fill(0);
+};
+
+var setLength = function setLength(msg, length, right) {
+  var buf = zeros(length);
+  msg = toBuffer(msg);
+
+  if (right) {
+    if (msg.length < length) {
+      msg.copy(buf);
+      return buf;
+    }
+
+    return msg.slice(0, length);
+  } else {
+    if (msg.length < length) {
+      msg.copy(buf, length - msg.length);
+      return buf;
+    }
+
+    return msg.slice(-length);
+  }
+};
+
+var setLengthRight = function setLengthRight(msg, length) {
+  return setLength(msg, length, true);
+};
+var SHA3_NULL_S = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
+var sha3 = function sha3(value) {
+  if (isBN(value)) {
+    value = value.toString();
+  }
+
+  if (isHexStrict(value) && /^0x/i.test(value.toString())) {
+    value = hexToBytes(value);
+  }
+
+  var returnValue = keccak256$1(value); // jshint ignore:line
+
+  if (returnValue === SHA3_NULL_S) {
+    return null;
+  } else {
+    return returnValue;
+  }
+};
+/**
+ * Convert a hex string to a byte array
+ *
+ * Note: Implementation from crypto-js
+ *
+ * @method hexToBytes
+ * @param {string} hex
+ * @return {Array} the byte array
+ */
+
+var hexToBytes = function hexToBytes(hex) {
+  hex = hex.toString(16);
+
+  if (!isHexStrict(hex)) {
+    throw new Error('Given value "' + hex + '" is not a valid hex string.');
+  }
+
+  hex = hex.replace(/^0x/i, '');
+  var bytes = [];
+
+  for (var c = 0; c < hex.length; c += 2) {
+    bytes.push(parseInt(hex.substr(c, 2), 16));
+  }
+
+  return bytes;
+};
+
+var isBN = function isBN(object) {
+  return object instanceof BN$1 || object && object.constructor && object.constructor.name === 'BN';
+};
+
+var isBigNumber = function isBigNumber(object) {
+  return object && (object instanceof BN$1 || object.constructor && object.constructor.name === 'BigNumber');
+};
+
+var utf8ToHex = function utf8ToHex(str) {
+  str = utf8.encode(str);
+  var hex = ''; // remove \u0000 padding from either side
+
+  str = str.replace(/^(?:\u0000)*/, '');
+  str = str.split('').reverse().join('');
+  str = str.replace(/^(?:\u0000)*/, '');
+  str = str.split('').reverse().join('');
+
+  for (var i = 0; i < str.length; i++) {
+    var code = str.charCodeAt(i); // if (code !== 0) {
+
+    var n = code.toString(16);
+    hex += n.length < 2 ? '0' + n : n; // }
+  }
+
+  return '0x' + hex;
+};
+var toBN = function toBN(number) {
+  try {
+    return numberToBN(number);
+  } catch (e) {
+    throw new Error(e + ' Given value: "' + number + '"');
+  }
+};
+var numberToHex = function numberToHex(value) {
+  if (value === null || value === undefined) {
+    return value;
+  }
+
+  if (!isFinite(value) && !isHexStrict(value)) {
+    throw new Error('Given input "' + value + '" is not a number.');
+  }
+
+  var number = toBN(value);
+  var result = number.toString(16);
+  return number.lt(new BN$1(0)) ? '-0x' + result.substr(1) : '0x' + result;
+};
+var toHex = function toHex(value, returnType) {
+  if (returnType === void 0) {
+    returnType = false;
+  }
+
+  /*jshint maxcomplexity: false */
+  if (isAddress(value)) {
+    return returnType ? 'address' : '0x' + value.toLowerCase().replace(/^0x/i, '');
+  }
+
+  if (isBoolean(value)) {
+    return returnType ? 'bool' : value ? '0x01' : '0x00';
+  }
+
+  if (isObject(value) && !isBigNumber(value) && !isBN(value)) {
+    return returnType ? 'string' : utf8ToHex(JSON.stringify(value));
+  } // if its a negative number, pass it through numberToHex
+
+
+  if (isString(value)) {
+    if (value.indexOf('-0x') === 0 || value.indexOf('-0X') === 0) {
+      return returnType ? 'int256' : numberToHex(value);
+    } else if (value.indexOf('0x') === 0 || value.indexOf('0X') === 0) {
+      return returnType ? 'bytes' : value;
+    }
+  }
+
+  return returnType ? value < 0 ? 'int256' : 'uint256' : numberToHex(value);
+};
+var removeTrailingZeros = function removeTrailingZeros(value) {
+  var regEx1 = /^[0]+/;
+  var regEx2 = /[0]+$/;
+  var regEx3 = /[.]$/;
+  var valueInString = value.toString();
+  var after = valueInString.replace(regEx1, ''); // Remove leading 0's
+
+  if (after.indexOf('.') > -1) {
+    after = after.replace(regEx2, ''); // Remove trailing 0's
+  }
+
+  after = after.replace(regEx3, ''); // Remove trailing decimal
+
+  if (after.indexOf('.') === 0) {
+    after = '0' + after;
+  }
+
+  return after ? after : 0;
+};
+var numberToString = function numberToString(arg) {
+  if (typeof arg === 'string') {
+    if (!arg.match(/^-?[0-9.]+$/)) {
+      throw new Error("while converting number to string, invalid number value '" + arg + "', should be a number matching (^-?[0-9.]+).");
+    }
+
+    return arg;
+  } else if (typeof arg === 'number') {
+    return String(arg);
+  } else if (typeof arg === 'object' && arg.toString && (arg.toTwos || arg.dividedToIntegerBy)) {
+    if (arg.toPrecision) {
+      return String(arg.toPrecision());
+    } else {
+      return arg.toString(10);
+    }
+  }
+
+  throw new Error("while converting number to string, invalid number value '" + arg + "' type " + typeof arg + ".");
+};
+
+var secp256k1 = /*#__PURE__*/new elliptic.ec('secp256k1');
 var toChecksum = function toChecksum(address) {
-  var addressHash = keccak256(address.slice(2));
+  if (typeof address === 'undefined') return '';
+
+  if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
+    throw new Error('Given address "' + address + '" is not a valid Kardiachain address.');
+  }
+
+  address = address.toLowerCase().replace(/^0x/i, '');
+  var addressHash = keccak256(address).replace(/^0x/i, '');
   var checksumAddress = '0x';
 
-  for (var i = 0; i < 40; i++) {
-    checksumAddress += parseInt(addressHash[i + 2], 16) > 7 ? address[i + 2].toUpperCase() : address[i + 2];
+  for (var i = 0; i < address.length; i++) {
+    checksumAddress += parseInt(addressHash[i], 16) > 7 ? address[i].toUpperCase() : address[i];
   }
 
   return checksumAddress;
 };
+var checkAddressChecksum = function checkAddressChecksum(address) {
+  try {
+    // Check each case
+    address = address.replace(/^0x/i, '');
+    var sha3Result = sha3(address.toLowerCase());
+    if (sha3Result === null) return false;
+    var addressHash = sha3Result.replace(/^0x/i, '');
 
+    for (var i = 0; i < 40; i++) {
+      // the nth letter should be uppercase if the nth digit of casemap is 1
+      if (parseInt(addressHash[i], 16) > 7 && address[i].toUpperCase() !== address[i] || parseInt(addressHash[i], 16) <= 7 && address[i].toLowerCase() !== address[i]) {
+        return false;
+      }
+    }
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+var isAddress = function isAddress(address) {
+  // check if it has the basic requirements of an address
+  if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
+    return false; // If it's ALL lowercase or ALL upppercase
+  } else if (/^(0x|0X)?[0-9a-f]{40}$/.test(address) || /^(0x|0X)?[0-9A-F]{40}$/.test(address)) {
+    return true; // Otherwise check each case
+  } else {
+    return checkAddressChecksum(address);
+  }
+};
 var fromPrivate = function fromPrivate(privateKey) {
   var buffer = Buffer.from(privateKey.slice(2), 'hex');
   var ecKey = secp256k1.keyFromPrivate(buffer);
@@ -2121,6 +1769,523 @@ var makeEven = function makeEven(hex) {
   return hex;
 };
 var sign = /*#__PURE__*/makeSigner(27);
+
+var KardiaAccount = /*#__PURE__*/function () {
+  function KardiaAccount(_ref) {
+    var client = _ref.client;
+    this._rpcClient = client;
+  }
+
+  var _proto = KardiaAccount.prototype;
+
+  _proto.getBalance = /*#__PURE__*/function () {
+    var _getBalance = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee(address, options) {
+      var params;
+      return runtime_1.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              params = [address];
+
+              if (options && options.blockHash) {
+                params.push(options.blockHash);
+              } else if (options && options.blockHeight) {
+                params.push(options.blockHeight);
+              } else {
+                params.push('latest');
+              }
+
+              _context.next = 4;
+              return this._rpcClient.request({
+                method: 'account_balance',
+                params: params
+              });
+
+            case 4:
+              return _context.abrupt("return", _context.sent);
+
+            case 5:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, this);
+    }));
+
+    function getBalance(_x, _x2) {
+      return _getBalance.apply(this, arguments);
+    }
+
+    return getBalance;
+  }();
+
+  _proto.getNonce = /*#__PURE__*/function () {
+    var _getNonce = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2(address) {
+      return runtime_1.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.next = 2;
+              return this._rpcClient.request({
+                method: 'account_nonce',
+                params: [address]
+              });
+
+            case 2:
+              return _context2.abrupt("return", _context2.sent);
+
+            case 3:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, this);
+    }));
+
+    function getNonce(_x3) {
+      return _getNonce.apply(this, arguments);
+    }
+
+    return getNonce;
+  }() // Static utility method
+  ;
+
+  KardiaAccount.getWalletFromPK = function getWalletFromPK(privateKey) {
+    var privateKeyBuffer = toBuffer$1(privateKey);
+    var wallet = EtherWallet.fromPrivateKey(privateKeyBuffer);
+    var addressStr = wallet.getChecksumAddressString();
+    return {
+      address: addressStr,
+      privateKey: privateKey,
+      balance: 0
+    };
+  };
+
+  KardiaAccount.getWalletFromMnemonic = /*#__PURE__*/function () {
+    var _getWalletFromMnemonic = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3(mnemonic) {
+      var wallet, privateKey, addressStr;
+      return runtime_1.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              wallet = ethers.Wallet.fromMnemonic(mnemonic.trim());
+              privateKey = wallet.privateKey;
+              addressStr = wallet.address;
+              return _context3.abrupt("return", {
+                address: addressStr,
+                privateKey: privateKey,
+                balance: 0
+              });
+
+            case 4:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    }));
+
+    function getWalletFromMnemonic(_x4) {
+      return _getWalletFromMnemonic.apply(this, arguments);
+    }
+
+    return getWalletFromMnemonic;
+  }();
+
+  KardiaAccount.isAddress = function isAddress$1(address) {
+    return isAddress(address);
+  };
+
+  KardiaAccount.generateWallet = function generateWallet() {
+    var wallet = ethers.Wallet.createRandom();
+    var privateKey = wallet.privateKey;
+    var addressStr = wallet.address;
+    return {
+      address: addressStr,
+      privateKey: privateKey,
+      balance: 0
+    };
+  };
+
+  return KardiaAccount;
+}();
+
+var zero = /*#__PURE__*/new BN$1(0);
+var negative1 = /*#__PURE__*/new BN$1(-1);
+var unitMap = {
+  hydro: '1',
+  oxy: '1000000000',
+  kai: '1000000000000000000'
+};
+
+var getValueOfUnit = function getValueOfUnit(unitInput) {
+  var unit = unitInput ? unitInput.toLowerCase() : 'kai';
+  var unitValue = unitMap[unit];
+
+  if (typeof unitValue !== 'string') {
+    throw new Error("The unit provided " + unitInput + " doesn't exists, please use the one of the following units " + JSON.stringify(unitMap, null, 2));
+  }
+
+  return new BN$1(unitValue, 10);
+};
+/**
+ * Using for convert from hydro unit to OXY or KAI
+ * @return value type: string
+ *
+ * @param input
+ * @param unit
+ *
+ */
+
+
+var fromHydro = function fromHydro(input, unit) {
+  try {
+    var oxy = numberToBN(input);
+    var negative = oxy.lt(zero);
+    var base = getValueOfUnit(unit);
+    var baseLength = unitMap[unit].length - 1 || 1;
+
+    if (negative) {
+      oxy = oxy.mul(negative1);
+    }
+
+    var fraction = oxy.mod(base).toString(10);
+
+    while (fraction.length < baseLength) {
+      fraction = "0" + fraction;
+    }
+
+    var whole = oxy.div(base).toString(10);
+    var value = "" + whole + (fraction === '0' ? '' : "." + fraction);
+
+    if (negative) {
+      value = "-" + value;
+    }
+
+    return removeTrailingZeros(value);
+  } catch (error) {
+    throw new Error("While converting number " + input + " to " + unit + ", " + error.message);
+  }
+};
+/**
+ * Using for convert OXY or KAI unit to Hydro unit
+ * @return value type: string
+ *
+ * @param input
+ * @param unit
+ */
+
+var toHydro = function toHydro(input, unit) {
+  try {
+    var kai = numberToString(input);
+    var base = getValueOfUnit(unit);
+    var baseLength = unitMap[unit].length - 1 || 1; // Is it negative?
+
+    var negative = kai.substring(0, 1) === '-';
+
+    if (negative) {
+      kai = kai.substring(1);
+    }
+
+    if (kai === '.') {
+      throw new Error("While converting number " + input + " to hydro, invalid value");
+    } // Split it into a whole and fractional part
+
+
+    var comps = kai.split('.');
+
+    if (comps.length > 2) {
+      throw new Error("While converting number " + input + " to hydro,  too many decimal points");
+    }
+
+    var whole = comps[0],
+        fraction = comps[1];
+
+    if (!whole) {
+      whole = '0';
+    }
+
+    if (!fraction) {
+      fraction = '0';
+    }
+
+    if (fraction.length > baseLength) {
+      throw new Error("While converting number " + input + " to hydro, too many decimal places");
+    }
+
+    while (fraction.length < baseLength) {
+      fraction += '0';
+    }
+
+    whole = new BN$1(whole);
+    fraction = new BN$1(fraction);
+    var hydro = whole.mul(base).add(fraction);
+
+    if (negative) {
+      hydro = hydro.mul(negative1);
+    }
+
+    return hydro.toString(10);
+  } catch (error) {
+    throw new Error("While converting number " + input + " to hydro, " + error.message);
+  }
+};
+
+var KAIChain = /*#__PURE__*/function () {
+  function KAIChain(_ref) {
+    var client = _ref.client;
+    this._rpcClient = client;
+  }
+
+  var _proto = KAIChain.prototype;
+
+  _proto.getBlockNumber = /*#__PURE__*/function () {
+    var _getBlockNumber = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee() {
+      return runtime_1.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return this._rpcClient.request({
+                method: 'kai_blockNumber',
+                params: []
+              });
+
+            case 2:
+              return _context.abrupt("return", _context.sent);
+
+            case 3:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, this);
+    }));
+
+    function getBlockNumber() {
+      return _getBlockNumber.apply(this, arguments);
+    }
+
+    return getBlockNumber;
+  }();
+
+  _proto.isValidator = /*#__PURE__*/function () {
+    var _isValidator = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2(address) {
+      return runtime_1.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              _context2.next = 3;
+              return this._rpcClient.request({
+                method: 'kai_validator',
+                params: [address, false]
+              });
+
+            case 3:
+              return _context2.abrupt("return", true);
+
+            case 6:
+              _context2.prev = 6;
+              _context2.t0 = _context2["catch"](0);
+              return _context2.abrupt("return", false);
+
+            case 9:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, this, [[0, 6]]);
+    }));
+
+    function isValidator(_x) {
+      return _isValidator.apply(this, arguments);
+    }
+
+    return isValidator;
+  }();
+
+  _proto.getValidators = /*#__PURE__*/function () {
+    var _getValidators = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3(withDelegators) {
+      return runtime_1.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              if (withDelegators === void 0) {
+                withDelegators = false;
+              }
+
+              _context3.next = 3;
+              return this._rpcClient.request({
+                method: 'kai_validators',
+                params: [withDelegators]
+              });
+
+            case 3:
+              return _context3.abrupt("return", _context3.sent);
+
+            case 4:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, this);
+    }));
+
+    function getValidators(_x2) {
+      return _getValidators.apply(this, arguments);
+    }
+
+    return getValidators;
+  }();
+
+  _proto.getBlockByBlockNumber = /*#__PURE__*/function () {
+    var _getBlockByBlockNumber = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(blockNumber) {
+      return runtime_1.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              if (!(blockNumber < 0)) {
+                _context4.next = 2;
+                break;
+              }
+
+              throw new Error('Invalid block number');
+
+            case 2:
+              _context4.next = 4;
+              return this._rpcClient.request({
+                method: 'kai_getBlockByNumber',
+                params: [blockNumber]
+              });
+
+            case 4:
+              return _context4.abrupt("return", _context4.sent);
+
+            case 5:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, this);
+    }));
+
+    function getBlockByBlockNumber(_x3) {
+      return _getBlockByBlockNumber.apply(this, arguments);
+    }
+
+    return getBlockByBlockNumber;
+  }();
+
+  _proto.getBlockByHash = /*#__PURE__*/function () {
+    var _getBlockByHash = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(blockHash) {
+      return runtime_1.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              _context5.next = 2;
+              return this._rpcClient.request({
+                method: 'kai_getBlockByHash',
+                params: [blockHash]
+              });
+
+            case 2:
+              return _context5.abrupt("return", _context5.sent);
+
+            case 3:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5, this);
+    }));
+
+    function getBlockByHash(_x4) {
+      return _getBlockByHash.apply(this, arguments);
+    }
+
+    return getBlockByHash;
+  }();
+
+  _proto.getBlockHeaderByBlockNumber = /*#__PURE__*/function () {
+    var _getBlockHeaderByBlockNumber = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee6(blockNumber) {
+      return runtime_1.wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              if (!(blockNumber < 0)) {
+                _context6.next = 2;
+                break;
+              }
+
+              throw new Error('Invalid block number');
+
+            case 2:
+              _context6.next = 4;
+              return this._rpcClient.request({
+                method: 'kai_getBlockHeaderByNumber',
+                params: [blockNumber]
+              });
+
+            case 4:
+              return _context6.abrupt("return", _context6.sent);
+
+            case 5:
+            case "end":
+              return _context6.stop();
+          }
+        }
+      }, _callee6, this);
+    }));
+
+    function getBlockHeaderByBlockNumber(_x5) {
+      return _getBlockHeaderByBlockNumber.apply(this, arguments);
+    }
+
+    return getBlockHeaderByBlockNumber;
+  }();
+
+  _proto.getBlockHeaderByHash = /*#__PURE__*/function () {
+    var _getBlockHeaderByHash = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(blockHash) {
+      return runtime_1.wrap(function _callee7$(_context7) {
+        while (1) {
+          switch (_context7.prev = _context7.next) {
+            case 0:
+              _context7.next = 2;
+              return this._rpcClient.request({
+                method: 'kai_getBlockHeaderByHash',
+                params: [blockHash]
+              });
+
+            case 2:
+              return _context7.abrupt("return", _context7.sent);
+
+            case 3:
+            case "end":
+              return _context7.stop();
+          }
+        }
+      }, _callee7, this);
+    }));
+
+    function getBlockHeaderByHash(_x6) {
+      return _getBlockHeaderByHash.apply(this, arguments);
+    }
+
+    return getBlockHeaderByHash;
+  }() // Static utility method
+  ;
+
+  KAIChain.KAIFromHydro = function KAIFromHydro(hydroValue) {
+    return fromHydro(hydroValue, 'kai');
+  };
+
+  KAIChain.HydroFromKAI = function HydroFromKAI(kaiValue) {
+    return toHydro(kaiValue, 'kai');
+  };
+
+  return KAIChain;
+}();
 
 // The RLP format
 // Serialization and deserialization for the BytesTree type, under the following grammar:
@@ -2205,6 +2370,7 @@ var sleep = function sleep(ms) {
 };
 
 var WAIT_TIMEOUT = 60000;
+var DEFAULT_GAS_PRICE = 1000000000;
 
 var KardiaTransaction = /*#__PURE__*/function () {
   function KardiaTransaction(_ref) {
@@ -2401,23 +2567,36 @@ var KardiaTransaction = /*#__PURE__*/function () {
         _ref2$data = _ref2.data,
         data = _ref2$data === void 0 ? '0x' : _ref2$data;
 
-    var _gasLimit = gas || gasLimit;
+    var _gasLimit = gas === '0xff' ? gasLimit : gas;
 
-    var _value = amount || value;
+    var _value = amount === '0x0' ? value : amount;
+
+    var _receiver = receiver === '0x' ? to : receiver;
 
     return {
       nonce: isHexStrict(nonce) ? nonce : toHex(nonce),
-      to: receiver || to,
+      to: _receiver,
       gasPrice: isHexStrict(gasPrice) ? gasPrice : toHex(gasPrice),
       gas: isHexStrict(_gasLimit) ? _gasLimit : toHex(_gasLimit),
       value: isHexStrict(_value) ? _value : toHex(_value),
       data: '0x' + data.toLowerCase().replace(/^0x/i, '')
     };
-  };
+  }
+  /**
+   *
+   * @param data transaction params
+   * @param privateKey Private key used to sign transaction
+   * @param waitUntilMined wait for transaction to complete or not
+   * @param waitTimeOut Time (in milliseconds) to wait for transaction to complete
+   */
+  ;
 
-  _proto.sendTransaction = /*#__PURE__*/function () {
-    var _sendTransaction = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(data, privateKey, waitUntilMined) {
-      var generatedTx, signedTx, txHash, breakTimeout, receipt;
+  _proto.sendTransaction =
+  /*#__PURE__*/
+  function () {
+    var _sendTransaction = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(data, privateKey, waitUntilMined, waitTimeOut) {
+      var estimatedGas, generatedTx, signedTx, txHash, _waitTimeOut, breakTimeout, receipt;
+
       return runtime_1.wrap(function _callee5$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
@@ -2426,89 +2605,145 @@ var KardiaTransaction = /*#__PURE__*/function () {
                 waitUntilMined = false;
               }
 
-              _context5.next = 3;
+              if (waitTimeOut === void 0) {
+                waitTimeOut = 0;
+              }
+
+              if (data.gas) {
+                _context5.next = 7;
+                break;
+              }
+
+              _context5.next = 5;
+              return this.estimateGas(data, data.data);
+
+            case 5:
+              estimatedGas = _context5.sent;
+              data.gas = estimatedGas * 10;
+
+            case 7:
+              _context5.next = 9;
               return this.generateTransaction(data);
 
-            case 3:
+            case 9:
               generatedTx = _context5.sent;
-              _context5.next = 6;
+              _context5.next = 12;
               return this.signTransaction(generatedTx, privateKey);
 
-            case 6:
+            case 12:
               signedTx = _context5.sent;
-              _context5.next = 9;
+              _context5.next = 15;
               return this._rpcClient.request({
                 method: 'tx_sendRawTransaction',
                 params: [signedTx.rawTransaction]
               });
 
-            case 9:
+            case 15:
               txHash = _context5.sent;
 
               if (waitUntilMined) {
-                _context5.next = 12;
+                _context5.next = 18;
                 break;
               }
 
               return _context5.abrupt("return", txHash);
 
-            case 12:
-              breakTimeout = Date.now() + WAIT_TIMEOUT;
+            case 18:
+              _waitTimeOut = waitTimeOut || WAIT_TIMEOUT;
+              breakTimeout = Date.now() + _waitTimeOut;
 
-            case 13:
+            case 20:
               if (!(Date.now() < breakTimeout)) {
-                _context5.next = 32;
+                _context5.next = 39;
                 break;
               }
 
-              _context5.prev = 14;
-              _context5.next = 17;
+              _context5.prev = 21;
+              _context5.next = 24;
               return this.getTransactionReceipt(txHash);
 
-            case 17:
+            case 24:
               receipt = _context5.sent;
 
               if (!receipt) {
-                _context5.next = 22;
+                _context5.next = 29;
                 break;
               }
 
               return _context5.abrupt("return", receipt);
 
-            case 22:
-              _context5.next = 24;
+            case 29:
+              _context5.next = 31;
               return sleep(1000);
 
-            case 24:
-              _context5.next = 30;
+            case 31:
+              _context5.next = 37;
               break;
-
-            case 26:
-              _context5.prev = 26;
-              _context5.t0 = _context5["catch"](14);
-              _context5.next = 30;
-              return sleep(1000);
-
-            case 30:
-              _context5.next = 13;
-              break;
-
-            case 32:
-              throw new Error("Timeout: cannot get receipt after " + WAIT_TIMEOUT + "ms");
 
             case 33:
+              _context5.prev = 33;
+              _context5.t0 = _context5["catch"](21);
+              _context5.next = 37;
+              return sleep(1000);
+
+            case 37:
+              _context5.next = 20;
+              break;
+
+            case 39:
+              throw new Error("Timeout: cannot get receipt after " + WAIT_TIMEOUT + "ms");
+
+            case 40:
             case "end":
               return _context5.stop();
           }
         }
-      }, _callee5, this, [[14, 26]]);
+      }, _callee5, this, [[21, 33]]);
     }));
 
-    function sendTransaction(_x5, _x6, _x7) {
+    function sendTransaction(_x5, _x6, _x7, _x8) {
       return _sendTransaction.apply(this, arguments);
     }
 
     return sendTransaction;
+  }();
+
+  _proto.estimateGas = /*#__PURE__*/function () {
+    var _estimateGas = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee6(txPayload, data) {
+      var txObject;
+      return runtime_1.wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              txObject = {
+                from: txPayload.from || '0x',
+                to: txPayload.to || '0x',
+                data: data,
+                value: txPayload.value || 0,
+                gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE
+              };
+              _context6.next = 3;
+              return this._rpcClient.request({
+                method: 'kai_estimateGas',
+                params: [txObject, "latest"]
+              });
+
+            case 3:
+              return _context6.abrupt("return", _context6.sent);
+
+            case 4:
+            case "end":
+              return _context6.stop();
+          }
+        }
+      }, _callee6, this);
+    }));
+
+    function estimateGas(_x9, _x10) {
+      return _estimateGas.apply(this, arguments);
+    }
+
+    return estimateGas;
   }();
 
   return KardiaTransaction;
@@ -2906,7 +3141,7 @@ var findFunctionFromAbi = function findFunctionFromAbi(abi, type, name) {
 };
 
 var DEFAULT_GAS = 900000;
-var DEFAULT_GAS_PRICE = 1;
+var DEFAULT_GAS_PRICE$1 = 1000000000;
 
 var KardiaContract = /*#__PURE__*/function () {
   function KardiaContract(_ref) {
@@ -2924,6 +3159,9 @@ var KardiaContract = /*#__PURE__*/function () {
       throw new Error('Either [client] or [provider] must be provided');
     }
 
+    this.txModule = new KardiaTransaction({
+      client: this._rpcClient
+    });
     this.bytecodes = bytecodes || '';
     if (abi && !Array.isArray(abi)) throw new Error('Invalid [abi]');
     this.abi = abi || [];
@@ -2945,45 +3183,6 @@ var KardiaContract = /*#__PURE__*/function () {
       abi: this.abi
     };
   };
-
-  _proto.estimateGas = /*#__PURE__*/function () {
-    var _estimateGas = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee(txPayload, data) {
-      var txObject;
-      return runtime_1.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              txObject = {
-                from: txPayload.from || '0x',
-                to: txPayload.to || '0x',
-                data: data,
-                value: txPayload.value || '0x',
-                gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE,
-                gas: txPayload.gas || DEFAULT_GAS
-              };
-              _context.next = 3;
-              return this._rpcClient.request({
-                method: 'kai_estimateGas',
-                params: [txObject]
-              });
-
-            case 3:
-              return _context.abrupt("return", _context.sent);
-
-            case 4:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee, this);
-    }));
-
-    function estimateGas(_x, _x2) {
-      return _estimateGas.apply(this, arguments);
-    }
-
-    return estimateGas;
-  }();
 
   _proto.deploy = function deploy(_ref2) {
     var _this = this;
@@ -3007,42 +3206,50 @@ var KardiaContract = /*#__PURE__*/function () {
       txData: function txData() {
         return data;
       },
+      getDefaultTxPayload: function getDefaultTxPayload() {
+        return {
+          amount: 0,
+          data: data,
+          gasPrice: DEFAULT_GAS_PRICE$1,
+          gas: DEFAULT_GAS
+        };
+      },
       estimateGas: function () {
-        var _estimateGas2 = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2(txPayload) {
-          return runtime_1.wrap(function _callee2$(_context2) {
+        var _estimateGas = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee(txPayload) {
+          return runtime_1.wrap(function _callee$(_context) {
             while (1) {
-              switch (_context2.prev = _context2.next) {
+              switch (_context.prev = _context.next) {
                 case 0:
                   if (txPayload === void 0) {
                     txPayload = {};
                   }
 
-                  _context2.next = 3;
-                  return _this.estimateGas(txPayload, data);
+                  _context.next = 3;
+                  return _this.txModule.estimateGas(txPayload, data);
 
                 case 3:
-                  return _context2.abrupt("return", _context2.sent);
+                  return _context.abrupt("return", _context.sent);
 
                 case 4:
                 case "end":
-                  return _context2.stop();
+                  return _context.stop();
               }
             }
-          }, _callee2);
+          }, _callee);
         }));
 
-        function estimateGas(_x3) {
-          return _estimateGas2.apply(this, arguments);
+        function estimateGas(_x) {
+          return _estimateGas.apply(this, arguments);
         }
 
         return estimateGas;
       }(),
       send: function () {
-        var _send = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3(privateKey, txPayload) {
+        var _send = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2(privateKey, txPayload) {
           var senderAccount, account, accountNonce, transaction, result;
-          return runtime_1.wrap(function _callee3$(_context3) {
+          return runtime_1.wrap(function _callee2$(_context2) {
             while (1) {
-              switch (_context3.prev = _context3.next) {
+              switch (_context2.prev = _context2.next) {
                 case 0:
                   if (txPayload === void 0) {
                     txPayload = {};
@@ -3052,37 +3259,37 @@ var KardiaContract = /*#__PURE__*/function () {
                   account = new KardiaAccount({
                     client: _this._rpcClient
                   });
-                  _context3.next = 5;
+                  _context2.next = 5;
                   return account.getNonce(senderAccount.address);
 
                 case 5:
-                  accountNonce = _context3.sent;
+                  accountNonce = _context2.sent;
                   transaction = new KardiaTransaction({
                     client: _this._rpcClient
                   });
-                  _context3.next = 9;
+                  _context2.next = 9;
                   return transaction.sendTransaction({
                     receiver: '0x',
                     amount: txPayload.amount || 0,
                     nonce: txPayload.nonce || accountNonce,
-                    gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE,
+                    gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE$1,
                     gas: txPayload.gas || DEFAULT_GAS,
                     data: data
                   }, privateKey, true);
 
                 case 9:
-                  result = _context3.sent;
-                  return _context3.abrupt("return", result);
+                  result = _context2.sent;
+                  return _context2.abrupt("return", result);
 
                 case 11:
                 case "end":
-                  return _context3.stop();
+                  return _context2.stop();
               }
             }
-          }, _callee3);
+          }, _callee2);
         }));
 
-        function send(_x4, _x5) {
+        function send(_x2, _x3) {
           return _send.apply(this, arguments);
         }
 
@@ -3109,42 +3316,46 @@ var KardiaContract = /*#__PURE__*/function () {
       txData: function txData() {
         return data;
       },
+      getDefaultTxPayload: function getDefaultTxPayload() {
+        return {
+          amount: 0,
+          gasPrice: DEFAULT_GAS_PRICE$1,
+          gas: DEFAULT_GAS,
+          data: data
+        };
+      },
       estimateGas: function () {
-        var _estimateGas3 = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(txPayload) {
-          return runtime_1.wrap(function _callee4$(_context4) {
+        var _estimateGas2 = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3(txPayload) {
+          return runtime_1.wrap(function _callee3$(_context3) {
             while (1) {
-              switch (_context4.prev = _context4.next) {
+              switch (_context3.prev = _context3.next) {
                 case 0:
-                  if (txPayload === void 0) {
-                    txPayload = {};
-                  }
+                  _context3.next = 2;
+                  return _this2.txModule.estimateGas(txPayload, data);
 
-                  _context4.next = 3;
-                  return _this2.estimateGas(txPayload, data);
+                case 2:
+                  return _context3.abrupt("return", _context3.sent);
 
                 case 3:
-                  return _context4.abrupt("return", _context4.sent);
-
-                case 4:
                 case "end":
-                  return _context4.stop();
+                  return _context3.stop();
               }
             }
-          }, _callee4);
+          }, _callee3);
         }));
 
-        function estimateGas(_x6) {
-          return _estimateGas3.apply(this, arguments);
+        function estimateGas(_x4) {
+          return _estimateGas2.apply(this, arguments);
         }
 
         return estimateGas;
       }(),
       send: function () {
-        var _send2 = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(privateKey, contractAddress, txPayload) {
+        var _send2 = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(privateKey, contractAddress, txPayload) {
           var senderAccount, account, accountNonce, transaction, txResult, events, result;
-          return runtime_1.wrap(function _callee5$(_context5) {
+          return runtime_1.wrap(function _callee4$(_context4) {
             while (1) {
-              switch (_context5.prev = _context5.next) {
+              switch (_context4.prev = _context4.next) {
                 case 0:
                   if (txPayload === void 0) {
                     txPayload = {};
@@ -3154,54 +3365,54 @@ var KardiaContract = /*#__PURE__*/function () {
                   account = new KardiaAccount({
                     client: _this2._rpcClient
                   });
-                  _context5.next = 5;
+                  _context4.next = 5;
                   return account.getNonce(senderAccount.address);
 
                 case 5:
-                  accountNonce = _context5.sent;
+                  accountNonce = _context4.sent;
                   transaction = new KardiaTransaction({
                     client: _this2._rpcClient
                   });
-                  _context5.next = 9;
+                  _context4.next = 9;
                   return transaction.sendTransaction({
                     receiver: contractAddress,
                     amount: txPayload.amount || 0,
                     nonce: txPayload.nonce || accountNonce,
-                    gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE,
+                    gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE$1,
                     gas: txPayload.gas || DEFAULT_GAS,
                     data: data
                   }, privateKey, true);
 
                 case 9:
-                  txResult = _context5.sent;
+                  txResult = _context4.sent;
                   events = txResult.logs ? txResult.logs.map(function (item) {
                     return parseEvent(_this2.abi, item);
                   }) : [];
                   result = _extends({
                     events: events
                   }, txResult);
-                  return _context5.abrupt("return", result);
+                  return _context4.abrupt("return", result);
 
                 case 13:
                 case "end":
-                  return _context5.stop();
+                  return _context4.stop();
               }
             }
-          }, _callee5);
+          }, _callee4);
         }));
 
-        function send(_x7, _x8, _x9) {
+        function send(_x5, _x6, _x7) {
           return _send2.apply(this, arguments);
         }
 
         return send;
       }(),
       call: function () {
-        var _call = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee6(contractAddress, txPayload, blockHeight) {
+        var _call = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(contractAddress, txPayload, blockHeight) {
           var callObject, result;
-          return runtime_1.wrap(function _callee6$(_context6) {
+          return runtime_1.wrap(function _callee5$(_context5) {
             while (1) {
-              switch (_context6.prev = _context6.next) {
+              switch (_context5.prev = _context5.next) {
                 case 0:
                   if (txPayload === void 0) {
                     txPayload = {};
@@ -3216,29 +3427,29 @@ var KardiaContract = /*#__PURE__*/function () {
                     to: contractAddress,
                     data: data,
                     value: txPayload.amount || 0,
-                    gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE,
+                    gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE$1,
                     gas: txPayload.gas || DEFAULT_GAS
                   }; // const result = await api.callSmartContract(callObject, blockHeight);
 
-                  _context6.next = 5;
+                  _context5.next = 5;
                   return _this2._rpcClient.request({
                     method: 'kai_kardiaCall',
                     params: [callObject, blockHeight]
                   });
 
                 case 5:
-                  result = _context6.sent;
-                  return _context6.abrupt("return", parseOutput(functionFromAbi.outputs, result));
+                  result = _context5.sent;
+                  return _context5.abrupt("return", parseOutput(functionFromAbi.outputs, result));
 
                 case 7:
                 case "end":
-                  return _context6.stop();
+                  return _context5.stop();
               }
             }
-          }, _callee6);
+          }, _callee5);
         }));
 
-        function call(_x10, _x11, _x12) {
+        function call(_x8, _x9, _x10) {
           return _call.apply(this, arguments);
         }
 
@@ -3246,6 +3457,43 @@ var KardiaContract = /*#__PURE__*/function () {
       }()
     };
   };
+
+  _proto.parseEvent = /*#__PURE__*/function () {
+    var _parseEvent2 = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee6(txHash) {
+      var _this3 = this;
+
+      var transaction, tx;
+      return runtime_1.wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              // Get Tx receipt
+              transaction = new KardiaTransaction({
+                client: this._rpcClient
+              });
+              _context6.next = 3;
+              return transaction.getTransactionReceipt(txHash);
+
+            case 3:
+              tx = _context6.sent;
+              return _context6.abrupt("return", tx.logs ? tx.logs.map(function (item) {
+                return parseEvent(_this3.abi, item);
+              }) : []);
+
+            case 5:
+            case "end":
+              return _context6.stop();
+          }
+        }
+      }, _callee6, this);
+    }));
+
+    function parseEvent$1(_x11) {
+      return _parseEvent2.apply(this, arguments);
+    }
+
+    return parseEvent$1;
+  }();
 
   return KardiaContract;
 }();

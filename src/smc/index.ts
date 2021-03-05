@@ -31,7 +31,7 @@ class KardiaContract {
   private _rpcClient: Client;
   public bytecodes: string;
   public abi: any[];
-  private txModule: KardiaTransaction
+  private txModule: KardiaTransaction;
   constructor({ client, bytecodes, abi, provider }: KardiaContractProps) {
     if (client) {
       this._rpcClient = client;
@@ -42,7 +42,7 @@ class KardiaContract {
       throw new Error('Either [client] or [provider] must be provided');
     }
 
-    this.txModule = new KardiaTransaction({ client: this._rpcClient })
+    this.txModule = new KardiaTransaction({ client: this._rpcClient });
 
     this.bytecodes = bytecodes || '';
     if (abi && !Array.isArray(abi)) throw new Error('Invalid [abi]');
@@ -84,7 +84,7 @@ class KardiaContract {
           data,
           gasPrice: DEFAULT_GAS_PRICE,
           gas: DEFAULT_GAS,
-        }
+        };
       },
       estimateGas: async (txPayload: Record<string, any> = {}) => {
         return await this.txModule.estimateGas(txPayload, data);
@@ -126,14 +126,13 @@ class KardiaContract {
     const data = methodData(functionFromAbi, paramsDecorate);
     return {
       txData: () => data,
-      getDefaultTxPayload: (contractAddress: string) => {
+      getDefaultTxPayload: () => {
         return {
-          receiver: contractAddress,
           amount: 0,
           gasPrice: DEFAULT_GAS_PRICE,
           gas: DEFAULT_GAS,
           data,
-        }
+        };
       },
       estimateGas: async (txPayload: Record<string, any>) => {
         return await this.txModule.estimateGas(txPayload, data);
@@ -193,6 +192,16 @@ class KardiaContract {
         return parseOutput(functionFromAbi.outputs, result);
       },
     };
+  }
+
+  async parseEvent(txHash: string) {
+    // Get Tx receipt
+    const transaction = new KardiaTransaction({ client: this._rpcClient });
+    const tx = await transaction.getTransactionReceipt(txHash);
+    // Parse event
+    return tx.logs
+      ? tx.logs.map((item: any) => parseEvent(this.abi, item))
+      : [];
   }
 }
 

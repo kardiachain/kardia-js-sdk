@@ -2,7 +2,14 @@ import KardiaContract from '../../src/smc';
 // import { DEFAULT_GAS_PRICE } from '../../src/transaction/config';
 import { sleep } from '../../src/util/time';
 import { ENDPOINT, ENDPOINT_PUBLIC } from '../config';
-import { DEPLOY_ACCOUNT, SMC1, SMC2, SMC3 } from './config';
+import {
+  DEPLOY_ACCOUNT,
+  SMC1,
+  SMC2,
+  SMC3,
+  SMC4,
+  TX_TO_GET_EVENTS,
+} from './config';
 
 const endpoint = process.env.TEST_ENV === 'prod' ? ENDPOINT_PUBLIC : ENDPOINT;
 
@@ -25,7 +32,7 @@ describe('SMC module test', () => {
   it('should throw error when initialized with invalid ABI', () => {
     expect(() => {
       // @ts-ignore
-      new KardiaContract({ provider: endpoint, abi: 'abc'});
+      new KardiaContract({ provider: endpoint, abi: 'abc' });
     }).toThrowError('Invalid [abi]');
   });
 
@@ -47,6 +54,14 @@ describe('SMC module test', () => {
     expect(info).toBeTruthy();
     expect(info.abi).toBeTruthy();
     expect(info.byteCode).toBeTruthy();
+  });
+
+  it('should parse event successfully', async () => {
+    const txHashToGetEvent = TX_TO_GET_EVENTS;
+    myContract.updateAbi(SMC4.ABI);
+    const events = await myContract.parseEvent(txHashToGetEvent);
+    expect(Array.isArray(events)).toEqual(true);
+    expect(events.length).toEqual(1);
   });
 
   it('should deploy contract and interact successfully', async () => {
@@ -77,14 +92,26 @@ describe('SMC module test', () => {
       expect(estimatedGas).toBeTruthy();
 
       const smcData = await preDeploy.send(DEPLOY_ACCOUNT.privateKey, {
-        gas: estimatedGas * 10
+        gas: estimatedGas * 10,
       });
       expect(smcData).toBeTruthy();
 
-      const deployedContract = myContract.invokeContract(smc.FUNCTION_TO_TEST.name, smc.FUNCTION_TO_TEST.param);
+      const deployedContract = myContract.invokeContract(
+        smc.FUNCTION_TO_TEST.name,
+        smc.FUNCTION_TO_TEST.param
+      );
+
+      const defaultInvokePayload = deployedContract.getDefaultTxPayload();
+      const estimatedGasForInvoke = await deployedContract.estimateGas(
+        defaultInvokePayload
+      );
+      expect(estimatedGasForInvoke).toBeTruthy();
+
       const result = await deployedContract.call(
         smcData.contractAddress,
-        {},
+        {
+          gas: estimatedGasForInvoke * 10,
+        },
         'latest'
       );
 

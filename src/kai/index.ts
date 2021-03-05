@@ -23,7 +23,7 @@ class KAIChain {
         method: 'kai_validator',
         params: [address, false],
       });
-      return true; 
+      return true;
     } catch (error) {
       return false;
     }
@@ -73,11 +73,11 @@ class KAIChain {
   // Static utility method
 
   public static KAIFromHydro(hydroValue: any): number {
-    return fromHydro(hydroValue, 'kai')
+    return fromHydro(hydroValue, 'kai');
   }
 
   public static HydroFromKAI(kaiValue: any) {
-    return toHydro(kaiValue, 'kai')
+    return toHydro(kaiValue, 'kai');
   }
 }
 

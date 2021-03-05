@@ -1,5 +1,4 @@
 import { Client } from '@open-rpc/client-js';
-import EtherWallet from 'ethereumjs-wallet';
 interface KardiaAccountProps {
     client: Client;
 }
@@ -12,8 +11,17 @@ declare class KardiaAccount {
     constructor({ client }: KardiaAccountProps);
     getBalance(address: string, options?: BlockQuery): Promise<any>;
     getNonce(address: string): Promise<any>;
-    static getWalletFromPK(privateKey: string): EtherWallet;
+    static getWalletFromPK(privateKey: string): {
+        address: string;
+        privateKey: string;
+        balance: number;
+    };
     static getWalletFromMnemonic(mnemonic: string): Promise<Record<string, any> | boolean>;
     static isAddress(address: string): boolean;
+    static generateWallet(): {
+        address: string;
+        privateKey: string;
+        balance: number;
+    };
 }
 export default KardiaAccount;
