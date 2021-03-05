@@ -29,6 +29,10 @@ class KRC39 {
       this.address = address;
     }
   }
+
+  public getContractInstance() {
+    return this._smcInstance;
+  }
 }
 
 export default KRC39;
