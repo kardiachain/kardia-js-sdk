@@ -1,20 +1,14 @@
-'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
-
-var clientJs = require('@open-rpc/client-js');
-var EthUtil = require('ethereumjs-util');
-var EtherWallet = _interopDefault(require('ethereumjs-wallet'));
-var ethers = require('ethers');
-var elliptic = _interopDefault(require('elliptic'));
-var jsSha3 = require('js-sha3');
-var BN$1 = _interopDefault(require('bn.js'));
-var utf8 = _interopDefault(require('utf8'));
-var numberToBN = _interopDefault(require('number-to-bn'));
-var lodash = require('lodash');
-var abiJs = _interopDefault(require('ethereumjs-abi'));
+import { HTTPTransport, Client, RequestManager } from '@open-rpc/client-js';
+import { toBuffer as toBuffer$1 } from 'ethereumjs-util';
+import EtherWallet from 'ethereumjs-wallet';
+import { ethers } from 'ethers';
+import elliptic from 'elliptic';
+import { keccak256 as keccak256$1 } from 'js-sha3';
+import BN$1 from 'bn.js';
+import utf8 from 'utf8';
+import numberToBN from 'number-to-bn';
+import { isString, isNumber, isBoolean, isObject } from 'lodash-es';
+import abiJs from 'ethereumjs-abi';
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
   try {
@@ -1439,7 +1433,7 @@ var isHexString = function isHexString(value, length) {
   return true;
 };
 var isHexStrict = function isHexStrict(hex) {
-  return (lodash.isString(hex) || lodash.isNumber(hex)) && /^(-)?0x[0-9a-f]*$/i.test(hex);
+  return (isString(hex) || isNumber(hex)) && /^(-)?0x[0-9a-f]*$/i.test(hex);
 };
 var isHexPrefixed = function isHexPrefixed(str) {
   if (typeof str !== 'string') {
@@ -1529,7 +1523,7 @@ var sha3 = function sha3(value) {
     value = hexToBytes(value);
   }
 
-  var returnValue = jsSha3.keccak256(value); // jshint ignore:line
+  var returnValue = keccak256$1(value); // jshint ignore:line
 
   if (returnValue === SHA3_NULL_S) {
     return null;
@@ -1620,16 +1614,16 @@ var toHex = function toHex(value, returnType) {
     return returnType ? 'address' : '0x' + value.toLowerCase().replace(/^0x/i, '');
   }
 
-  if (lodash.isBoolean(value)) {
+  if (isBoolean(value)) {
     return returnType ? 'bool' : value ? '0x01' : '0x00';
   }
 
-  if (lodash.isObject(value) && !isBigNumber(value) && !isBN(value)) {
+  if (isObject(value) && !isBigNumber(value) && !isBN(value)) {
     return returnType ? 'string' : utf8ToHex(JSON.stringify(value));
   } // if its a negative number, pass it through numberToHex
 
 
-  if (lodash.isString(value)) {
+  if (isString(value)) {
     if (value.indexOf('-0x') === 0 || value.indexOf('-0X') === 0) {
       return returnType ? 'int256' : numberToHex(value);
     } else if (value.indexOf('0x') === 0 || value.indexOf('0X') === 0) {
@@ -1857,7 +1851,7 @@ var KardiaAccount = /*#__PURE__*/function () {
   ;
 
   KardiaAccount.getWalletFromPK = function getWalletFromPK(privateKey) {
-    var privateKeyBuffer = EthUtil.toBuffer(privateKey);
+    var privateKeyBuffer = toBuffer$1(privateKey);
     var wallet = EtherWallet.fromPrivateKey(privateKeyBuffer);
     var addressStr = wallet.getChecksumAddressString();
     return {
@@ -1874,7 +1868,7 @@ var KardiaAccount = /*#__PURE__*/function () {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              wallet = ethers.ethers.Wallet.fromMnemonic(mnemonic.trim());
+              wallet = ethers.Wallet.fromMnemonic(mnemonic.trim());
               privateKey = wallet.privateKey;
               addressStr = wallet.address;
               return _context3.abrupt("return", {
@@ -1903,7 +1897,7 @@ var KardiaAccount = /*#__PURE__*/function () {
   };
 
   KardiaAccount.generateWallet = function generateWallet() {
-    var wallet = ethers.ethers.Wallet.createRandom();
+    var wallet = ethers.Wallet.createRandom();
     var privateKey = wallet.privateKey;
     var addressStr = wallet.address;
     return {
@@ -2279,6 +2273,197 @@ var KAIChain = /*#__PURE__*/function () {
     }
 
     return getBlockHeaderByHash;
+  }();
+
+  _proto.newFilter = /*#__PURE__*/function () {
+    var _newFilter = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee8(fromBlock, toBlock, address, topics) {
+      return runtime_1.wrap(function _callee8$(_context8) {
+        while (1) {
+          switch (_context8.prev = _context8.next) {
+            case 0:
+              _context8.next = 2;
+              return this._rpcClient.request({
+                method: 'kai_newFilter',
+                params: [{
+                  fromBlock: fromBlock,
+                  toBlock: toBlock,
+                  address: address,
+                  topics: topics
+                }]
+              });
+
+            case 2:
+              return _context8.abrupt("return", _context8.sent);
+
+            case 3:
+            case "end":
+              return _context8.stop();
+          }
+        }
+      }, _callee8, this);
+    }));
+
+    function newFilter(_x7, _x8, _x9, _x10) {
+      return _newFilter.apply(this, arguments);
+    }
+
+    return newFilter;
+  }();
+
+  _proto.newBlockFilter = /*#__PURE__*/function () {
+    var _newBlockFilter = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee9() {
+      return runtime_1.wrap(function _callee9$(_context9) {
+        while (1) {
+          switch (_context9.prev = _context9.next) {
+            case 0:
+              _context9.next = 2;
+              return this._rpcClient.request({
+                method: 'kai_newBlockFilter',
+                params: []
+              });
+
+            case 2:
+              return _context9.abrupt("return", _context9.sent);
+
+            case 3:
+            case "end":
+              return _context9.stop();
+          }
+        }
+      }, _callee9, this);
+    }));
+
+    function newBlockFilter() {
+      return _newBlockFilter.apply(this, arguments);
+    }
+
+    return newBlockFilter;
+  }();
+
+  _proto.uninstallFilter = /*#__PURE__*/function () {
+    var _uninstallFilter = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee10(filterId) {
+      return runtime_1.wrap(function _callee10$(_context10) {
+        while (1) {
+          switch (_context10.prev = _context10.next) {
+            case 0:
+              _context10.next = 2;
+              return this._rpcClient.request({
+                method: 'kai_uninstallFilter',
+                params: [filterId]
+              });
+
+            case 2:
+              return _context10.abrupt("return", _context10.sent);
+
+            case 3:
+            case "end":
+              return _context10.stop();
+          }
+        }
+      }, _callee10, this);
+    }));
+
+    function uninstallFilter(_x11) {
+      return _uninstallFilter.apply(this, arguments);
+    }
+
+    return uninstallFilter;
+  }();
+
+  _proto.getFilterChanges = /*#__PURE__*/function () {
+    var _getFilterChanges = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee11(filterId) {
+      return runtime_1.wrap(function _callee11$(_context11) {
+        while (1) {
+          switch (_context11.prev = _context11.next) {
+            case 0:
+              _context11.next = 2;
+              return this._rpcClient.request({
+                method: 'kai_getFilterChanges',
+                params: [filterId]
+              });
+
+            case 2:
+              return _context11.abrupt("return", _context11.sent);
+
+            case 3:
+            case "end":
+              return _context11.stop();
+          }
+        }
+      }, _callee11, this);
+    }));
+
+    function getFilterChanges(_x12) {
+      return _getFilterChanges.apply(this, arguments);
+    }
+
+    return getFilterChanges;
+  }();
+
+  _proto.getFilterLogs = /*#__PURE__*/function () {
+    var _getFilterLogs = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee12(filterId) {
+      return runtime_1.wrap(function _callee12$(_context12) {
+        while (1) {
+          switch (_context12.prev = _context12.next) {
+            case 0:
+              _context12.next = 2;
+              return this._rpcClient.request({
+                method: 'kai_getFilterLogs',
+                params: [filterId]
+              });
+
+            case 2:
+              return _context12.abrupt("return", _context12.sent);
+
+            case 3:
+            case "end":
+              return _context12.stop();
+          }
+        }
+      }, _callee12, this);
+    }));
+
+    function getFilterLogs(_x13) {
+      return _getFilterLogs.apply(this, arguments);
+    }
+
+    return getFilterLogs;
+  }();
+
+  _proto.getLogs = /*#__PURE__*/function () {
+    var _getLogs = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee13(fromBlock, toBlock, address, topics, blockhash) {
+      return runtime_1.wrap(function _callee13$(_context13) {
+        while (1) {
+          switch (_context13.prev = _context13.next) {
+            case 0:
+              _context13.next = 2;
+              return this._rpcClient.request({
+                method: 'kai_getLogs',
+                params: [{
+                  fromBlock: fromBlock,
+                  toBlock: toBlock,
+                  address: address,
+                  topics: topics,
+                  blockhash: blockhash
+                }]
+              });
+
+            case 2:
+              return _context13.abrupt("return", _context13.sent);
+
+            case 3:
+            case "end":
+              return _context13.stop();
+          }
+        }
+      }, _callee13, this);
+    }));
+
+    function getLogs(_x14, _x15, _x16, _x17, _x18) {
+      return _getLogs.apply(this, arguments);
+    }
+
+    return getLogs;
   }() // Static utility method
   ;
 
@@ -2386,8 +2571,8 @@ var KardiaTransaction = /*#__PURE__*/function () {
     if (client) {
       this._rpcClient = client;
     } else if (provider) {
-      var transport = new clientJs.HTTPTransport(provider);
-      this._rpcClient = new clientJs.Client(new clientJs.RequestManager([transport]));
+      var transport = new HTTPTransport(provider);
+      this._rpcClient = new Client(new RequestManager([transport]));
     } else {
       throw new Error('Either [client] or [provider] must be provided');
     }
@@ -2731,7 +2916,7 @@ var KardiaTransaction = /*#__PURE__*/function () {
               _context6.next = 3;
               return this._rpcClient.request({
                 method: 'kai_estimateGas',
-                params: [txObject, "latest"]
+                params: [txObject, 'latest']
               });
 
             case 3:
@@ -3159,8 +3344,8 @@ var KardiaContract = /*#__PURE__*/function () {
     if (client) {
       this._rpcClient = client;
     } else if (provider) {
-      var transport = new clientJs.HTTPTransport(provider);
-      this._rpcClient = new clientJs.Client(new clientJs.RequestManager([transport]));
+      var transport = new HTTPTransport(provider);
+      this._rpcClient = new Client(new RequestManager([transport]));
     } else {
       throw new Error('Either [client] or [provider] must be provided');
     }
@@ -3507,8 +3692,8 @@ var KardiaContract = /*#__PURE__*/function () {
 var KardiaClient = function KardiaClient(_ref) {
   var endpoint = _ref.endpoint;
   // Init RPC client
-  var transport = new clientJs.HTTPTransport(endpoint);
-  this._rpcClient = new clientJs.Client(new clientJs.RequestManager([transport])); // Init sub module
+  var transport = new HTTPTransport(endpoint);
+  this._rpcClient = new Client(new RequestManager([transport])); // Init sub module
 
   this.account = new KardiaAccount({
     client: this._rpcClient
@@ -3524,8 +3709,6 @@ var KardiaClient = function KardiaClient(_ref) {
   });
 };
 
-exports.KAIChain = KAIChain;
-exports.KardiaAccount = KardiaAccount;
-exports.KardiaTransaction = KardiaTransaction;
-exports.default = KardiaClient;
-//# sourceMappingURL=kardia-dx.cjs.development.js.map
+export default KardiaClient;
+export { KAIChain, KardiaAccount, KardiaTransaction };
+//# sourceMappingURL=kardia-js-sdk.esm.js.map

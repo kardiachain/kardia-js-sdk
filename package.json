@@ -37,16 +37,16 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "kardia-dx",
+  "name": "kardia-js-sdk",
   "author": "phongnhat19",
-  "module": "dist/kardia-dx.esm.js",
+  "module": "dist/kardia-js-sdk.esm.js",
   "size-limit": [
     {
-      "path": "dist/kardia-dx.cjs.production.min.js",
+      "path": "dist/kardia-js-sdk.cjs.production.min.js",
       "limit": "10 KB"
     },
     {
-      "path": "dist/kardia-dx.esm.js",
+      "path": "dist/kardia-js-sdk.esm.js",
       "limit": "10 KB"
     }
   ],

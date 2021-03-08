@@ -46,13 +46,13 @@ Javascript library to interact with Kardia Chain.
 ### npm
 
 ```bash
-  npm install kardia-dx
+  npm install @kardiachain/kardia-js-sdk
 ```
 
 ### yarn
 
 ```bash
-  yarn add kardia-dx
+  yarn add @kardiachain/kardia-js-sdk
 ```
 
 ## Usage
@@ -60,7 +60,7 @@ Javascript library to interact with Kardia Chain.
 ### es2015/nodejs
 
 ```js
-var KardiaClient = require('kardia-dx');
+var KardiaClient = require('kardia-js-sdk').default;
 var kardiaClient = new KardiaClient('http://<host>:port');
 
 // transaction module
@@ -80,7 +80,7 @@ var contract = kardiaClient.contract;
 ### es6
 
 ```js
-import KardiaClient from 'kardia-dx';
+import KardiaClient from 'kardia-js-sdk';
 const kardiaClient = new KardiaClient({ endpoint: 'http://<host>:port' });
 
 // transaction module
@@ -102,7 +102,7 @@ const contract = kardiaClient.contract;
 ### Get account balance
 
 ```js
-import KardiaClient from 'kardia-dx';
+import KardiaClient from 'kardia-js-sdk';
 const kardiaClient = new KardiaClient({ endpoint: 'http://<host>:port' });
 
 const latestBalance = await kardiaClient.account.getBalance(ADDRESS);
@@ -116,7 +116,7 @@ const balanceAtHash = await kardiaClient.account.getBalance(ADDRESS, {blockHash:
 ### Create a transaction
 
 ```js
-import KardiaClient from 'kardia-dx';
+import KardiaClient from 'kardia-js-sdk';
 const kardiaClient = new KardiaClient({ endpoint: 'http://<host>:port' });
 
 const nonce = await kardiaClient.account.getNonce(ADDRESS);
