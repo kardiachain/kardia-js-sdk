@@ -38,10 +38,10 @@ declare class KardiaContract {
         getDefaultTxPayload: () => {
             amount: number;
             gasPrice: number;
-            gas: number;
             data: string;
         };
         estimateGas: (txPayload: Record<string, any>) => Promise<any>;
+        getTxObject: () => Promise<any>;
         send: (privateKey: string, contractAddress: string, txPayload?: Record<string, any>) => Promise<any>;
         call: (contractAddress: string, txPayload?: Record<string, any>, blockHeight?: any) => Promise<any>;
     };
