@@ -130,12 +130,25 @@ class KardiaContract {
         return {
           amount: 0,
           gasPrice: DEFAULT_GAS_PRICE,
-          gas: DEFAULT_GAS,
+          // gas: DEFAULT_GAS,
           data,
         };
       },
       estimateGas: async (txPayload: Record<string, any>) => {
         return await this.txModule.estimateGas(txPayload, data);
+      },
+      getTxObject: async () => {
+        const defaultPayload: any = {
+          amount: 0,
+          gasPrice: DEFAULT_GAS_PRICE,
+          data,
+        };
+        const estimatedGas = await this.txModule.estimateGas(
+          defaultPayload,
+          data
+        );
+        defaultPayload.gas = estimatedGas;
+        return defaultPayload;
       },
       send: async (
         privateKey: string,
@@ -173,7 +186,7 @@ class KardiaContract {
       call: async (
         contractAddress: string,
         txPayload: Record<string, any> = {},
-        blockHeight: any = 0
+        blockHeight: any = 'latest'
       ) => {
         const callObject = {
           from: txPayload.from || '0x',

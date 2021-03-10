@@ -71,11 +71,13 @@ describe('KAI module test', () => {
   });
 
   it('should get block header by number successfully', async () => {
+    const latestBlock = await kardiaClient.kaiChain.getBlockNumber();
     const blockHeader = await kardiaClient.kaiChain.getBlockHeaderByBlockNumber(
-      BLOCK_NUMBER
+      // BLOCK_NUMBER
+      latestBlock
     );
     expect(blockHeader).toBeTruthy();
-    expect(blockHeader.height).toEqual(BLOCK_NUMBER);
+    expect(blockHeader.height).toEqual(latestBlock);
 
     expect(async () => {
       await kardiaClient.kaiChain.getBlockHeaderByBlockNumber(-1);
@@ -83,11 +85,15 @@ describe('KAI module test', () => {
   });
 
   it('should get block header by hash successfully', async () => {
+    const latestBlock = await kardiaClient.kaiChain.getBlockNumber();
+    const block = await kardiaClient.kaiChain.getBlockByBlockNumber(
+      latestBlock
+    );
     const blockHeader = await kardiaClient.kaiChain.getBlockHeaderByHash(
-      BLOCK_HASH
+      block.hash
     );
     expect(blockHeader).toBeTruthy();
-    expect(blockHeader.hash).toEqual(BLOCK_HASH);
+    expect(blockHeader.hash).toEqual(block.hash);
   });
 
   // Utility test
