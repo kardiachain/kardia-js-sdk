@@ -40,6 +40,13 @@
   },
   "name": "kardia-js-sdk",
   "author": "phongnhat19",
+  "bugs": {
+    "url": "https://github.com/kardiachain/kardia-js-sdk/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kardiachain/kardia-js-sdk.git"
+  },
   "module": "dist/kardia-js-sdk.esm.js",
   "size-limit": [
     {
