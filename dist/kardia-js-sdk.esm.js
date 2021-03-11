@@ -9,6 +9,7 @@ import utf8 from 'utf8';
 import numberToBN from 'number-to-bn';
 import { isString, isNumber, isBoolean, isObject } from 'lodash-es';
 import abiJs from 'ethereumjs-abi';
+import { BigNumber } from 'bignumber.js';
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
   try {
@@ -3723,6 +3724,594 @@ var KardiaContract = /*#__PURE__*/function () {
   return KardiaContract;
 }();
 
+var krc20ABI = [{
+  inputs: [],
+  payable: false,
+  stateMutability: 'nonpayable',
+  type: 'constructor'
+}, {
+  anonymous: false,
+  inputs: [{
+    indexed: true,
+    internalType: 'address',
+    name: 'owner',
+    type: 'address'
+  }, {
+    indexed: true,
+    internalType: 'address',
+    name: 'spender',
+    type: 'address'
+  }, {
+    indexed: false,
+    internalType: 'uint256',
+    name: 'value',
+    type: 'uint256'
+  }],
+  name: 'Approval',
+  type: 'event'
+}, {
+  anonymous: false,
+  inputs: [{
+    indexed: true,
+    internalType: 'address',
+    name: 'from',
+    type: 'address'
+  }, {
+    indexed: true,
+    internalType: 'address',
+    name: 'to',
+    type: 'address'
+  }, {
+    indexed: false,
+    internalType: 'uint256',
+    name: 'value',
+    type: 'uint256'
+  }],
+  name: 'Transfer',
+  type: 'event'
+}, {
+  constant: true,
+  inputs: [{
+    internalType: 'address',
+    name: '',
+    type: 'address'
+  }, {
+    internalType: 'address',
+    name: '',
+    type: 'address'
+  }],
+  name: 'allowance',
+  outputs: [{
+    internalType: 'uint256',
+    name: '',
+    type: 'uint256'
+  }],
+  payable: false,
+  stateMutability: 'view',
+  type: 'function'
+}, {
+  constant: false,
+  inputs: [{
+    internalType: 'address',
+    name: 'spender',
+    type: 'address'
+  }, {
+    internalType: 'uint256',
+    name: 'value',
+    type: 'uint256'
+  }],
+  name: 'approve',
+  outputs: [{
+    internalType: 'bool',
+    name: '',
+    type: 'bool'
+  }],
+  payable: false,
+  stateMutability: 'nonpayable',
+  type: 'function'
+}, {
+  constant: true,
+  inputs: [{
+    internalType: 'address',
+    name: '',
+    type: 'address'
+  }],
+  name: 'balanceOf',
+  outputs: [{
+    internalType: 'uint256',
+    name: '',
+    type: 'uint256'
+  }],
+  payable: false,
+  stateMutability: 'view',
+  type: 'function'
+}, {
+  constant: false,
+  inputs: [{
+    internalType: 'address',
+    name: 'from',
+    type: 'address'
+  }, {
+    internalType: 'uint256',
+    name: 'value',
+    type: 'uint256'
+  }],
+  name: 'burn',
+  outputs: [{
+    internalType: 'bool',
+    name: '',
+    type: 'bool'
+  }],
+  payable: false,
+  stateMutability: 'nonpayable',
+  type: 'function'
+}, {
+  constant: true,
+  inputs: [],
+  name: 'decimals',
+  outputs: [{
+    internalType: 'uint8',
+    name: '',
+    type: 'uint8'
+  }],
+  payable: false,
+  stateMutability: 'view',
+  type: 'function'
+}, {
+  constant: false,
+  inputs: [{
+    internalType: 'address',
+    name: 'to',
+    type: 'address'
+  }, {
+    internalType: 'uint256',
+    name: 'value',
+    type: 'uint256'
+  }],
+  name: 'mint',
+  outputs: [{
+    internalType: 'bool',
+    name: '',
+    type: 'bool'
+  }],
+  payable: false,
+  stateMutability: 'nonpayable',
+  type: 'function'
+}, {
+  constant: true,
+  inputs: [],
+  name: 'name',
+  outputs: [{
+    internalType: 'string',
+    name: '',
+    type: 'string'
+  }],
+  payable: false,
+  stateMutability: 'view',
+  type: 'function'
+}, {
+  constant: true,
+  inputs: [{
+    internalType: 'address',
+    name: '',
+    type: 'address'
+  }],
+  name: 'nonces',
+  outputs: [{
+    internalType: 'uint256',
+    name: '',
+    type: 'uint256'
+  }],
+  payable: false,
+  stateMutability: 'view',
+  type: 'function'
+}, {
+  constant: true,
+  inputs: [],
+  name: 'symbol',
+  outputs: [{
+    internalType: 'string',
+    name: '',
+    type: 'string'
+  }],
+  payable: false,
+  stateMutability: 'view',
+  type: 'function'
+}, {
+  constant: true,
+  inputs: [],
+  name: 'totalSupply',
+  outputs: [{
+    internalType: 'uint256',
+    name: '',
+    type: 'uint256'
+  }],
+  payable: false,
+  stateMutability: 'view',
+  type: 'function'
+}, {
+  constant: false,
+  inputs: [{
+    internalType: 'address',
+    name: 'to',
+    type: 'address'
+  }, {
+    internalType: 'uint256',
+    name: 'value',
+    type: 'uint256'
+  }],
+  name: 'transfer',
+  outputs: [{
+    internalType: 'bool',
+    name: '',
+    type: 'bool'
+  }],
+  payable: false,
+  stateMutability: 'nonpayable',
+  type: 'function'
+}, {
+  constant: false,
+  inputs: [{
+    internalType: 'address',
+    name: 'from',
+    type: 'address'
+  }, {
+    internalType: 'address',
+    name: 'to',
+    type: 'address'
+  }, {
+    internalType: 'uint256',
+    name: 'value',
+    type: 'uint256'
+  }],
+  name: 'transferFrom',
+  outputs: [{
+    internalType: 'bool',
+    name: '',
+    type: 'bool'
+  }],
+  payable: false,
+  stateMutability: 'nonpayable',
+  type: 'function'
+}];
+
+var KRC20 = /*#__PURE__*/function () {
+  function KRC20(_ref) {
+    var client = _ref.client,
+        address = _ref.address,
+        name = _ref.name,
+        decimals = _ref.decimals,
+        symbol = _ref.symbol,
+        provider = _ref.provider;
+    this.address = '';
+    this.name = '';
+    this.decimals = 18;
+    this.symbol = '';
+
+    if (client) {
+      this._rpcClient = client;
+    } else if (provider) {
+      var transport = new HTTPTransport(provider);
+      this._rpcClient = new Client(new RequestManager([transport]));
+    } else {
+      throw new Error('Either [client] or [provider] must be provided');
+    }
+
+    this._smcInstance = new KardiaContract({
+      client: this._rpcClient
+    });
+
+    this._smcInstance.updateAbi(krc20ABI);
+
+    if (address) {
+      if (!checkAddressChecksum(address)) throw new Error('Invalid [address]');
+      this.address = address;
+    }
+
+    if (name) {
+      this.name = name;
+    }
+
+    if (symbol) {
+      this.symbol = symbol;
+    }
+
+    if (decimals) {
+      this.decimals = decimals;
+    }
+  }
+
+  var _proto = KRC20.prototype;
+
+  _proto.validateAddress = function validateAddress() {
+    if (!checkAddressChecksum(this.address)) throw new Error('Invalid [address]');
+  };
+
+  _proto.getContractInstance = function getContractInstance() {
+    return this._smcInstance;
+  };
+
+  _proto.getName = /*#__PURE__*/function () {
+    var _getName = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee(fetch) {
+      var name;
+      return runtime_1.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              if (fetch) {
+                _context.next = 2;
+                break;
+              }
+
+              return _context.abrupt("return", this.name);
+
+            case 2:
+              this.validateAddress();
+              _context.next = 5;
+              return this._smcInstance.invokeContract('name', []).call(this.address);
+
+            case 5:
+              name = _context.sent;
+
+              if (name) {
+                this.name = name;
+              }
+
+              return _context.abrupt("return", this.name);
+
+            case 8:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, this);
+    }));
+
+    function getName(_x) {
+      return _getName.apply(this, arguments);
+    }
+
+    return getName;
+  }();
+
+  _proto.getDecimals = /*#__PURE__*/function () {
+    var _getDecimals = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2(fetch) {
+      var decimals;
+      return runtime_1.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              if (fetch) {
+                _context2.next = 2;
+                break;
+              }
+
+              return _context2.abrupt("return", this.decimals);
+
+            case 2:
+              this.validateAddress();
+              _context2.next = 5;
+              return this._smcInstance.invokeContract('decimals', []).call(this.address);
+
+            case 5:
+              decimals = _context2.sent;
+
+              if (decimals) {
+                this.decimals = decimals;
+              }
+
+              return _context2.abrupt("return", this.decimals);
+
+            case 8:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, this);
+    }));
+
+    function getDecimals(_x2) {
+      return _getDecimals.apply(this, arguments);
+    }
+
+    return getDecimals;
+  }();
+
+  _proto.getSymbol = /*#__PURE__*/function () {
+    var _getSymbol = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3(fetch) {
+      var symbol;
+      return runtime_1.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              if (fetch) {
+                _context3.next = 2;
+                break;
+              }
+
+              return _context3.abrupt("return", this.symbol);
+
+            case 2:
+              this.validateAddress();
+              _context3.next = 5;
+              return this._smcInstance.invokeContract('symbol', []).call(this.address);
+
+            case 5:
+              symbol = _context3.sent;
+
+              if (symbol) {
+                this.symbol = symbol;
+              }
+
+              return _context3.abrupt("return", this.symbol);
+
+            case 8:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, this);
+    }));
+
+    function getSymbol(_x3) {
+      return _getSymbol.apply(this, arguments);
+    }
+
+    return getSymbol;
+  }();
+
+  _proto.getTotalSupply = /*#__PURE__*/function () {
+    var _getTotalSupply = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(format) {
+      var totalSupply;
+      return runtime_1.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              if (format === void 0) {
+                format = 'string';
+              }
+
+              this.validateAddress();
+              _context4.next = 4;
+              return this._smcInstance.invokeContract('totalSupply', []).call(this.address);
+
+            case 4:
+              totalSupply = _context4.sent;
+
+              if (!(format === 'BigNumber')) {
+                _context4.next = 7;
+                break;
+              }
+
+              return _context4.abrupt("return", new BigNumber(totalSupply));
+
+            case 7:
+              if (!(format === 'string')) {
+                _context4.next = 9;
+                break;
+              }
+
+              return _context4.abrupt("return", totalSupply.toLocaleString('fullwide', {
+                useGrouping: false
+              }));
+
+            case 9:
+              return _context4.abrupt("return", totalSupply);
+
+            case 10:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, this);
+    }));
+
+    function getTotalSupply(_x4) {
+      return _getTotalSupply.apply(this, arguments);
+    }
+
+    return getTotalSupply;
+  }();
+
+  _proto.getFromAddress = function getFromAddress(address) {
+    if (!checkAddressChecksum(address)) throw new Error('Invalid [address]');
+    this.address = address;
+    this.getName(true);
+    this.getDecimals(true);
+    this.getSymbol(true);
+  };
+
+  _proto.balanceOf = /*#__PURE__*/function () {
+    var _balanceOf = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(address) {
+      var balance;
+      return runtime_1.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              if (checkAddressChecksum(address)) {
+                _context5.next = 2;
+                break;
+              }
+
+              throw new Error('Invalid [address]');
+
+            case 2:
+              _context5.next = 4;
+              return this._smcInstance.invokeContract('balanceOf', [address]).call(this.address);
+
+            case 4:
+              balance = _context5.sent;
+              return _context5.abrupt("return", balance);
+
+            case 6:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5, this);
+    }));
+
+    function balanceOf(_x5) {
+      return _balanceOf.apply(this, arguments);
+    }
+
+    return balanceOf;
+  }();
+
+  _proto.transfer = /*#__PURE__*/function () {
+    var _transfer = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee6(privateKey, to, amount) {
+      var invocation, defaultPayload, estimatedGas;
+      return runtime_1.wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              this.validateAddress();
+
+              if (checkAddressChecksum(to)) {
+                _context6.next = 3;
+                break;
+              }
+
+              throw new Error('Invalid [to]');
+
+            case 3:
+              if (!(amount < 0)) {
+                _context6.next = 5;
+                break;
+              }
+
+              throw new Error('Invalid [amount]');
+
+            case 5:
+              invocation = this._smcInstance.invokeContract('transfer', [to, amount]);
+              defaultPayload = invocation.getDefaultTxPayload();
+              _context6.next = 9;
+              return invocation.estimateGas(defaultPayload);
+
+            case 9:
+              estimatedGas = _context6.sent;
+              return _context6.abrupt("return", invocation.send(privateKey, this.address, {
+                gas: estimatedGas * 2
+              }));
+
+            case 11:
+            case "end":
+              return _context6.stop();
+          }
+        }
+      }, _callee6, this);
+    }));
+
+    function transfer(_x6, _x7, _x8) {
+      return _transfer.apply(this, arguments);
+    }
+
+    return transfer;
+  }();
+
+  return KRC20;
+}();
+
 var KardiaClient = function KardiaClient(_ref) {
   var endpoint = _ref.endpoint;
   // Init RPC client
@@ -3741,8 +4330,11 @@ var KardiaClient = function KardiaClient(_ref) {
   this.contract = new KardiaContract({
     client: this._rpcClient
   });
+  this.krc20 = new KRC20({
+    client: this._rpcClient
+  });
 };
 
 export default KardiaClient;
-export { KAIChain, KardiaAccount, KardiaTransaction };
+export { KAIChain, KRC20, KardiaAccount, KardiaTransaction };
 //# sourceMappingURL=kardia-js-sdk.esm.js.map
