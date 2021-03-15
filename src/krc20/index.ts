@@ -163,7 +163,7 @@ class KRC20 {
   public async estimateGas(to: string, amount: number) {
     const invocation = this._smcInstance.invokeContract('transfer', [
       to,
-      amount,
+      toHydro(amount, 'kai'),
     ]);
 
     const defaultPayload = invocation.getDefaultTxPayload();
