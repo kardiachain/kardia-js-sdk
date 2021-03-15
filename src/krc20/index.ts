@@ -134,7 +134,12 @@ class KRC20 {
     return balance;
   }
 
-  public async transfer(privateKey: string, to: string, amount: number) {
+  public async transfer(
+    privateKey: string,
+    to: string,
+    amount: number,
+    transferPayload: Record<string, any> = {}
+  ) {
     this.validateAddress();
     if (!checkAddressChecksum(to)) throw new Error('Invalid [to]');
     if (amount < 0) throw new Error('Invalid [amount]');
@@ -143,10 +148,26 @@ class KRC20 {
       to,
       amount,
     ]);
+
+    if (!transferPayload.gas) {
+      const defaultPayload = invocation.getDefaultTxPayload();
+      const estimatedGas = await invocation.estimateGas(defaultPayload);
+
+      transferPayload.gas = estimatedGas * 2;
+    }
+
+    return invocation.send(privateKey, this.address, transferPayload);
+  }
+
+  public async estimateGas(to: string, amount: number) {
+    const invocation = this._smcInstance.invokeContract('transfer', [
+      to,
+      amount,
+    ]);
+
     const defaultPayload = invocation.getDefaultTxPayload();
     const estimatedGas = await invocation.estimateGas(defaultPayload);
-
-    return invocation.send(privateKey, this.address, { gas: estimatedGas * 2 });
+    return estimatedGas * 2;
   }
 }
 
