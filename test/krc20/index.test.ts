@@ -1,13 +1,22 @@
+import KardiaClient from '../../src';
 import KRC20 from '../../src/krc20';
 import { ENDPOINT, ENDPOINT_PUBLIC } from '../config';
 import { ACCOUNT1, ACCOUNT2, TOKEN1 } from './config';
 
 const endpoint = process.env.TEST_ENV === 'prod' ? ENDPOINT_PUBLIC : ENDPOINT;
+const kardiaClient = new KardiaClient({ endpoint });
 
 describe('SMC module test', () => {
   let krc20Instance: KRC20;
   beforeEach(() => {
     krc20Instance = new KRC20({ provider: endpoint, address: TOKEN1.address });
+  });
+
+  it.only('should be initialized with Kardia client', async () => {
+    expect(kardiaClient.krc20).toBeTruthy();
+    kardiaClient.krc20.address = TOKEN1.address;
+    const name = await kardiaClient.krc20.getName(true);
+    expect(name).toEqual(TOKEN1.name);
   });
 
   it('should be initialized successfully', () => {

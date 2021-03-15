@@ -118,12 +118,12 @@ class KRC20 {
     return totalSupply;
   }
 
-  public getFromAddress(address: string) {
+  public async getFromAddress(address: string) {
     if (!checkAddressChecksum(address)) throw new Error('Invalid [address]');
     this.address = address;
-    this.getName(true);
-    this.getDecimals(true);
-    this.getSymbol(true);
+    await this.getName(true);
+    await this.getDecimals(true);
+    await this.getSymbol(true);
   }
 
   public async balanceOf(address: string) {
