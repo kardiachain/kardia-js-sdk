@@ -4292,42 +4292,53 @@ var KRC20 = /*#__PURE__*/function () {
   }();
 
   _proto.transfer = /*#__PURE__*/function () {
-    var _transfer = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(privateKey, to, amount) {
+    var _transfer = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(privateKey, to, amount, transferPayload) {
       var invocation, defaultPayload, estimatedGas;
       return runtime_1.wrap(function _callee7$(_context7) {
         while (1) {
           switch (_context7.prev = _context7.next) {
             case 0:
+              if (transferPayload === void 0) {
+                transferPayload = {};
+              }
+
               this.validateAddress();
 
               if (checkAddressChecksum(to)) {
-                _context7.next = 3;
+                _context7.next = 4;
                 break;
               }
 
               throw new Error('Invalid [to]');
 
-            case 3:
+            case 4:
               if (!(amount < 0)) {
-                _context7.next = 5;
+                _context7.next = 6;
                 break;
               }
 
               throw new Error('Invalid [amount]');
 
-            case 5:
+            case 6:
               invocation = this._smcInstance.invokeContract('transfer', [to, amount]);
+
+              if (transferPayload.gas) {
+                _context7.next = 13;
+                break;
+              }
+
               defaultPayload = invocation.getDefaultTxPayload();
-              _context7.next = 9;
+              _context7.next = 11;
               return invocation.estimateGas(defaultPayload);
 
-            case 9:
-              estimatedGas = _context7.sent;
-              return _context7.abrupt("return", invocation.send(privateKey, this.address, {
-                gas: estimatedGas * 2
-              }));
-
             case 11:
+              estimatedGas = _context7.sent;
+              transferPayload.gas = estimatedGas * 2;
+
+            case 13:
+              return _context7.abrupt("return", invocation.send(privateKey, this.address, transferPayload));
+
+            case 14:
             case "end":
               return _context7.stop();
           }
@@ -4335,11 +4346,42 @@ var KRC20 = /*#__PURE__*/function () {
       }, _callee7, this);
     }));
 
-    function transfer(_x7, _x8, _x9) {
+    function transfer(_x7, _x8, _x9, _x10) {
       return _transfer.apply(this, arguments);
     }
 
     return transfer;
+  }();
+
+  _proto.estimateGas = /*#__PURE__*/function () {
+    var _estimateGas = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee8(to, amount) {
+      var invocation, defaultPayload, estimatedGas;
+      return runtime_1.wrap(function _callee8$(_context8) {
+        while (1) {
+          switch (_context8.prev = _context8.next) {
+            case 0:
+              invocation = this._smcInstance.invokeContract('transfer', [to, amount]);
+              defaultPayload = invocation.getDefaultTxPayload();
+              _context8.next = 4;
+              return invocation.estimateGas(defaultPayload);
+
+            case 4:
+              estimatedGas = _context8.sent;
+              return _context8.abrupt("return", estimatedGas * 2);
+
+            case 6:
+            case "end":
+              return _context8.stop();
+          }
+        }
+      }, _callee8, this);
+    }));
+
+    function estimateGas(_x11, _x12) {
+      return _estimateGas.apply(this, arguments);
+    }
+
+    return estimateGas;
   }();
 
   return KRC20;
