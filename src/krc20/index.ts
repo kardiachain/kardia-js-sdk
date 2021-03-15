@@ -3,6 +3,7 @@ import KardiaContract from '../smc';
 import { checkAddressChecksum } from '../util/account';
 import { krc20ABI } from './krc20.abi';
 import { BigNumber } from 'bignumber.js';
+import { toHydro } from '../util/amount';
 
 interface KRC20Props {
   client?: Client;
@@ -146,7 +147,7 @@ class KRC20 {
 
     const invocation = this._smcInstance.invokeContract('transfer', [
       to,
-      amount,
+      toHydro(amount, 'kai'),
     ]);
 
     if (!transferPayload.gas) {
