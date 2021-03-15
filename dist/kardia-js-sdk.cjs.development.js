@@ -4326,7 +4326,7 @@ var KRC20 = /*#__PURE__*/function () {
               throw new Error('Invalid [amount]');
 
             case 6:
-              invocation = this._smcInstance.invokeContract('transfer', [to, amount]);
+              invocation = this._smcInstance.invokeContract('transfer', [to, toHydro(amount, 'kai')]);
 
               if (transferPayload.gas) {
                 _context7.next = 13;
