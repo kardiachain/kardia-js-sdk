@@ -4360,7 +4360,7 @@ var KRC20 = /*#__PURE__*/function () {
         while (1) {
           switch (_context8.prev = _context8.next) {
             case 0:
-              invocation = this._smcInstance.invokeContract('transfer', [to, amount]);
+              invocation = this._smcInstance.invokeContract('transfer', [to, toHydro(amount, 'kai')]);
               defaultPayload = invocation.getDefaultTxPayload();
               _context8.next = 4;
               return invocation.estimateGas(defaultPayload);
