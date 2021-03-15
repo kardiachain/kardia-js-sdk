@@ -22,7 +22,7 @@ declare class KRC20 {
     getDecimals(fetch?: boolean): Promise<number>;
     getSymbol(fetch?: boolean): Promise<string>;
     getTotalSupply(format?: 'string' | 'BigNumber' | 'number'): Promise<any>;
-    getFromAddress(address: string): void;
+    getFromAddress(address: string): Promise<void>;
     balanceOf(address: string): Promise<any>;
     transfer(privateKey: string, to: string, amount: number): Promise<any>;
 }

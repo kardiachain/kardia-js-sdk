@@ -4213,17 +4213,8 @@ var KRC20 = /*#__PURE__*/function () {
     return getTotalSupply;
   }();
 
-  _proto.getFromAddress = function getFromAddress(address) {
-    if (!checkAddressChecksum(address)) throw new Error('Invalid [address]');
-    this.address = address;
-    this.getName(true);
-    this.getDecimals(true);
-    this.getSymbol(true);
-  };
-
-  _proto.balanceOf = /*#__PURE__*/function () {
-    var _balanceOf = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(address) {
-      var balance;
+  _proto.getFromAddress = /*#__PURE__*/function () {
+    var _getFromAddress = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(address) {
       return runtime_1.wrap(function _callee5$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
@@ -4236,14 +4227,19 @@ var KRC20 = /*#__PURE__*/function () {
               throw new Error('Invalid [address]');
 
             case 2:
-              _context5.next = 4;
-              return this._smcInstance.invokeContract('balanceOf', [address]).call(this.address);
+              this.address = address;
+              _context5.next = 5;
+              return this.getName(true);
 
-            case 4:
-              balance = _context5.sent;
-              return _context5.abrupt("return", balance);
+            case 5:
+              _context5.next = 7;
+              return this.getDecimals(true);
 
-            case 6:
+            case 7:
+              _context5.next = 9;
+              return this.getSymbol(true);
+
+            case 9:
             case "end":
               return _context5.stop();
           }
@@ -4251,7 +4247,44 @@ var KRC20 = /*#__PURE__*/function () {
       }, _callee5, this);
     }));
 
-    function balanceOf(_x5) {
+    function getFromAddress(_x5) {
+      return _getFromAddress.apply(this, arguments);
+    }
+
+    return getFromAddress;
+  }();
+
+  _proto.balanceOf = /*#__PURE__*/function () {
+    var _balanceOf = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee6(address) {
+      var balance;
+      return runtime_1.wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              if (checkAddressChecksum(address)) {
+                _context6.next = 2;
+                break;
+              }
+
+              throw new Error('Invalid [address]');
+
+            case 2:
+              _context6.next = 4;
+              return this._smcInstance.invokeContract('balanceOf', [address]).call(this.address);
+
+            case 4:
+              balance = _context6.sent;
+              return _context6.abrupt("return", balance);
+
+            case 6:
+            case "end":
+              return _context6.stop();
+          }
+        }
+      }, _callee6, this);
+    }));
+
+    function balanceOf(_x6) {
       return _balanceOf.apply(this, arguments);
     }
 
@@ -4259,16 +4292,16 @@ var KRC20 = /*#__PURE__*/function () {
   }();
 
   _proto.transfer = /*#__PURE__*/function () {
-    var _transfer = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee6(privateKey, to, amount) {
+    var _transfer = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(privateKey, to, amount) {
       var invocation, defaultPayload, estimatedGas;
-      return runtime_1.wrap(function _callee6$(_context6) {
+      return runtime_1.wrap(function _callee7$(_context7) {
         while (1) {
-          switch (_context6.prev = _context6.next) {
+          switch (_context7.prev = _context7.next) {
             case 0:
               this.validateAddress();
 
               if (checkAddressChecksum(to)) {
-                _context6.next = 3;
+                _context7.next = 3;
                 break;
               }
 
@@ -4276,7 +4309,7 @@ var KRC20 = /*#__PURE__*/function () {
 
             case 3:
               if (!(amount < 0)) {
-                _context6.next = 5;
+                _context7.next = 5;
                 break;
               }
 
@@ -4285,24 +4318,24 @@ var KRC20 = /*#__PURE__*/function () {
             case 5:
               invocation = this._smcInstance.invokeContract('transfer', [to, amount]);
               defaultPayload = invocation.getDefaultTxPayload();
-              _context6.next = 9;
+              _context7.next = 9;
               return invocation.estimateGas(defaultPayload);
 
             case 9:
-              estimatedGas = _context6.sent;
-              return _context6.abrupt("return", invocation.send(privateKey, this.address, {
+              estimatedGas = _context7.sent;
+              return _context7.abrupt("return", invocation.send(privateKey, this.address, {
                 gas: estimatedGas * 2
               }));
 
             case 11:
             case "end":
-              return _context6.stop();
+              return _context7.stop();
           }
         }
-      }, _callee6, this);
+      }, _callee7, this);
     }));
 
-    function transfer(_x6, _x7, _x8) {
+    function transfer(_x7, _x8, _x9) {
       return _transfer.apply(this, arguments);
     }
 
