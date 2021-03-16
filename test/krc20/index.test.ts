@@ -12,11 +12,8 @@ describe('SMC module test', () => {
     krc20Instance = new KRC20({ provider: endpoint, address: TOKEN1.address });
   });
 
-  it.only('should be initialized with Kardia client', async () => {
+  it('should be initialized with Kardia client', async () => {
     expect(kardiaClient.krc20).toBeTruthy();
-    kardiaClient.krc20.address = TOKEN1.address;
-    const name = await kardiaClient.krc20.getName(true);
-    expect(name).toEqual(TOKEN1.name);
   });
 
   it('should be initialized successfully', () => {
@@ -29,7 +26,7 @@ describe('SMC module test', () => {
     }).toThrowError('Either [client] or [provider] must be provided');
   });
 
-  it('should get name successfully', async () => {
+  it.only('should get name successfully', async () => {
     const name = await krc20Instance.getName(true);
     expect(name).toEqual(TOKEN1.name);
   });

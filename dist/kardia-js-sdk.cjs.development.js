@@ -4102,7 +4102,7 @@ var KRC20 = /*#__PURE__*/function () {
             case 5:
               decimals = _context2.sent;
 
-              if (decimals) {
+              if (decimals !== undefined) {
                 this.decimals = decimals;
               }
 
