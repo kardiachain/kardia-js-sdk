@@ -26,7 +26,7 @@ describe('SMC module test', () => {
     }).toThrowError('Either [client] or [provider] must be provided');
   });
 
-  it.only('should get name successfully', async () => {
+  it('should get name successfully', async () => {
     const name = await krc20Instance.getName(true);
     expect(name).toEqual(TOKEN1.name);
   });

@@ -147,7 +147,9 @@ class KRC20 {
 
     const invocation = this._smcInstance.invokeContract('transfer', [
       to,
-      toHydro(amount, 'kai'),
+      Number(amount * 10 ** this.decimals).toLocaleString('fullwide', {
+        useGrouping: false,
+      }),
     ]);
 
     if (!transferPayload.gas) {
