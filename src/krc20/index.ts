@@ -85,7 +85,7 @@ class KRC20 {
     const decimals = await this._smcInstance
       .invokeContract('decimals', [])
       .call(this.address);
-    if (decimals) {
+    if (decimals !== undefined) {
       this.decimals = decimals;
     }
     return this.decimals;
