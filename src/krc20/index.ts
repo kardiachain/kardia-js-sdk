@@ -12,6 +12,7 @@ interface KRC20Props {
   name?: string;
   symbol?: string;
   decimals?: number;
+  abi?: Record<string, any>[];
 }
 
 class KRC20 {
@@ -20,6 +21,7 @@ class KRC20 {
   public name: string = '';
   public decimals: number = 18;
   public symbol: string = '';
+  public abi: Record<string, any>[] = krc20ABI;
 
   private _smcInstance: KardiaContract;
 
@@ -30,6 +32,7 @@ class KRC20 {
     decimals,
     symbol,
     provider,
+    abi,
   }: KRC20Props) {
     if (client) {
       this._rpcClient = client;
@@ -56,6 +59,13 @@ class KRC20 {
     if (decimals) {
       this.decimals = decimals;
     }
+    if (abi) {
+      this.abi = abi;
+    }
+  }
+
+  public setCustomABI(abi: Record<string, any>[]) {
+    this.abi = abi;
   }
 
   private validateAddress() {
