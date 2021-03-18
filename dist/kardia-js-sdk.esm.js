@@ -1908,6 +1908,10 @@ var KardiaAccount = /*#__PURE__*/function () {
     };
   };
 
+  KardiaAccount.toChecksumAddress = function toChecksumAddress(address) {
+    return toChecksum(address);
+  };
+
   return KardiaAccount;
 }();
 
@@ -2561,7 +2565,7 @@ var sleep = function sleep(ms) {
   });
 };
 
-var WAIT_TIMEOUT = 60000;
+var WAIT_TIMEOUT = 300000;
 var DEFAULT_GAS_PRICE = 1000000000;
 
 var KardiaTransaction = /*#__PURE__*/function () {
@@ -3982,11 +3986,13 @@ var KRC20 = /*#__PURE__*/function () {
         name = _ref.name,
         decimals = _ref.decimals,
         symbol = _ref.symbol,
-        provider = _ref.provider;
+        provider = _ref.provider,
+        abi = _ref.abi;
     this.address = '';
     this.name = '';
     this.decimals = 18;
     this.symbol = '';
+    this.abi = krc20ABI;
 
     if (client) {
       this._rpcClient = client;
@@ -4019,9 +4025,17 @@ var KRC20 = /*#__PURE__*/function () {
     if (decimals) {
       this.decimals = decimals;
     }
+
+    if (abi) {
+      this.abi = abi;
+    }
   }
 
   var _proto = KRC20.prototype;
+
+  _proto.setCustomABI = function setCustomABI(abi) {
+    this.abi = abi;
+  };
 
   _proto.validateAddress = function validateAddress() {
     if (!checkAddressChecksum(this.address)) throw new Error('Invalid [address]');

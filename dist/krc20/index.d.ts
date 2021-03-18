@@ -7,6 +7,7 @@ interface KRC20Props {
     name?: string;
     symbol?: string;
     decimals?: number;
+    abi?: Record<string, any>[];
 }
 declare class KRC20 {
     private _rpcClient;
@@ -14,8 +15,10 @@ declare class KRC20 {
     name: string;
     decimals: number;
     symbol: string;
+    abi: Record<string, any>[];
     private _smcInstance;
-    constructor({ client, address, name, decimals, symbol, provider, }: KRC20Props);
+    constructor({ client, address, name, decimals, symbol, provider, abi, }: KRC20Props);
+    setCustomABI(abi: Record<string, any>[]): void;
     private validateAddress;
     getContractInstance(): KardiaContract;
     getName(fetch?: boolean): Promise<string>;

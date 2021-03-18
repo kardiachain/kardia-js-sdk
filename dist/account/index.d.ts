@@ -23,5 +23,6 @@ declare class KardiaAccount {
         privateKey: string;
         balance: number;
     };
+    static toChecksumAddress(address: string): string;
 }
 export default KardiaAccount;
