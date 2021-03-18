@@ -3,6 +3,7 @@ import KardiaContract from '../smc';
 import { checkAddressChecksum } from '../util/account';
 import { krc20ABI } from './krc20.abi';
 import { BigNumber } from 'bignumber.js';
+import KardiaAccount from '../account';
 // import { toHydro } from '../util/amount';
 
 interface KRC20Props {
@@ -47,7 +48,9 @@ class KRC20 {
     this._smcInstance.updateAbi(krc20ABI);
 
     if (address) {
-      if (!checkAddressChecksum(address)) throw new Error('Invalid [address]');
+      if (!checkAddressChecksum(address) || !KardiaAccount.isAddress(address)) {
+        throw new Error('Invalid [address]');
+      }
       this.address = address;
     }
     if (name) {
@@ -69,7 +72,10 @@ class KRC20 {
   }
 
   private validateAddress() {
-    if (!checkAddressChecksum(this.address))
+    if (
+      !checkAddressChecksum(this.address) ||
+      !KardiaAccount.isAddress(this.address)
+    )
       throw new Error('Invalid [address]');
   }
 
@@ -130,7 +136,8 @@ class KRC20 {
   }
 
   public async getFromAddress(address: string) {
-    if (!checkAddressChecksum(address)) throw new Error('Invalid [address]');
+    if (!checkAddressChecksum(address) || !KardiaAccount.isAddress(address))
+      throw new Error('Invalid [address]');
     this.address = address;
     await this.getName(true);
     await this.getDecimals(true);

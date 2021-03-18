@@ -6,13 +6,13 @@ export const TOKEN1 = {
   totalSupply: '1000000000000000000000000',
 };
 
-// export const TOKEN1 = {
-//   address: '0xeFF34B63f55200a9D635B8ABBBFCC719b4977864',
-//   name: 'VNDC',
-//   decimals: 18,
-//   symbol: 'VNDC',
-//   totalSupply: '1000000000000000000000000',
-// };
+export const TOKEN2 = {
+  address: '0xae67DeAb9ff650862fD9CAC1127bad2132e8408a',
+  name: 'SampleToken',
+  decimals: 18,
+  symbol: 'TOK1',
+  totalSupply: '1000000000000000000000000',
+};
 
 export const ACCOUNT1 = {
   privateKey:
