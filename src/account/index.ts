@@ -2,7 +2,7 @@ import { Client } from '@open-rpc/client-js';
 import * as EthUtil from 'ethereumjs-util';
 import EtherWallet from 'ethereumjs-wallet';
 import { ethers } from 'ethers';
-import { isAddress } from '../util/account';
+import { isAddress, toChecksum } from '../util/account';
 
 interface KardiaAccountProps {
   client: Client;
@@ -83,6 +83,10 @@ class KardiaAccount {
       privateKey,
       balance: 0,
     };
+  }
+
+  public static toChecksumAddress(address: string) {
+    return toChecksum(address);
   }
 }
 

@@ -6,3 +6,5 @@ export const PRIVATE_KEY =
 export const VALID_ADDRESS = '0x3cE95D1995E2C86B400c3f36E8d09b2C422FF1Ae';
 export const MNEMONIC =
   'ginger monitor stay various salon logic wasp program swallow claim pipe system';
+
+export const ADDRESS_LOWERCASE = '0x3cE95D1995E2C86B400c3f36E8d09b2C422ff1ae';

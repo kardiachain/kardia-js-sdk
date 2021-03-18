@@ -7,6 +7,7 @@ import {
   PRIVATE_KEY,
   VALID_ADDRESS,
   MNEMONIC,
+  ADDRESS_LOWERCASE,
 } from './config';
 import KardiaAccount from '../../src/account';
 
@@ -68,5 +69,10 @@ describe('Account module test', () => {
     expect(wallet.address).toBeTruthy();
     expect(wallet.privateKey).toBeTruthy();
     expect(wallet.balance).toEqual(0);
+  });
+
+  it('should get correct checksum address', () => {
+    const checksum = KardiaAccount.toChecksumAddress(ADDRESS_LOWERCASE);
+    expect(checksum).toEqual(VALID_ADDRESS);
   });
 });
