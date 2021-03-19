@@ -117,24 +117,31 @@ class KAIChain {
     });
   }
 
-  public async getLogs(
-    fromBlock?: 'latest' | number,
-    toBlock?: 'latest' | number,
-    address?: string,
-    topics?: [],
-    blockhash?: any
-  ) {
+  public async getLogs({
+    fromBlock = 1,
+    toBlock = 'latest',
+    address,
+    topics,
+    blockhash,
+  }: {
+    fromBlock?: 'latest' | number;
+    toBlock?: 'latest' | number;
+    address?: string;
+    topics?: (string | null)[];
+    blockhash?: any;
+  }) {
+    const logsParams: Record<string, any> = {
+      fromBlock: fromBlock,
+      toBlock: toBlock,
+      address: address,
+      topics: topics,
+    };
+    if (blockhash) {
+      logsParams.blockhash = blockhash;
+    }
     return await this._rpcClient.request({
       method: 'kai_getLogs',
-      params: [
-        {
-          fromBlock: fromBlock,
-          toBlock: toBlock,
-          address: address,
-          topics: topics,
-          blockhash: blockhash,
-        },
-      ],
+      params: [logsParams],
     });
   }
 

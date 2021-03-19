@@ -71,7 +71,6 @@ describe('SMC module test', () => {
     // const SMC_TO_TEST = [SMC3];
     // const SMC_TO_TEST = [SMC1];
     for (let index = 0; index < SMC_TO_TEST.length; index++) {
-      sleep(20000);
       const smc = SMC_TO_TEST[index];
       myContract.updateAbi(smc.ABI);
       myContract.updateByteCode(smc.BYTECODES);
@@ -106,6 +105,8 @@ describe('SMC module test', () => {
         defaultInvokePayload
       );
       expect(estimatedGasForInvoke).toBeTruthy();
+
+      await sleep(10000);
 
       const result = await deployedContract.call(
         smcData.contractAddress,
