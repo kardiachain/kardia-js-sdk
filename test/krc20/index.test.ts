@@ -3,7 +3,13 @@ import { BigNumber } from 'bignumber.js';
 import KRC20 from '../../src/krc20';
 import KardiaContract from '../../src/smc';
 import { ENDPOINT, ENDPOINT_PUBLIC } from '../config';
-import { ACCOUNT1, ACCOUNT2, TOKEN1, TOKEN2 } from './config';
+import {
+  ACCOUNT1,
+  ACCOUNT2,
+  ADDRESS_LOWERCASE,
+  TOKEN1,
+  TOKEN2,
+} from './config';
 
 const endpoint = process.env.TEST_ENV === 'prod' ? ENDPOINT_PUBLIC : ENDPOINT;
 const kardiaClient = new KardiaClient({ endpoint });
@@ -37,6 +43,13 @@ describe('SMC module test', () => {
   it('should get name successfully', async () => {
     const name = await krc20Instance.getName(true);
     expect(name).toEqual(TOKEN1.name);
+  });
+
+  it('should throw error when get name of invalid token address', async () => {
+    expect(async () => {
+      krc20Instance.address = 'invalid_address';
+      await krc20Instance.getName(true);
+    }).rejects.toThrowError('Invalid [address]');
   });
 
   it('should get decimals successfully', async () => {
@@ -90,20 +103,29 @@ describe('SMC module test', () => {
     }).rejects.toThrowError('Invalid [amount]');
   });
 
+  it('should throw error when transfer with invalid address', () => {
+    expect(async () => {
+      await krc20Instance.transfer(ACCOUNT1.privateKey, ADDRESS_LOWERCASE, 1);
+    }).rejects.toThrowError('Invalid [to]');
+  });
+
   it('should initialized with name, symbol, decimals, abi', async () => {
     const NAME = 'NAME';
     const DECIMALS = 12;
     const SYMBOL = 'SYMBOL';
+    const ABI: Record<string, any>[] = [];
     const internalInstance = new KRC20({
       provider: endpoint,
       address: TOKEN1.address,
       name: NAME,
       decimals: DECIMALS,
       symbol: SYMBOL,
+      abi: ABI,
     });
     expect(await internalInstance.getName()).toEqual(NAME);
     expect(await internalInstance.getDecimals()).toEqual(DECIMALS);
     expect(await internalInstance.getSymbol()).toEqual(SYMBOL);
+    expect(internalInstance.abi).toEqual(ABI);
   });
 
   it('should get contract instance', async () => {

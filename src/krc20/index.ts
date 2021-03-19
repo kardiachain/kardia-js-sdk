@@ -159,7 +159,8 @@ class KRC20 {
     transferPayload: Record<string, any> = {}
   ) {
     this.validateAddress();
-    if (!checkAddressChecksum(to)) throw new Error('Invalid [to]');
+    if (!checkAddressChecksum(to) || !KardiaAccount.isAddress(to))
+      throw new Error('Invalid [to]');
     if (amount < 0) throw new Error('Invalid [amount]');
 
     const invocation = this._smcInstance.invokeContract('transfer', [
