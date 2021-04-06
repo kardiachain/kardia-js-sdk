@@ -234,6 +234,8 @@ export const toHex = (value: any, returnType = false) => {
       return returnType ? 'int256' : numberToHex(value);
     } else if (value.indexOf('0x') === 0 || value.indexOf('0X') === 0) {
       return returnType ? 'bytes' : value;
+    } else if (!isFinite(value as any)) {
+      return returnType ? 'string' : utf8ToHex(value);
     }
   }
 
