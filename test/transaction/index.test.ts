@@ -32,7 +32,7 @@ describe('Transaction module test', () => {
     // const res = await kardiaTransaction.getTransaction(txHash);
 
     expect(txHash).toBeTruthy();
-  })
+  });
 
   it('should send transaction successfully', async () => {
     const nonce = await kardiaClient.account.getNonce(ACCOUNT2.address);

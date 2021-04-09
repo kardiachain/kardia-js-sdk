@@ -61,8 +61,7 @@ class KardiaTransaction {
     });
   }
 
-  public async generateTransactionHash(tx: any){
-
+  public async generateTransactionHash(tx: any) {
     const transaction = {
       nonce: tx.nonce,
       gasPrice: tx.gasPrice,
@@ -81,7 +80,7 @@ class KardiaTransaction {
       transaction.data,
     ]);
     const hash = keccak256(rlpEncoded);
-    
+
     return hash;
   }
 
