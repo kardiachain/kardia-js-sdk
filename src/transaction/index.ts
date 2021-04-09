@@ -61,6 +61,30 @@ class KardiaTransaction {
     });
   }
 
+  public async generateTransactionHash(tx: any){
+
+    const transaction = {
+      nonce: tx.nonce,
+      gasPrice: tx.gasPrice,
+      gas: tx.gas,
+      to: '0x' + tx.to.toLowerCase().replace('0x', ''),
+      value: tx.value,
+      data: '0x' + tx.data.toLowerCase().replace('0x', ''),
+    };
+
+    const rlpEncoded = encode([
+      fromNat(transaction.nonce),
+      fromNat(transaction.gasPrice),
+      fromNat(transaction.gas),
+      transaction.to.toLowerCase(),
+      fromNat(transaction.value),
+      transaction.data,
+    ]);
+    const hash = keccak256(rlpEncoded);
+    
+    return hash;
+  }
+
   public async signTransaction(tx: TxParams, privateKey: string) {
     const _privateKey = `0x${privateKey.replace('0x', '')}`;
     if (!tx.gas) {
