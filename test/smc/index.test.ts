@@ -61,7 +61,7 @@ describe('SMC module test', () => {
     myContract.updateAbi(SMC4.ABI);
     const events = await myContract.parseEvent(txHashToGetEvent);
     expect(Array.isArray(events)).toEqual(true);
-    expect(events.length).toEqual(1);
+    expect(events.length).toEqual(7);
   });
 
   it('should deploy contract and interact successfully', async () => {

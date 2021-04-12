@@ -12,28 +12,6 @@ describe('Transaction module test', () => {
     expect(kardiaClient.transaction).toBeTruthy();
   });
 
-  it('should be return transaction hash', async () => {
-    const kardiaTransaction = kardiaClient.transaction;
-
-    const nonce = await kardiaClient.account.getNonce(ACCOUNT2.address);
-    const txData = {
-      to: ACCOUNT.address,
-      gas: 50000,
-      nonce,
-      gasPrice: 1,
-      value: 22093,
-      data: keccak256(Date.now().toString()),
-    };
-
-    const tx = await kardiaTransaction.generateTransaction(txData);
-
-    const txHash = await kardiaTransaction.generateTransactionHash(tx);
-
-    // const res = await kardiaTransaction.getTransaction(txHash);
-
-    expect(txHash).toBeTruthy();
-  });
-
   it('should send transaction successfully', async () => {
     const nonce = await kardiaClient.account.getNonce(ACCOUNT2.address);
     const txData = {
