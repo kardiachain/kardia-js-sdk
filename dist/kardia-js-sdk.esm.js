@@ -8,6 +8,7 @@ import BN$1 from 'bn.js';
 import utf8 from 'utf8';
 import numberToBN from 'number-to-bn';
 import { isString, isNumber, isBoolean, isObject } from 'lodash-es';
+import Web3 from 'web3';
 import abiJs from 'ethereumjs-abi';
 import { BigNumber } from 'bignumber.js';
 
@@ -2570,6 +2571,19 @@ var sleep = function sleep(ms) {
 var WAIT_TIMEOUT = 300000;
 var DEFAULT_GAS_PRICE = 1000000000;
 
+var isExtensionEnabled = function isExtensionEnabled() {
+  if (window.kardiachain) {
+    window.web3 = new Web3(window.kardiachain);
+
+    if (window.kardiachain.isKaiWallet) {
+      window.kardiachain.enable();
+      return true;
+    }
+  }
+
+  return false;
+};
+
 var KardiaTransaction = /*#__PURE__*/function () {
   function KardiaTransaction(_ref) {
     var client = _ref.client,
@@ -2677,18 +2691,152 @@ var KardiaTransaction = /*#__PURE__*/function () {
     return getTransactionReceipt;
   }();
 
-  _proto.signTransaction = /*#__PURE__*/function () {
-    var _signTransaction = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(tx, privateKey) {
-      var _privateKey, transaction, rlpEncoded, hash, signature, decodeSign, rawTx, rawTransaction, values, result;
+  _proto.sendTransactionToExtension = /*#__PURE__*/function () {
+    var _sendTransactionToExtension = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(data, waitUntilMined, waitTimeOut) {
+      var accounts, estimatedGas, signPromise, txHash, _waitTimeOut, breakTimeout, receipt;
 
       return runtime_1.wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
+              if (waitUntilMined === void 0) {
+                waitUntilMined = false;
+              }
+
+              if (waitTimeOut === void 0) {
+                waitTimeOut = 0;
+              }
+
+              if (isExtensionEnabled()) {
+                _context4.next = 4;
+                break;
+              }
+
+              throw new Error('KardiaChain Wallet Extension not found');
+
+            case 4:
+              _context4.next = 6;
+              return window.web3.eth.getAccounts();
+
+            case 6:
+              accounts = _context4.sent;
+
+              if (data.gas) {
+                _context4.next = 12;
+                break;
+              }
+
+              _context4.next = 10;
+              return this.estimateGas(data, data.data);
+
+            case 10:
+              estimatedGas = _context4.sent;
+              data.gas = estimatedGas * 10;
+
+            case 12:
+              signPromise = function signPromise() {
+                return new Promise(function (resolve, reject) {
+                  window.web3.eth.sendTransaction({
+                    from: accounts[0],
+                    gasPrice: data.gasPrice || DEFAULT_GAS_PRICE,
+                    gas: data.gas,
+                    to: data.to,
+                    value: data.value
+                  }, function (error, hash) {
+                    if (error) {
+                      reject(error);
+                    } else {
+                      resolve(hash);
+                    }
+                  });
+                });
+              };
+
+              _context4.next = 15;
+              return signPromise();
+
+            case 15:
+              txHash = _context4.sent;
+
+              if (waitUntilMined) {
+                _context4.next = 18;
+                break;
+              }
+
+              return _context4.abrupt("return", txHash);
+
+            case 18:
+              _waitTimeOut = waitTimeOut || WAIT_TIMEOUT;
+              breakTimeout = Date.now() + _waitTimeOut;
+
+            case 20:
+              if (!(Date.now() < breakTimeout)) {
+                _context4.next = 39;
+                break;
+              }
+
+              _context4.prev = 21;
+              _context4.next = 24;
+              return this.getTransactionReceipt(txHash);
+
+            case 24:
+              receipt = _context4.sent;
+
+              if (!receipt) {
+                _context4.next = 29;
+                break;
+              }
+
+              return _context4.abrupt("return", receipt);
+
+            case 29:
+              _context4.next = 31;
+              return sleep(1000);
+
+            case 31:
+              _context4.next = 37;
+              break;
+
+            case 33:
+              _context4.prev = 33;
+              _context4.t0 = _context4["catch"](21);
+              _context4.next = 37;
+              return sleep(1000);
+
+            case 37:
+              _context4.next = 20;
+              break;
+
+            case 39:
+              throw new Error("Timeout: cannot get receipt after " + WAIT_TIMEOUT + "ms");
+
+            case 40:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, this, [[21, 33]]);
+    }));
+
+    function sendTransactionToExtension(_x3, _x4, _x5) {
+      return _sendTransactionToExtension.apply(this, arguments);
+    }
+
+    return sendTransactionToExtension;
+  }();
+
+  _proto.signTransaction = /*#__PURE__*/function () {
+    var _signTransaction = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(tx, privateKey) {
+      var _privateKey, transaction, rlpEncoded, hash, signature, decodeSign, rawTx, rawTransaction, values, result;
+
+      return runtime_1.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
               _privateKey = "0x" + privateKey.replace('0x', '');
 
               if (tx.gas) {
-                _context4.next = 3;
+                _context5.next = 3;
                 break;
               }
 
@@ -2696,7 +2844,7 @@ var KardiaTransaction = /*#__PURE__*/function () {
 
             case 3:
               if (!(tx.nonce < 0 || tx.gas < 0 || tx.gasPrice < 0)) {
-                _context4.next = 5;
+                _context5.next = 5;
                 break;
               }
 
@@ -2728,17 +2876,17 @@ var KardiaTransaction = /*#__PURE__*/function () {
                 s: trimLeadingZero(values[8].toString()),
                 rawTransaction: rawTransaction
               };
-              return _context4.abrupt("return", result);
+              return _context5.abrupt("return", result);
 
             case 18:
             case "end":
-              return _context4.stop();
+              return _context5.stop();
           }
         }
-      }, _callee4);
+      }, _callee5);
     }));
 
-    function signTransaction(_x3, _x4) {
+    function signTransaction(_x6, _x7) {
       return _signTransaction.apply(this, arguments);
     }
 
@@ -2792,12 +2940,12 @@ var KardiaTransaction = /*#__PURE__*/function () {
   _proto.sendTransaction =
   /*#__PURE__*/
   function () {
-    var _sendTransaction = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(data, privateKey, waitUntilMined, waitTimeOut) {
+    var _sendTransaction = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee6(data, privateKey, waitUntilMined, waitTimeOut) {
       var estimatedGas, generatedTx, signedTx, txHash, _waitTimeOut, breakTimeout, receipt;
 
-      return runtime_1.wrap(function _callee5$(_context5) {
+      return runtime_1.wrap(function _callee6$(_context6) {
         while (1) {
-          switch (_context5.prev = _context5.next) {
+          switch (_context6.prev = _context6.next) {
             case 0:
               if (waitUntilMined === void 0) {
                 waitUntilMined = false;
@@ -2808,43 +2956,43 @@ var KardiaTransaction = /*#__PURE__*/function () {
               }
 
               if (data.gas) {
-                _context5.next = 7;
+                _context6.next = 7;
                 break;
               }
 
-              _context5.next = 5;
+              _context6.next = 5;
               return this.estimateGas(data, data.data);
 
             case 5:
-              estimatedGas = _context5.sent;
+              estimatedGas = _context6.sent;
               data.gas = estimatedGas * 10;
 
             case 7:
-              _context5.next = 9;
+              _context6.next = 9;
               return this.generateTransaction(data);
 
             case 9:
-              generatedTx = _context5.sent;
-              _context5.next = 12;
+              generatedTx = _context6.sent;
+              _context6.next = 12;
               return this.signTransaction(generatedTx, privateKey);
 
             case 12:
-              signedTx = _context5.sent;
-              _context5.next = 15;
+              signedTx = _context6.sent;
+              _context6.next = 15;
               return this._rpcClient.request({
                 method: 'tx_sendRawTransaction',
                 params: [signedTx.rawTransaction]
               });
 
             case 15:
-              txHash = _context5.sent;
+              txHash = _context6.sent;
 
               if (waitUntilMined) {
-                _context5.next = 18;
+                _context6.next = 18;
                 break;
               }
 
-              return _context5.abrupt("return", txHash);
+              return _context6.abrupt("return", txHash);
 
             case 18:
               _waitTimeOut = waitTimeOut || WAIT_TIMEOUT;
@@ -2852,40 +3000,40 @@ var KardiaTransaction = /*#__PURE__*/function () {
 
             case 20:
               if (!(Date.now() < breakTimeout)) {
-                _context5.next = 39;
+                _context6.next = 39;
                 break;
               }
 
-              _context5.prev = 21;
-              _context5.next = 24;
+              _context6.prev = 21;
+              _context6.next = 24;
               return this.getTransactionReceipt(txHash);
 
             case 24:
-              receipt = _context5.sent;
+              receipt = _context6.sent;
 
               if (!receipt) {
-                _context5.next = 29;
+                _context6.next = 29;
                 break;
               }
 
-              return _context5.abrupt("return", receipt);
+              return _context6.abrupt("return", receipt);
 
             case 29:
-              _context5.next = 31;
+              _context6.next = 31;
               return sleep(1000);
 
             case 31:
-              _context5.next = 37;
+              _context6.next = 37;
               break;
 
             case 33:
-              _context5.prev = 33;
-              _context5.t0 = _context5["catch"](21);
-              _context5.next = 37;
+              _context6.prev = 33;
+              _context6.t0 = _context6["catch"](21);
+              _context6.next = 37;
               return sleep(1000);
 
             case 37:
-              _context5.next = 20;
+              _context6.next = 20;
               break;
 
             case 39:
@@ -2893,13 +3041,13 @@ var KardiaTransaction = /*#__PURE__*/function () {
 
             case 40:
             case "end":
-              return _context5.stop();
+              return _context6.stop();
           }
         }
-      }, _callee5, this, [[21, 33]]);
+      }, _callee6, this, [[21, 33]]);
     }));
 
-    function sendTransaction(_x5, _x6, _x7, _x8) {
+    function sendTransaction(_x8, _x9, _x10, _x11) {
       return _sendTransaction.apply(this, arguments);
     }
 
@@ -2907,11 +3055,11 @@ var KardiaTransaction = /*#__PURE__*/function () {
   }();
 
   _proto.estimateGas = /*#__PURE__*/function () {
-    var _estimateGas = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee6(txPayload, data) {
+    var _estimateGas = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(txPayload, data) {
       var txObject;
-      return runtime_1.wrap(function _callee6$(_context6) {
+      return runtime_1.wrap(function _callee7$(_context7) {
         while (1) {
-          switch (_context6.prev = _context6.next) {
+          switch (_context7.prev = _context7.next) {
             case 0:
               txObject = {
                 from: txPayload.from || '0x',
@@ -2920,24 +3068,24 @@ var KardiaTransaction = /*#__PURE__*/function () {
                 value: txPayload.value || 0,
                 gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE
               };
-              _context6.next = 3;
+              _context7.next = 3;
               return this._rpcClient.request({
                 method: 'kai_estimateGas',
                 params: [txObject, 'latest']
               });
 
             case 3:
-              return _context6.abrupt("return", _context6.sent);
+              return _context7.abrupt("return", _context7.sent);
 
             case 4:
             case "end":
-              return _context6.stop();
+              return _context7.stop();
           }
         }
-      }, _callee6, this);
+      }, _callee7, this);
     }));
 
-    function estimateGas(_x9, _x10) {
+    function estimateGas(_x12, _x13) {
       return _estimateGas.apply(this, arguments);
     }
 

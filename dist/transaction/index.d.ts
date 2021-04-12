@@ -17,6 +17,7 @@ declare class KardiaTransaction {
     getTransaction(txHash: string): Promise<any>;
     getPendingTransaction(): Promise<any>;
     getTransactionReceipt(txHash: string): Promise<any>;
+    sendTransactionToExtension(data: any, waitUntilMined?: boolean, waitTimeOut?: number): Promise<any>;
     signTransaction(tx: TxParams, privateKey: string): Promise<{
         messageHash: string;
         v: string;
