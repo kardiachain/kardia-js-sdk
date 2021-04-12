@@ -1,6 +1,6 @@
 export const BLOCK_NUMBER = 1;
 export const BLOCK_HASH =
-  '0x41a39e54dc0080dfce9a6917e14ed9b43872285c6de17fc8166cf4cb044caab9';
+  '0xae1eef12a180f3ebf665e927000b9fad27d1de3ab783c0e0b7c4e360483ef5c2';
 
 export const VALIDATOR_ADDRESS = '0xFBD5e2aFB7C0a7862b06964e29E676bf02183256';
 export const NOT_VALIDATOR_ADDRESS =

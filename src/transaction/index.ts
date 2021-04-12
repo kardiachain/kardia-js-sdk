@@ -5,6 +5,7 @@ import {
   sign,
   trimLeadingZero,
 } from '../util/account';
+import Web3 from 'web3';
 import { fromNat } from '../util/bytes';
 // import {keccak256} from 'js-sha3';
 import { keccak256 } from '../util/hash';
@@ -26,6 +27,17 @@ interface TxParams {
   value: string;
   data: string;
 }
+
+const isExtensionEnabled = () => {
+  if ((window as any).kardiachain) {
+    (window as any).web3 = new Web3((window as any).kardiachain);
+    if ((window as any).kardiachain.isKaiWallet) {
+      (window as any).kardiachain.enable();
+      return true;
+    }
+  }
+  return false;
+};
 
 class KardiaTransaction {
   private _rpcClient: Client;
@@ -59,6 +71,63 @@ class KardiaTransaction {
       method: 'tx_getTransactionReceipt',
       params: [txHash],
     });
+  }
+
+  public async sendTransactionToExtension(
+    data: any,
+    waitUntilMined: boolean = false,
+    waitTimeOut: number = 0
+  ) {
+    if (!isExtensionEnabled()) {
+      throw new Error('KardiaChain Wallet Extension not found');
+    }
+
+    const accounts = await (window as any).web3.eth.getAccounts();
+    if (!data.gas) {
+      const estimatedGas = await this.estimateGas(data, data.data);
+      data.gas = estimatedGas * 10;
+    }
+
+    const signPromise = () => {
+      return new Promise((resolve: (txHash: string) => void, reject) => {
+        (window as any).web3.eth.sendTransaction(
+          {
+            from: accounts[0],
+            gasPrice: data.gasPrice || DEFAULT_GAS_PRICE,
+            gas: data.gas,
+            to: data.to,
+            value: data.value,
+          },
+          function(error: any, hash: string) {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(hash);
+            }
+          }
+        );
+      });
+    };
+
+    const txHash = await signPromise();
+    if (!waitUntilMined) return txHash;
+
+    const _waitTimeOut = waitTimeOut || WAIT_TIMEOUT;
+    const breakTimeout = Date.now() + _waitTimeOut;
+    while (Date.now() < breakTimeout) {
+      try {
+        const receipt = await this.getTransactionReceipt(txHash);
+        if (receipt) {
+          return receipt;
+        } else {
+          await sleep(1000);
+        }
+      } catch (err) {
+        await sleep(1000);
+      }
+    }
+
+    throw new Error(`Timeout: cannot get receipt after ${WAIT_TIMEOUT}ms`);
   }
 
   public async signTransaction(tx: TxParams, privateKey: string) {
