@@ -12,7 +12,12 @@ declare class KAIChain {
     getBlockByHash(blockHash: string): Promise<any>;
     getBlockHeaderByBlockNumber(blockNumber: number): Promise<any>;
     getBlockHeaderByHash(blockHash: string): Promise<any>;
-    newFilter(fromBlock?: 'latest' | number, toBlock?: 'latest' | number, address?: string, topics?: []): Promise<any>;
+    newFilter({ fromBlock, toBlock, address, topics }: {
+        fromBlock?: 'latest' | number;
+        toBlock?: 'latest' | number;
+        address?: string;
+        topics?: string[];
+    }): Promise<any>;
     newBlockFilter(): Promise<any>;
     uninstallFilter(filterId: string): Promise<any>;
     getFilterChanges(filterId: string): Promise<any>;

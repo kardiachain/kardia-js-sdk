@@ -26,6 +26,7 @@ declare class KardiaTransaction {
         rawTransaction: string;
     }>;
     generateTransaction({ receiver, to, amount, value, nonce, gasPrice, gas, gasLimit, data, }: any): TxParams;
+    sendRawTransaction(rawTx: any, waitUntilMined?: boolean, waitTimeOut?: number): Promise<any>;
     /**
      *
      * @param data transaction params
