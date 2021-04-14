@@ -89,15 +89,20 @@ class KardiaTransaction {
     }
 
     const signPromise = () => {
+
+      const txData: Record<string, any> = {
+        from: accounts[0],
+        gasPrice: data.gasPrice || DEFAULT_GAS_PRICE,
+        gas: data.gas,
+        to: data.to,
+        value: data.value,
+      }
+
+      if (data.data) txData.data = data.data
+
       return new Promise((resolve: (txHash: string) => void, reject) => {
         (window as any).web3.eth.sendTransaction(
-          {
-            from: accounts[0],
-            gasPrice: data.gasPrice || DEFAULT_GAS_PRICE,
-            gas: data.gas,
-            to: data.to,
-            value: data.value,
-          },
+          txData,
           function(error: any, hash: string) {
             if (error) {
               reject(error);
