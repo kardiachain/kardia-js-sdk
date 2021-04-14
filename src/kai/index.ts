@@ -70,22 +70,26 @@ class KAIChain {
     });
   }
 
-  public async newFilter(
+  public async newFilter({
+    fromBlock = 'latest',
+    toBlock = 'latest',
+    address,
+    topics = []
+  }: {
     fromBlock?: 'latest' | number,
     toBlock?: 'latest' | number,
     address?: string,
-    topics?: []
-  ) {
+    topics?: string[]
+  }) {
+
+    const param: Record<string, any> = {fromBlock, toBlock};
+
+    if (address) param.address = address;
+    if (topics && topics.length > 0) param.topics = topics;
+
     return await this._rpcClient.request({
       method: 'kai_newFilter',
-      params: [
-        {
-          fromBlock: fromBlock,
-          toBlock: toBlock,
-          address: address,
-          topics: topics,
-        },
-      ],
+      params: [param],
     });
   }
 

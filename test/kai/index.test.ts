@@ -7,6 +7,7 @@ import {
   VALIDATOR_ADDRESS,
 } from './config';
 import { ENDPOINT, ENDPOINT_PUBLIC } from '../config';
+import { keccak256 } from '../../src/util/hash';
 
 const endpoint = process.env.TEST_ENV === 'prod' ? ENDPOINT_PUBLIC : ENDPOINT;
 
@@ -94,6 +95,21 @@ describe('KAI module test', () => {
     );
     expect(blockHeader).toBeTruthy();
     expect(blockHeader.hash).toEqual(block.hash);
+  });
+
+  it('should create and get filter successfully', async () => {
+    jest.setTimeout(500000);
+    const topic = keccak256('Transfer(address,address,uint256)');
+
+    const filterId = await kardiaClient.kaiChain.newFilter({
+      fromBlock: 200000,
+      topics: [topic]
+    })
+
+    expect(filterId).toBeTruthy();
+
+    const logs = await kardiaClient.kaiChain.getFilterLogs(filterId);
+    expect(logs).toBeTruthy();
   });
 
   // Utility test

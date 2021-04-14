@@ -207,6 +207,31 @@ class KardiaTransaction {
     };
   }
 
+  public async sendRawTransaction(rawTx: any, waitUntilMined: boolean = false, waitTimeOut: number = 0) {
+    const txHash = await this._rpcClient.request({
+      method: 'tx_sendRawTransaction',
+      params: [rawTx],
+    });
+    if (!waitUntilMined) return txHash;
+
+    const _waitTimeOut = waitTimeOut || WAIT_TIMEOUT;
+    const breakTimeout = Date.now() + _waitTimeOut;
+    while (Date.now() < breakTimeout) {
+      try {
+        const receipt = await this.getTransactionReceipt(txHash);
+        if (receipt) {
+          return receipt;
+        } else {
+          await sleep(1000);
+        }
+      } catch (err) {
+        await sleep(1000);
+      }
+    }
+
+    throw new Error(`Timeout: cannot get receipt after ${WAIT_TIMEOUT}ms`);
+  }
+
   /**
    *
    * @param data transaction params
@@ -227,28 +252,7 @@ class KardiaTransaction {
     const generatedTx = await this.generateTransaction(data);
     const signedTx = await this.signTransaction(generatedTx, privateKey);
 
-    const txHash = await this._rpcClient.request({
-      method: 'tx_sendRawTransaction',
-      params: [signedTx.rawTransaction],
-    });
-    if (!waitUntilMined) return txHash;
-
-    const _waitTimeOut = waitTimeOut || WAIT_TIMEOUT;
-    const breakTimeout = Date.now() + _waitTimeOut;
-    while (Date.now() < breakTimeout) {
-      try {
-        const receipt = await this.getTransactionReceipt(txHash);
-        if (receipt) {
-          return receipt;
-        } else {
-          await sleep(1000);
-        }
-      } catch (err) {
-        await sleep(1000);
-      }
-    }
-
-    throw new Error(`Timeout: cannot get receipt after ${WAIT_TIMEOUT}ms`);
+    return this.sendRawTransaction(signedTx.rawTransaction, waitUntilMined, waitTimeOut || WAIT_TIMEOUT)
   }
 
   public async estimateGas(txPayload: any, data: string) {
