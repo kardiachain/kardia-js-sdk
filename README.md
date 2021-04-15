@@ -92,9 +92,9 @@ const nonce = await kardiaClient.account.getNonce(ADDRESS);
 
 const txData = {
   receiver: RECEIVING_ADDRESS,
-  gas: 1*10**9, // Minumum Gas Price = 1 OXY
   nonce,
-  gasPrice: 1, // Default gas price 1
+  gas: 29000, // Minumum Gas Price = 29000, Max Gas Price Max = 20000000
+  gasPrice: 1*10**9, // Minimum Gas Price = 1OXY
   amount: '1000000000000000000' // Value in HYDRO (1 KAI = 1*10^18 HYDRO = 1*10^9 OXY)
 };
 
