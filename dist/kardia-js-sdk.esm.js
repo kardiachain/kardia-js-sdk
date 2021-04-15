@@ -2739,14 +2739,16 @@ var KardiaTransaction = /*#__PURE__*/function () {
 
             case 12:
               signPromise = function signPromise() {
+                var txData = {
+                  from: accounts[0],
+                  gasPrice: data.gasPrice || DEFAULT_GAS_PRICE,
+                  gas: data.gas,
+                  to: data.to,
+                  value: data.value
+                };
+                if (data.data) txData.data = data.data;
                 return new Promise(function (resolve, reject) {
-                  window.web3.eth.sendTransaction({
-                    from: accounts[0],
-                    gasPrice: data.gasPrice || DEFAULT_GAS_PRICE,
-                    gas: data.gas,
-                    to: data.to,
-                    value: data.value
-                  }, function (error, hash) {
+                  window.web3.eth.sendTransaction(txData, function (error, hash) {
                     if (error) {
                       reject(error);
                     } else {
