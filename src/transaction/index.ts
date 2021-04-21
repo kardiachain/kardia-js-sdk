@@ -13,6 +13,7 @@ import { decode, encode } from '../util/rlp';
 import { isHexStrict, toHex } from '../util/string';
 import { sleep } from '../util/time';
 import { DEFAULT_GAS_PRICE, WAIT_TIMEOUT } from './config';
+import { getVersion } from '../util/helper';
 
 interface KardiaTransactionProps {
   client?: Client;
@@ -45,7 +46,11 @@ class KardiaTransaction {
     if (client) {
       this._rpcClient = client;
     } else if (provider) {
-      const transport = new HTTPTransport(provider);
+      const transport = new HTTPTransport(provider, {
+        headers: {
+          "User-Agent": `JS SDK / ${getVersion()}`
+        }
+      });
       this._rpcClient = new Client(new RequestManager([transport]));
     } else {
       throw new Error('Either [client] or [provider] must be provided');

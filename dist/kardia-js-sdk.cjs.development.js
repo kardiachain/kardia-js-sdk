@@ -4599,10 +4599,16 @@ var KRC20 = /*#__PURE__*/function () {
   return KRC20;
 }();
 
+var packageJSON = /*#__PURE__*/require('../package.json');
+
 var KardiaClient = function KardiaClient(_ref) {
   var endpoint = _ref.endpoint;
   // Init RPC client
-  var transport = new clientJs.HTTPTransport(endpoint);
+  var transport = new clientJs.HTTPTransport(endpoint, {
+    headers: {
+      "User-Agent": "JS SDK / " + packageJSON.version
+    }
+  });
   this._rpcClient = new clientJs.Client(new clientJs.RequestManager([transport])); // Init sub module
 
   this.account = new KardiaAccount({

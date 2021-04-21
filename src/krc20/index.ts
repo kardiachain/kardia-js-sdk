@@ -3,6 +3,7 @@ import KardiaContract from '../smc';
 import { checkAddressChecksum } from '../util/account';
 import { krc20ABI } from './krc20.abi';
 import { BigNumber } from 'bignumber.js';
+import { getVersion } from '../util/helper';
 // import { toHydro } from '../util/amount';
 
 interface KRC20Props {
@@ -37,7 +38,11 @@ class KRC20 {
     if (client) {
       this._rpcClient = client;
     } else if (provider) {
-      const transport = new HTTPTransport(provider);
+      const transport = new HTTPTransport(provider, {
+        headers: {
+          "User-Agent": `JS SDK / ${getVersion()}`
+        }
+      });
       this._rpcClient = new Client(new RequestManager([transport]));
     } else {
       throw new Error('Either [client] or [provider] must be provided');

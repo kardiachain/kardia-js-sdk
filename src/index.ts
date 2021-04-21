@@ -4,6 +4,7 @@ import KAIChain from './kai';
 import KardiaContract from './smc';
 import KardiaTransaction from './transaction';
 import KRC20 from './krc20';
+import { getVersion } from './util/helper';
 
 interface KardiaClientProps {
   endpoint: string;
@@ -18,7 +19,11 @@ class KardiaClient {
   public krc20: KRC20;
   constructor({ endpoint }: KardiaClientProps) {
     // Init RPC client
-    const transport = new HTTPTransport(endpoint);
+    const transport = new HTTPTransport(endpoint, {
+      headers: {
+        "User-Agent": `JS SDK / ${getVersion()}`
+      }
+    });
     this._rpcClient = new Client(new RequestManager([transport]));
 
     // Init sub module

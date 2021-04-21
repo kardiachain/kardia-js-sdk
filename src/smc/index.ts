@@ -10,6 +10,7 @@ import {
 } from '../util/abi';
 import { parseOutput } from '../util/abi/parser';
 import { fromPrivate } from '../util/account';
+import { getVersion } from '../util/helper';
 import { isHexStrict, toHex } from '../util/string';
 interface KardiaContractProps {
   client?: Client;
@@ -36,7 +37,11 @@ class KardiaContract {
     if (client) {
       this._rpcClient = client;
     } else if (provider) {
-      const transport = new HTTPTransport(provider);
+      const transport = new HTTPTransport(provider, {
+        headers: {
+          "User-Agent": `JS SDK / ${getVersion()}`
+        }
+      });
       this._rpcClient = new Client(new RequestManager([transport]));
     } else {
       throw new Error('Either [client] or [provider] must be provided');
