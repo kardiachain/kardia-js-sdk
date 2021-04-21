@@ -1,5 +1,3 @@
-const packageJSON = require('../../package.json');
-
 export const getVersion = () => {
-  return packageJSON.version;
+  return '0.3.4';
 }

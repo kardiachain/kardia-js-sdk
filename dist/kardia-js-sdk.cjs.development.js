@@ -2581,10 +2581,8 @@ var sleep = function sleep(ms) {
 var WAIT_TIMEOUT = 300000;
 var DEFAULT_GAS_PRICE = 1000000000;
 
-var packageJSON = /*#__PURE__*/require('../../package.json');
-
 var getVersion = function getVersion() {
-  return packageJSON.version;
+  return '0.3.4';
 };
 
 var isExtensionEnabled = function isExtensionEnabled() {
