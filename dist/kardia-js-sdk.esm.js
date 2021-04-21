@@ -2575,6 +2575,12 @@ var sleep = function sleep(ms) {
 var WAIT_TIMEOUT = 300000;
 var DEFAULT_GAS_PRICE = 1000000000;
 
+var packageJSON = /*#__PURE__*/require('../../package.json');
+
+var getVersion = function getVersion() {
+  return packageJSON.version;
+};
+
 var isExtensionEnabled = function isExtensionEnabled() {
   if (window.kardiachain) {
     window.web3 = new Web3(window.kardiachain);
@@ -2596,7 +2602,11 @@ var KardiaTransaction = /*#__PURE__*/function () {
     if (client) {
       this._rpcClient = client;
     } else if (provider) {
-      var transport = new HTTPTransport(provider);
+      var transport = new HTTPTransport(provider, {
+        headers: {
+          "User-Agent": "JS SDK / " + getVersion()
+        }
+      });
       this._rpcClient = new Client(new RequestManager([transport]));
     } else {
       throw new Error('Either [client] or [provider] must be provided');
@@ -3537,7 +3547,11 @@ var KardiaContract = /*#__PURE__*/function () {
     if (client) {
       this._rpcClient = client;
     } else if (provider) {
-      var transport = new HTTPTransport(provider);
+      var transport = new HTTPTransport(provider, {
+        headers: {
+          "User-Agent": "JS SDK / " + getVersion()
+        }
+      });
       this._rpcClient = new Client(new RequestManager([transport]));
     } else {
       throw new Error('Either [client] or [provider] must be provided');
@@ -4185,7 +4199,11 @@ var KRC20 = /*#__PURE__*/function () {
     if (client) {
       this._rpcClient = client;
     } else if (provider) {
-      var transport = new HTTPTransport(provider);
+      var transport = new HTTPTransport(provider, {
+        headers: {
+          "User-Agent": "JS SDK / " + getVersion()
+        }
+      });
       this._rpcClient = new Client(new RequestManager([transport]));
     } else {
       throw new Error('Either [client] or [provider] must be provided');
@@ -4593,14 +4611,12 @@ var KRC20 = /*#__PURE__*/function () {
   return KRC20;
 }();
 
-var packageJSON = /*#__PURE__*/require('../package.json');
-
 var KardiaClient = function KardiaClient(_ref) {
   var endpoint = _ref.endpoint;
   // Init RPC client
   var transport = new HTTPTransport(endpoint, {
     headers: {
-      "User-Agent": "JS SDK / " + packageJSON.version
+      "User-Agent": "JS SDK / " + getVersion()
     }
   });
   this._rpcClient = new Client(new RequestManager([transport])); // Init sub module
