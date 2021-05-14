@@ -6,8 +6,8 @@ import { ENDPOINT, ENDPOINT_PUBLIC } from '../config';
 import {
   DEPLOY_ACCOUNT,
   SMC1,
-  SMC2,
-  SMC3,
+  // SMC2,
+  // SMC3,
   SMC4,
   TX_TO_GET_EVENTS,
 } from './config';
@@ -67,17 +67,17 @@ describe('SMC module test', () => {
     myContract.updateAbi(SMC4.ABI);
     const events = await myContract.parseEvent(txHashToGetEvent);
     expect(Array.isArray(events)).toEqual(true);
-    expect(events.length).toEqual(7);
+    expect(events.length).toEqual(1);
   });
 
   it('should deploy contract and interact successfully', async () => {
     jest.setTimeout(150000);
 
-    const SMC_TO_TEST = [SMC1, SMC2, SMC3];
+    // const SMC_TO_TEST = [SMC1, SMC2, SMC3];
     // const SMC_TO_TEST = [SMC3];
-    // const SMC_TO_TEST = [SMC1];
+    const SMC_TO_TEST = [SMC1];
     for (let index = 0; index < SMC_TO_TEST.length; index++) {
-      sleep(20000);
+      sleep(50000);
       const smc = SMC_TO_TEST[index];
       myContract.updateAbi(smc.ABI);
       myContract.updateByteCode(smc.BYTECODES);
@@ -96,10 +96,9 @@ describe('SMC module test', () => {
       const defaultPayload = preDeploy.getDefaultTxPayload();
       const estimatedGas = await preDeploy.estimateGas(defaultPayload);
       expect(estimatedGas).toBeTruthy();
-
       const smcData = await preDeploy.send(DEPLOY_ACCOUNT.privateKey, {
-        gas: estimatedGas * 10,
-      });
+        gas: estimatedGas * 2,
+      }, true);
       expect(smcData).toBeTruthy();
 
       const deployedContract = myContract.invokeContract(
@@ -116,7 +115,7 @@ describe('SMC module test', () => {
       const result = await deployedContract.call(
         smcData.contractAddress,
         {
-          gas: estimatedGasForInvoke * 10,
+          gas: estimatedGasForInvoke * 2,
         },
         'latest'
       );
