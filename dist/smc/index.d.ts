@@ -31,7 +31,7 @@ declare class KardiaContract {
             gas: number;
         };
         estimateGas: (txPayload?: Record<string, any>) => Promise<any>;
-        send: (privateKey: string, txPayload?: Record<string, any>) => Promise<any>;
+        send: (privateKey: string, txPayload?: Record<string, any>, waitUntilMined?: boolean) => Promise<any>;
     };
     invokeContract(name: string, params: any[]): {
         txData: () => string;
@@ -42,7 +42,7 @@ declare class KardiaContract {
         };
         estimateGas: (txPayload: Record<string, any>) => Promise<any>;
         getTxObject: () => Promise<any>;
-        send: (privateKey: string, contractAddress: string, txPayload?: Record<string, any>) => Promise<any>;
+        send: (privateKey: string, contractAddress: string, txPayload?: Record<string, any>, waitUntilMined?: boolean) => Promise<any>;
         call: (contractAddress: string, txPayload?: Record<string, any>, blockHeight?: any) => Promise<any>;
     };
     parseEvent(txHash: string): Promise<any>;

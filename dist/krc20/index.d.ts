@@ -27,7 +27,7 @@ declare class KRC20 {
     getTotalSupply(format?: 'string' | 'BigNumber' | 'number'): Promise<any>;
     getFromAddress(address: string): Promise<void>;
     balanceOf(address: string): Promise<any>;
-    transfer(privateKey: string, to: string, amount: number, transferPayload?: Record<string, any>): Promise<any>;
+    transfer(privateKey: string, to: string, amount: number, transferPayload?: Record<string, any>, waitUntilMined?: boolean): Promise<any>;
     estimateGas(to: string, amount: number): Promise<number>;
 }
 export default KRC20;

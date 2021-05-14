@@ -2582,7 +2582,7 @@ var WAIT_TIMEOUT = 300000;
 var DEFAULT_GAS_PRICE = 1000000000;
 
 var getVersion = function getVersion() {
-  return '0.3.5';
+  return '0.3.6';
 };
 
 var isExtensionEnabled = function isExtensionEnabled() {
@@ -3647,7 +3647,7 @@ var KardiaContract = /*#__PURE__*/function () {
         return estimateGas;
       }(),
       send: function () {
-        var _send = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2(privateKey, txPayload) {
+        var _send = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2(privateKey, txPayload, waitUntilMined) {
           var senderAccount, account, accountNonce, transaction, result;
           return runtime_1.wrap(function _callee2$(_context2) {
             while (1) {
@@ -3657,19 +3657,23 @@ var KardiaContract = /*#__PURE__*/function () {
                     txPayload = {};
                   }
 
+                  if (waitUntilMined === void 0) {
+                    waitUntilMined = false;
+                  }
+
                   senderAccount = fromPrivate(privateKey);
                   account = new KardiaAccount({
                     client: _this._rpcClient
                   });
-                  _context2.next = 5;
+                  _context2.next = 6;
                   return account.getNonce(senderAccount.address);
 
-                case 5:
+                case 6:
                   accountNonce = _context2.sent;
                   transaction = new KardiaTransaction({
                     client: _this._rpcClient
                   });
-                  _context2.next = 9;
+                  _context2.next = 10;
                   return transaction.sendTransaction({
                     receiver: '0x',
                     amount: txPayload.amount || 0,
@@ -3677,13 +3681,13 @@ var KardiaContract = /*#__PURE__*/function () {
                     gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE$1,
                     gas: txPayload.gas || DEFAULT_GAS,
                     data: data
-                  }, privateKey, true);
+                  }, privateKey, waitUntilMined);
 
-                case 9:
+                case 10:
                   result = _context2.sent;
                   return _context2.abrupt("return", result);
 
-                case 11:
+                case 12:
                 case "end":
                   return _context2.stop();
               }
@@ -3691,7 +3695,7 @@ var KardiaContract = /*#__PURE__*/function () {
           }, _callee2);
         }));
 
-        function send(_x2, _x3) {
+        function send(_x2, _x3, _x4) {
           return _send.apply(this, arguments);
         }
 
@@ -3746,7 +3750,7 @@ var KardiaContract = /*#__PURE__*/function () {
           }, _callee3);
         }));
 
-        function estimateGas(_x4) {
+        function estimateGas(_x5) {
           return _estimateGas2.apply(this, arguments);
         }
 
@@ -3787,7 +3791,7 @@ var KardiaContract = /*#__PURE__*/function () {
         return getTxObject;
       }(),
       send: function () {
-        var _send2 = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(privateKey, contractAddress, txPayload) {
+        var _send2 = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(privateKey, contractAddress, txPayload, waitUntilMined) {
           var senderAccount, account, accountNonce, transaction, txResult, events, result;
           return runtime_1.wrap(function _callee5$(_context5) {
             while (1) {
@@ -3797,19 +3801,23 @@ var KardiaContract = /*#__PURE__*/function () {
                     txPayload = {};
                   }
 
+                  if (waitUntilMined === void 0) {
+                    waitUntilMined = false;
+                  }
+
                   senderAccount = fromPrivate(privateKey);
                   account = new KardiaAccount({
                     client: _this2._rpcClient
                   });
-                  _context5.next = 5;
+                  _context5.next = 6;
                   return account.getNonce(senderAccount.address);
 
-                case 5:
+                case 6:
                   accountNonce = _context5.sent;
                   transaction = new KardiaTransaction({
                     client: _this2._rpcClient
                   });
-                  _context5.next = 9;
+                  _context5.next = 10;
                   return transaction.sendTransaction({
                     receiver: contractAddress,
                     amount: txPayload.amount || 0,
@@ -3817,9 +3825,9 @@ var KardiaContract = /*#__PURE__*/function () {
                     gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE$1,
                     gas: txPayload.gas || DEFAULT_GAS,
                     data: data
-                  }, privateKey, true);
+                  }, privateKey, waitUntilMined);
 
-                case 9:
+                case 10:
                   txResult = _context5.sent;
                   events = txResult.logs ? txResult.logs.map(function (item) {
                     return parseEvent(_this2.abi, item);
@@ -3829,7 +3837,7 @@ var KardiaContract = /*#__PURE__*/function () {
                   }, txResult);
                   return _context5.abrupt("return", result);
 
-                case 13:
+                case 14:
                 case "end":
                   return _context5.stop();
               }
@@ -3837,7 +3845,7 @@ var KardiaContract = /*#__PURE__*/function () {
           }, _callee5);
         }));
 
-        function send(_x5, _x6, _x7) {
+        function send(_x6, _x7, _x8, _x9) {
           return _send2.apply(this, arguments);
         }
 
@@ -3885,7 +3893,7 @@ var KardiaContract = /*#__PURE__*/function () {
           }, _callee6);
         }));
 
-        function call(_x8, _x9, _x10) {
+        function call(_x10, _x11, _x12) {
           return _call.apply(this, arguments);
         }
 
@@ -3924,7 +3932,7 @@ var KardiaContract = /*#__PURE__*/function () {
       }, _callee7, this);
     }));
 
-    function parseEvent$1(_x11) {
+    function parseEvent$1(_x13) {
       return _parseEvent2.apply(this, arguments);
     }
 
@@ -4516,7 +4524,7 @@ var KRC20 = /*#__PURE__*/function () {
   }();
 
   _proto.transfer = /*#__PURE__*/function () {
-    var _transfer = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(privateKey, to, amount, transferPayload) {
+    var _transfer = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(privateKey, to, amount, transferPayload, waitUntilMined) {
       var invocation, defaultPayload, estimatedGas;
       return runtime_1.wrap(function _callee7$(_context7) {
         while (1) {
@@ -4526,45 +4534,49 @@ var KRC20 = /*#__PURE__*/function () {
                 transferPayload = {};
               }
 
+              if (waitUntilMined === void 0) {
+                waitUntilMined = false;
+              }
+
               this.validateAddress();
 
               if (checkAddressChecksum(to)) {
-                _context7.next = 4;
+                _context7.next = 5;
                 break;
               }
 
               throw new Error('Invalid [to]');
 
-            case 4:
+            case 5:
               if (!(amount < 0)) {
-                _context7.next = 6;
+                _context7.next = 7;
                 break;
               }
 
               throw new Error('Invalid [amount]');
 
-            case 6:
+            case 7:
               invocation = this._smcInstance.invokeContract('transfer', [to, Number(amount * Math.pow(10, this.decimals)).toLocaleString('fullwide', {
                 useGrouping: false
               })]);
 
               if (transferPayload.gas) {
-                _context7.next = 13;
+                _context7.next = 14;
                 break;
               }
 
               defaultPayload = invocation.getDefaultTxPayload();
-              _context7.next = 11;
+              _context7.next = 12;
               return invocation.estimateGas(defaultPayload);
 
-            case 11:
+            case 12:
               estimatedGas = _context7.sent;
               transferPayload.gas = estimatedGas * 2;
 
-            case 13:
-              return _context7.abrupt("return", invocation.send(privateKey, this.address, transferPayload));
-
             case 14:
+              return _context7.abrupt("return", invocation.send(privateKey, this.address, transferPayload, waitUntilMined));
+
+            case 15:
             case "end":
               return _context7.stop();
           }
@@ -4572,7 +4584,7 @@ var KRC20 = /*#__PURE__*/function () {
       }, _callee7, this);
     }));
 
-    function transfer(_x7, _x8, _x9, _x10) {
+    function transfer(_x7, _x8, _x9, _x10, _x11) {
       return _transfer.apply(this, arguments);
     }
 
@@ -4605,7 +4617,7 @@ var KRC20 = /*#__PURE__*/function () {
       }, _callee8, this);
     }));
 
-    function estimateGas(_x11, _x12) {
+    function estimateGas(_x12, _x13) {
       return _estimateGas.apply(this, arguments);
     }
 
