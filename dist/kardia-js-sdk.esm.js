@@ -2576,7 +2576,7 @@ var WAIT_TIMEOUT = 300000;
 var DEFAULT_GAS_PRICE = 1000000000;
 
 var getVersion = function getVersion() {
-  return '0.3.4';
+  return '0.3.5';
 };
 
 var isExtensionEnabled = function isExtensionEnabled() {
@@ -4637,5 +4637,5 @@ var KardiaClient = function KardiaClient(_ref) {
 };
 
 export default KardiaClient;
-export { KAIChain, KRC20, KardiaAccount, KardiaTransaction };
+export { KAIChain, KRC20, KardiaAccount, KardiaContract, KardiaTransaction };
 //# sourceMappingURL=kardia-js-sdk.esm.js.map

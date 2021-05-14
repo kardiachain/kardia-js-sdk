@@ -15,5 +15,5 @@ declare class KardiaClient {
     krc20: KRC20;
     constructor({ endpoint }: KardiaClientProps);
 }
-export { KardiaTransaction, KardiaAccount, KAIChain, KRC20 };
+export { KardiaTransaction, KardiaAccount, KAIChain, KRC20, KardiaContract };
 export default KardiaClient;
