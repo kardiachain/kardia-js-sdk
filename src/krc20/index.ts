@@ -154,7 +154,8 @@ class KRC20 {
     privateKey: string,
     to: string,
     amount: number,
-    transferPayload: Record<string, any> = {}
+    transferPayload: Record<string, any> = {},
+    waitUntilMined = false
   ) {
     this.validateAddress();
     if (!checkAddressChecksum(to)) throw new Error('Invalid [to]');
@@ -174,7 +175,7 @@ class KRC20 {
       transferPayload.gas = estimatedGas * 2;
     }
 
-    return invocation.send(privateKey, this.address, transferPayload);
+    return invocation.send(privateKey, this.address, transferPayload, waitUntilMined);
   }
 
   public async estimateGas(to: string, amount: number) {

@@ -94,7 +94,7 @@ class KardiaContract {
       estimateGas: async (txPayload: Record<string, any> = {}) => {
         return await this.txModule.estimateGas(txPayload, data);
       },
-      send: async (privateKey: string, txPayload: Record<string, any> = {}) => {
+      send: async (privateKey: string, txPayload: Record<string, any> = {}, waitUntilMined = false) => {
         const senderAccount = fromPrivate(privateKey);
 
         const account = new KardiaAccount({ client: this._rpcClient });
@@ -110,7 +110,7 @@ class KardiaContract {
             data,
           },
           privateKey,
-          true
+          waitUntilMined
         );
         return result;
       },
@@ -158,7 +158,8 @@ class KardiaContract {
       send: async (
         privateKey: string,
         contractAddress: string,
-        txPayload: Record<string, any> = {}
+        txPayload: Record<string, any> = {},
+        waitUntilMined = false,
       ) => {
         const senderAccount = fromPrivate(privateKey);
 
@@ -176,7 +177,7 @@ class KardiaContract {
             data,
           },
           privateKey,
-          true
+          waitUntilMined
         );
 
         const events = txResult.logs
