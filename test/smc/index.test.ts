@@ -1,4 +1,5 @@
 import KardiaContract from '../../src/smc';
+import {KardiaContract as ESMKardiaContract} from '../../src'
 // import { DEFAULT_GAS_PRICE } from '../../src/transaction/config';
 import { sleep } from '../../src/util/time';
 import { ENDPOINT, ENDPOINT_PUBLIC } from '../config';
@@ -22,6 +23,11 @@ describe('SMC module test', () => {
   it('should be initialized successfully', () => {
     expect(myContract).toBeTruthy();
   });
+
+  it('should be initialized by using ESM module', () => {
+    const esmContractInstance = new ESMKardiaContract({ provider: endpoint })
+    expect(esmContractInstance).toBeTruthy()
+  })
 
   it('should throw error when initialized without client and provider', () => {
     expect(() => {
