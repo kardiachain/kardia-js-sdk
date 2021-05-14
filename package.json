@@ -1,5 +1,5 @@
 {
-  "version": "0.3.5",
+  "version": "0.3.6",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -33,6 +33,7 @@
     "trailingComma": "es5"
   },
   "name": "kardia-js-sdk",
+  "homepage": "https://docs.kardiachain.io/js-sdk",
   "author": "phongnhat19",
   "bugs": {
     "url": "https://github.com/kardiachain/kardia-js-sdk/issues"
