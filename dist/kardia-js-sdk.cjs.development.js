@@ -2582,7 +2582,7 @@ var WAIT_TIMEOUT = 300000;
 var DEFAULT_GAS_PRICE = 1000000000;
 
 var getVersion = function getVersion() {
-  return '0.3.6';
+  return '0.3.7';
 };
 
 var isExtensionEnabled = function isExtensionEnabled() {
@@ -3425,7 +3425,7 @@ var parseEvent = function parseEvent(currentAbi, eventObject) {
 
       return decode.toString();
     });
-    var decodeObject = decodeOutput(eventAbi.inputs, rawOutput);
+    var decodeObject = decodeOutput(orderedInputs, rawOutput);
     return _extends({
       event: _extends({
         name: eventAbi.name
