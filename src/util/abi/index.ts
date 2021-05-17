@@ -211,7 +211,7 @@ export const parseEvent = (
       }
       return decode.toString();
     });
-    const decodeObject = decodeOutput(eventAbi.inputs, rawOutput);
+    const decodeObject = decodeOutput(orderedInputs, rawOutput);
     return {
       event: {
         name: eventAbi.name,
