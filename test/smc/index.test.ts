@@ -8,7 +8,8 @@ import {
   SMC1,
   // SMC2,
   // SMC3,
-  SMC4,
+  SMC_KRC20,
+  // SMC4,
   TX_TO_GET_EVENTS,
 } from './config';
 
@@ -64,10 +65,10 @@ describe('SMC module test', () => {
 
   it('should parse event successfully', async () => {
     const txHashToGetEvent = TX_TO_GET_EVENTS;
-    myContract.updateAbi(SMC4.ABI);
+    myContract.updateAbi(SMC_KRC20.ABI);
     const events = await myContract.parseEvent(txHashToGetEvent);
     expect(Array.isArray(events)).toEqual(true);
-    expect(events.length).toEqual(1);
+    expect(events.length).toEqual(2);
   });
 
   it('should deploy contract and interact successfully', async () => {

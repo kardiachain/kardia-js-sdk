@@ -1,5 +1,5 @@
 export const BLOCK_HASH =
-  '0xdcd44e9aa3df9b536eec2a9c37da837a9d32788d04b464bdb43dc6e7f15ec6c6';
+  '0x72254ae7beef8dc391abfa07d04ea6df21330bb5e33d522c2b003f8fc755d129';
 export const BLOCK_HEIGHT = 1;
 export const PRIVATE_KEY =
   '0x96c9348e15ca2f005dd808fef5f0ca7e1a0767151dbc6c20e282750e68367e56';

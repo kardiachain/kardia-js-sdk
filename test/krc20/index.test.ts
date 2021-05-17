@@ -6,7 +6,7 @@ import { ACCOUNT1, ACCOUNT2, TOKEN1 } from './config';
 const endpoint = process.env.TEST_ENV === 'prod' ? ENDPOINT_PUBLIC : ENDPOINT;
 const kardiaClient = new KardiaClient({ endpoint });
 
-describe('SMC module test', () => {
+describe('KRC20 module test', () => {
   let krc20Instance: KRC20;
   beforeEach(() => {
     krc20Instance = new KRC20({ provider: endpoint, address: TOKEN1.address });
@@ -57,7 +57,9 @@ describe('SMC module test', () => {
     const tx = await krc20Instance.transfer(
       ACCOUNT1.privateKey,
       ACCOUNT2.address,
-      1
+      1,
+      {},
+      true
     );
     expect(tx).toBeTruthy();
     expect(tx.from).toEqual(ACCOUNT1.address);

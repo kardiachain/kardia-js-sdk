@@ -1,23 +1,15 @@
 export const TOKEN1 = {
-  address: '0xae67DeAb9ff650862fD9CAC1127bad2132e8408a',
-  name: 'SampleToken',
+  address: '0x9b8af677D6F9b286aF448AdB96Ee6360DFF21De5',
+  name: 'DOGE',
   decimals: 18,
-  symbol: 'TOK1',
-  totalSupply: '1000000000000000000000000',
+  symbol: 'DOGE',
+  totalSupply: '1000000000000000000000000000',
 };
-
-// export const TOKEN1 = {
-//   address: '0xeFF34B63f55200a9D635B8ABBBFCC719b4977864',
-//   name: 'VNDC',
-//   decimals: 18,
-//   symbol: 'VNDC',
-//   totalSupply: '1000000000000000000000000',
-// };
 
 export const ACCOUNT1 = {
   privateKey:
-    '0x8843ebcb1021b00ae9a644db6617f9c6d870e5fd53624cefe374c1d2d710fd06',
-  address: '0xc1fe56E3F58D3244F606306611a5d10c8333f1f6',
+    '0x963cdd4eec3c24e20611f253652495b0c6112b27d4394fcb7a06c255027c5b41',
+  address: '0xf64C35a3d5340B8493cE4CD988B3c1e890B2bD68',
 };
 
 export const ACCOUNT2 = {
