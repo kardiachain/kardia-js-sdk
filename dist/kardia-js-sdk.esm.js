@@ -2576,7 +2576,7 @@ var WAIT_TIMEOUT = 300000;
 var DEFAULT_GAS_PRICE = 1000000000;
 
 var getVersion = function getVersion() {
-  return '0.3.7';
+  return '0.3.8';
 };
 
 var isExtensionEnabled = function isExtensionEnabled() {
@@ -4517,8 +4517,8 @@ var KRC20 = /*#__PURE__*/function () {
     return balanceOf;
   }();
 
-  _proto.transfer = /*#__PURE__*/function () {
-    var _transfer = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(privateKey, to, amount, transferPayload, waitUntilMined) {
+  _proto.transferRaw = /*#__PURE__*/function () {
+    var _transferRaw = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(privateKey, to, amount, transferPayload, waitUntilMined) {
       var invocation, defaultPayload, estimatedGas;
       return runtime_1.wrap(function _callee7$(_context7) {
         while (1) {
@@ -4542,7 +4542,7 @@ var KRC20 = /*#__PURE__*/function () {
               throw new Error('Invalid [to]');
 
             case 5:
-              if (!(amount < 0)) {
+              if (amount) {
                 _context7.next = 7;
                 break;
               }
@@ -4550,9 +4550,7 @@ var KRC20 = /*#__PURE__*/function () {
               throw new Error('Invalid [amount]');
 
             case 7:
-              invocation = this._smcInstance.invokeContract('transfer', [to, Number(amount * Math.pow(10, this.decimals)).toLocaleString('fullwide', {
-                useGrouping: false
-              })]);
+              invocation = this._smcInstance.invokeContract('transfer', [to, amount]);
 
               if (transferPayload.gas) {
                 _context7.next = 14;
@@ -4578,32 +4576,67 @@ var KRC20 = /*#__PURE__*/function () {
       }, _callee7, this);
     }));
 
-    function transfer(_x7, _x8, _x9, _x10, _x11) {
-      return _transfer.apply(this, arguments);
+    function transferRaw(_x7, _x8, _x9, _x10, _x11) {
+      return _transferRaw.apply(this, arguments);
     }
 
-    return transfer;
+    return transferRaw;
   }();
 
-  _proto.estimateGas = /*#__PURE__*/function () {
-    var _estimateGas = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee8(to, amount) {
+  _proto.transfer = /*#__PURE__*/function () {
+    var _transfer = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee8(privateKey, to, amount, transferPayload, waitUntilMined) {
       var invocation, defaultPayload, estimatedGas;
       return runtime_1.wrap(function _callee8$(_context8) {
         while (1) {
           switch (_context8.prev = _context8.next) {
             case 0:
+              if (transferPayload === void 0) {
+                transferPayload = {};
+              }
+
+              if (waitUntilMined === void 0) {
+                waitUntilMined = false;
+              }
+
+              this.validateAddress();
+
+              if (checkAddressChecksum(to)) {
+                _context8.next = 5;
+                break;
+              }
+
+              throw new Error('Invalid [to]');
+
+            case 5:
+              if (!(amount < 0)) {
+                _context8.next = 7;
+                break;
+              }
+
+              throw new Error('Invalid [amount]');
+
+            case 7:
               invocation = this._smcInstance.invokeContract('transfer', [to, Number(amount * Math.pow(10, this.decimals)).toLocaleString('fullwide', {
                 useGrouping: false
               })]);
+
+              if (transferPayload.gas) {
+                _context8.next = 14;
+                break;
+              }
+
               defaultPayload = invocation.getDefaultTxPayload();
-              _context8.next = 4;
+              _context8.next = 12;
               return invocation.estimateGas(defaultPayload);
 
-            case 4:
+            case 12:
               estimatedGas = _context8.sent;
-              return _context8.abrupt("return", estimatedGas * 2);
+              transferPayload.gas = estimatedGas * 2;
 
-            case 6:
+            case 14:
+              return _context8.abrupt("return", invocation.send(privateKey, this.address, transferPayload, waitUntilMined));
+
+            case 15:
             case "end":
               return _context8.stop();
           }
@@ -4611,7 +4644,40 @@ var KRC20 = /*#__PURE__*/function () {
       }, _callee8, this);
     }));
 
-    function estimateGas(_x12, _x13) {
+    function transfer(_x12, _x13, _x14, _x15, _x16) {
+      return _transfer.apply(this, arguments);
+    }
+
+    return transfer;
+  }();
+
+  _proto.estimateGas = /*#__PURE__*/function () {
+    var _estimateGas = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee9(to, amount) {
+      var invocation, defaultPayload, estimatedGas;
+      return runtime_1.wrap(function _callee9$(_context9) {
+        while (1) {
+          switch (_context9.prev = _context9.next) {
+            case 0:
+              invocation = this._smcInstance.invokeContract('transfer', [to, Number(amount * Math.pow(10, this.decimals)).toLocaleString('fullwide', {
+                useGrouping: false
+              })]);
+              defaultPayload = invocation.getDefaultTxPayload();
+              _context9.next = 4;
+              return invocation.estimateGas(defaultPayload);
+
+            case 4:
+              estimatedGas = _context9.sent;
+              return _context9.abrupt("return", estimatedGas * 2);
+
+            case 6:
+            case "end":
+              return _context9.stop();
+          }
+        }
+      }, _callee9, this);
+    }));
+
+    function estimateGas(_x17, _x18) {
       return _estimateGas.apply(this, arguments);
     }
 
