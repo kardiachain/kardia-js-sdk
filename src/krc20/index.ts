@@ -150,6 +150,32 @@ class KRC20 {
     return balance;
   }
 
+  public async transferRaw(
+    privateKey: string,
+    to: string,
+    amount: string,
+    transferPayload: Record<string, any> = {},
+    waitUntilMined = false
+  ) {
+    this.validateAddress();
+    if (!checkAddressChecksum(to)) throw new Error('Invalid [to]');
+    if (!amount) throw new Error('Invalid [amount]');
+
+    const invocation = this._smcInstance.invokeContract('transfer', [
+      to,
+      amount,
+    ]);
+
+    if (!transferPayload.gas) {
+      const defaultPayload = invocation.getDefaultTxPayload();
+      const estimatedGas = await invocation.estimateGas(defaultPayload);
+
+      transferPayload.gas = estimatedGas * 2;
+    }
+
+    return invocation.send(privateKey, this.address, transferPayload, waitUntilMined);
+  }
+
   public async transfer(
     privateKey: string,
     to: string,
