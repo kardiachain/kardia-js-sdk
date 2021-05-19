@@ -80,4 +80,16 @@ describe('KRC20 module test', () => {
     expect(tx.from).toEqual(ACCOUNT1.address);
     expect(tx.to).toEqual(TOKEN1.address);
   });
+
+  it('should return tx hash when transfer without `waitUntilMined` flag', async () => {
+    jest.setTimeout(150000);
+
+    const tx = await krc20Instance.transferRaw(
+      ACCOUNT1.privateKey,
+      ACCOUNT2.address,
+      '1000000000000000000',
+    );
+    expect(tx).toBeTruthy();
+    expect(typeof tx === 'string').toBeTruthy()
+  })
 });
