@@ -2576,7 +2576,7 @@ var WAIT_TIMEOUT = 300000;
 var DEFAULT_GAS_PRICE = 1000000000;
 
 var getVersion = function getVersion() {
-  return '0.3.8';
+  return '0.3.9';
 };
 
 var isExtensionEnabled = function isExtensionEnabled() {
@@ -3823,6 +3823,15 @@ var KardiaContract = /*#__PURE__*/function () {
 
                 case 10:
                   txResult = _context5.sent;
+
+                  if (waitUntilMined) {
+                    _context5.next = 13;
+                    break;
+                  }
+
+                  return _context5.abrupt("return", txResult);
+
+                case 13:
                   events = txResult.logs ? txResult.logs.map(function (item) {
                     return parseEvent(_this2.abi, item);
                   }) : [];
@@ -3831,7 +3840,7 @@ var KardiaContract = /*#__PURE__*/function () {
                   }, txResult);
                   return _context5.abrupt("return", result);
 
-                case 14:
+                case 16:
                 case "end":
                   return _context5.stop();
               }
