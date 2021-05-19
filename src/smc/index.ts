@@ -180,6 +180,8 @@ class KardiaContract {
           waitUntilMined
         );
 
+        if (!waitUntilMined) return txResult;
+
         const events = txResult.logs
           ? txResult.logs.map((item: any) => parseEvent(this.abi, item))
           : [];
