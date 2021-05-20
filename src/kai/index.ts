@@ -142,6 +142,13 @@ class KAIChain {
     });
   }
 
+  public async getGasPrice() {
+    return await this._rpcClient.request({
+      method: 'kai_gasPrice',
+      params: [],
+    });
+  }
+
   // Static utility method
 
   public static KAIFromHydro(hydroValue: any): number {

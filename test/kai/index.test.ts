@@ -112,6 +112,11 @@ describe('KAI module test', () => {
     expect(logs).toBeTruthy();
   });
 
+  it('should get gas price successfully', async () => {
+    const gasPriceInHydro = await kardiaClient.kaiChain.getGasPrice();
+    expect(gasPriceInHydro).toBeTruthy();
+  });
+
   // Utility test
   it('should convert hydro to KAI correctly and vice versa', async () => {
     const kaiMount = KAIChain.KAIFromHydro(KAI_IN_HYDRO);
