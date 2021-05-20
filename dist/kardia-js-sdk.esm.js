@@ -2476,6 +2476,36 @@ var KAIChain = /*#__PURE__*/function () {
     }
 
     return getLogs;
+  }();
+
+  _proto.getGasPrice = /*#__PURE__*/function () {
+    var _getGasPrice = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee14() {
+      return runtime_1.wrap(function _callee14$(_context14) {
+        while (1) {
+          switch (_context14.prev = _context14.next) {
+            case 0:
+              _context14.next = 2;
+              return this._rpcClient.request({
+                method: 'kai_gasPrice',
+                params: []
+              });
+
+            case 2:
+              return _context14.abrupt("return", _context14.sent);
+
+            case 3:
+            case "end":
+              return _context14.stop();
+          }
+        }
+      }, _callee14, this);
+    }));
+
+    function getGasPrice() {
+      return _getGasPrice.apply(this, arguments);
+    }
+
+    return getGasPrice;
   }() // Static utility method
   ;
 
@@ -2576,7 +2606,7 @@ var WAIT_TIMEOUT = 300000;
 var DEFAULT_GAS_PRICE = 1000000000;
 
 var getVersion = function getVersion() {
-  return '0.3.9';
+  return '0.3.10';
 };
 
 var isExtensionEnabled = function isExtensionEnabled() {
@@ -2705,7 +2735,7 @@ var KardiaTransaction = /*#__PURE__*/function () {
 
   _proto.sendTransactionToExtension = /*#__PURE__*/function () {
     var _sendTransactionToExtension = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(data, waitUntilMined, waitTimeOut) {
-      var accounts, estimatedGas, signPromise, txHash, _waitTimeOut, breakTimeout, receipt;
+      var accounts, estimatedGas, _client, signPromise, txHash, _waitTimeOut, breakTimeout, receipt;
 
       return runtime_1.wrap(function _callee4$(_context4) {
         while (1) {
@@ -2746,6 +2776,21 @@ var KardiaTransaction = /*#__PURE__*/function () {
               data.gas = estimatedGas * 10;
 
             case 12:
+              if (data.gasPrice) {
+                _context4.next = 17;
+                break;
+              }
+
+              _client = new KAIChain({
+                client: this._rpcClient
+              });
+              _context4.next = 16;
+              return _client.getGasPrice();
+
+            case 16:
+              data.gasPrice = _context4.sent;
+
+            case 17:
               signPromise = function signPromise() {
                 var txData = {
                   from: accounts[0],
@@ -2766,70 +2811,70 @@ var KardiaTransaction = /*#__PURE__*/function () {
                 });
               };
 
-              _context4.next = 15;
+              _context4.next = 20;
               return signPromise();
 
-            case 15:
+            case 20:
               txHash = _context4.sent;
 
               if (waitUntilMined) {
-                _context4.next = 18;
+                _context4.next = 23;
                 break;
               }
 
               return _context4.abrupt("return", txHash);
 
-            case 18:
+            case 23:
               _waitTimeOut = waitTimeOut || WAIT_TIMEOUT;
               breakTimeout = Date.now() + _waitTimeOut;
 
-            case 20:
+            case 25:
               if (!(Date.now() < breakTimeout)) {
-                _context4.next = 39;
+                _context4.next = 44;
                 break;
               }
 
-              _context4.prev = 21;
-              _context4.next = 24;
+              _context4.prev = 26;
+              _context4.next = 29;
               return this.getTransactionReceipt(txHash);
 
-            case 24:
+            case 29:
               receipt = _context4.sent;
 
               if (!receipt) {
-                _context4.next = 29;
+                _context4.next = 34;
                 break;
               }
 
               return _context4.abrupt("return", receipt);
 
-            case 29:
-              _context4.next = 31;
+            case 34:
+              _context4.next = 36;
               return sleep(1000);
 
-            case 31:
-              _context4.next = 37;
+            case 36:
+              _context4.next = 42;
               break;
 
-            case 33:
-              _context4.prev = 33;
-              _context4.t0 = _context4["catch"](21);
-              _context4.next = 37;
+            case 38:
+              _context4.prev = 38;
+              _context4.t0 = _context4["catch"](26);
+              _context4.next = 42;
               return sleep(1000);
 
-            case 37:
-              _context4.next = 20;
+            case 42:
+              _context4.next = 25;
               break;
 
-            case 39:
+            case 44:
               throw new Error("Timeout: cannot get receipt after " + WAIT_TIMEOUT + "ms");
 
-            case 40:
+            case 45:
             case "end":
               return _context4.stop();
           }
         }
-      }, _callee4, this, [[21, 33]]);
+      }, _callee4, this, [[26, 38]]);
     }));
 
     function sendTransactionToExtension(_x3, _x4, _x5) {
@@ -3047,7 +3092,8 @@ var KardiaTransaction = /*#__PURE__*/function () {
   /*#__PURE__*/
   function () {
     var _sendTransaction = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(data, privateKey, waitUntilMined, waitTimeOut) {
-      var estimatedGas, generatedTx, signedTx;
+      var estimatedGas, _client, generatedTx, signedTx;
+
       return runtime_1.wrap(function _callee7$(_context7) {
         while (1) {
           switch (_context7.prev = _context7.next) {
@@ -3073,19 +3119,34 @@ var KardiaTransaction = /*#__PURE__*/function () {
               data.gas = estimatedGas * 10;
 
             case 7:
-              _context7.next = 9;
-              return this.generateTransaction(data);
+              if (data.gasPrice) {
+                _context7.next = 12;
+                break;
+              }
 
-            case 9:
-              generatedTx = _context7.sent;
-              _context7.next = 12;
-              return this.signTransaction(generatedTx, privateKey);
+              _client = new KAIChain({
+                client: this._rpcClient
+              });
+              _context7.next = 11;
+              return _client.getGasPrice();
+
+            case 11:
+              data.gasPrice = _context7.sent;
 
             case 12:
+              _context7.next = 14;
+              return this.generateTransaction(data);
+
+            case 14:
+              generatedTx = _context7.sent;
+              _context7.next = 17;
+              return this.signTransaction(generatedTx, privateKey);
+
+            case 17:
               signedTx = _context7.sent;
               return _context7.abrupt("return", this.sendRawTransaction(signedTx.rawTransaction, waitUntilMined, waitTimeOut || WAIT_TIMEOUT));
 
-            case 14:
+            case 19:
             case "end":
               return _context7.stop();
           }

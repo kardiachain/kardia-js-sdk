@@ -23,6 +23,7 @@ declare class KAIChain {
     getFilterChanges(filterId: string): Promise<any>;
     getFilterLogs(filterId: string): Promise<any>;
     getLogs(fromBlock?: 'latest' | number, toBlock?: 'latest' | number, address?: string, topics?: [], blockhash?: any): Promise<any>;
+    getGasPrice(): Promise<any>;
     static KAIFromHydro(hydroValue: any): number;
     static HydroFromKAI(kaiValue: any): any;
 }
