@@ -14,6 +14,7 @@ import { isHexStrict, toHex } from '../util/string';
 import { sleep } from '../util/time';
 import { DEFAULT_GAS_PRICE, WAIT_TIMEOUT } from './config';
 import { getVersion } from '../util/helper';
+import KAIChain from '../kai';
 
 interface KardiaTransactionProps {
   client?: Client;
@@ -91,6 +92,11 @@ class KardiaTransaction {
     if (!data.gas) {
       const estimatedGas = await this.estimateGas(data, data.data);
       data.gas = estimatedGas * 10;
+    }
+
+    if (!data.gasPrice) {
+      const _client = new KAIChain({client: this._rpcClient})
+      data.gasPrice = await _client.getGasPrice();
     }
 
     const signPromise = () => {
@@ -259,6 +265,12 @@ class KardiaTransaction {
       const estimatedGas = await this.estimateGas(data, data.data);
       data.gas = estimatedGas * 10;
     }
+
+    if (!data.gasPrice) {
+      const _client = new KAIChain({client: this._rpcClient})
+      data.gasPrice = await _client.getGasPrice();
+    }
+
     const generatedTx = await this.generateTransaction(data);
     const signedTx = await this.signTransaction(generatedTx, privateKey);
 
