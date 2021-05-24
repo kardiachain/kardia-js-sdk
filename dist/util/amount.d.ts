@@ -14,4 +14,4 @@ export declare const fromHydro: (input: any, unit: 'hydro' | 'oxy' | 'kai') => a
  * @param input
  * @param unit
  */
-export declare const toHydro: (input: any, unit: any) => any;
+export declare const toHydro: (input: any, unit: 'hydro' | 'oxy' | 'kai') => any;

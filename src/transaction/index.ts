@@ -146,7 +146,7 @@ class KardiaTransaction {
     throw new Error(`Timeout: cannot get receipt after ${WAIT_TIMEOUT}ms`);
   }
 
-  public async signTransaction(tx: TxParams, privateKey: string) {
+  public signTransaction(tx: TxParams, privateKey: string) {
     const _privateKey = `0x${privateKey.replace('0x', '')}`;
     if (!tx.gas) {
       throw new Error('"gas" is missing');
@@ -271,9 +271,8 @@ class KardiaTransaction {
       data.gasPrice = await _client.getGasPrice();
     }
 
-    const generatedTx = await this.generateTransaction(data);
-    const signedTx = await this.signTransaction(generatedTx, privateKey);
-
+    const generatedTx = this.generateTransaction(data);
+    const signedTx = this.signTransaction(generatedTx, privateKey);
     return this.sendRawTransaction(signedTx.rawTransaction, waitUntilMined, waitTimeOut || WAIT_TIMEOUT)
   }
 
