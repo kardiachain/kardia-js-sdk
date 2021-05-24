@@ -36,4 +36,5 @@ class KardiaClient {
 }
 
 export { KardiaTransaction, KardiaAccount, KAIChain, KRC20, KardiaContract };
+export { KardiaUtils } from './util'
 export default KardiaClient;

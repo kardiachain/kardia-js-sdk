@@ -76,7 +76,7 @@ export const fromHydro = (input: any, unit: 'hydro' | 'oxy' | 'kai') => {
  * @param input
  * @param unit
  */
-export const toHydro = (input: any, unit: any) => {
+export const toHydro = (input: any, unit: 'hydro' | 'oxy' | 'kai') => {
   try {
     let kai = numberToString(input);
 

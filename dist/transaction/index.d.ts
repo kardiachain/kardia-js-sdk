@@ -18,13 +18,13 @@ declare class KardiaTransaction {
     getPendingTransaction(): Promise<any>;
     getTransactionReceipt(txHash: string): Promise<any>;
     sendTransactionToExtension(data: any, waitUntilMined?: boolean, waitTimeOut?: number): Promise<any>;
-    signTransaction(tx: TxParams, privateKey: string): Promise<{
+    signTransaction(tx: TxParams, privateKey: string): {
         messageHash: string;
         v: string;
         r: string;
         s: string;
         rawTransaction: string;
-    }>;
+    };
     generateTransaction({ receiver, to, amount, value, nonce, gasPrice, gas, gasLimit, data, }: any): TxParams;
     sendRawTransaction(rawTx: any, waitUntilMined?: boolean, waitTimeOut?: number): Promise<any>;
     /**
