@@ -2606,7 +2606,7 @@ var WAIT_TIMEOUT = 300000;
 var DEFAULT_GAS_PRICE = 1000000000;
 
 var getVersion = function getVersion() {
-  return '0.3.10';
+  return '0.3.11';
 };
 
 var isExtensionEnabled = function isExtensionEnabled() {
@@ -4655,7 +4655,7 @@ var KRC20 = /*#__PURE__*/function () {
 
   _proto.transfer = /*#__PURE__*/function () {
     var _transfer = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee8(privateKey, to, amount, transferPayload, waitUntilMined) {
-      var invocation, defaultPayload, estimatedGas;
+      var bnAmount, bnDecimals, invocation, defaultPayload, estimatedGas;
       return runtime_1.wrap(function _callee8$(_context8) {
         while (1) {
           switch (_context8.prev = _context8.next) {
@@ -4686,27 +4686,27 @@ var KRC20 = /*#__PURE__*/function () {
               throw new Error('Invalid [amount]');
 
             case 7:
-              invocation = this._smcInstance.invokeContract('transfer', [to, Number(amount * Math.pow(10, this.decimals)).toLocaleString('fullwide', {
-                useGrouping: false
-              })]);
+              bnAmount = new BigNumber(amount);
+              bnDecimals = new BigNumber(Math.pow(10, this.decimals));
+              invocation = this._smcInstance.invokeContract('transfer', [to, bnAmount.multipliedBy(bnDecimals).toFixed(0, 1)]);
 
               if (transferPayload.gas) {
-                _context8.next = 14;
+                _context8.next = 16;
                 break;
               }
 
               defaultPayload = invocation.getDefaultTxPayload();
-              _context8.next = 12;
+              _context8.next = 14;
               return invocation.estimateGas(defaultPayload);
 
-            case 12:
+            case 14:
               estimatedGas = _context8.sent;
               transferPayload.gas = estimatedGas * 2;
 
-            case 14:
+            case 16:
               return _context8.abrupt("return", invocation.send(privateKey, this.address, transferPayload, waitUntilMined));
 
-            case 15:
+            case 17:
             case "end":
               return _context8.stop();
           }
@@ -4723,23 +4723,23 @@ var KRC20 = /*#__PURE__*/function () {
 
   _proto.estimateGas = /*#__PURE__*/function () {
     var _estimateGas = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee9(to, amount) {
-      var invocation, defaultPayload, estimatedGas;
+      var bnAmount, bnDecimals, invocation, defaultPayload, estimatedGas;
       return runtime_1.wrap(function _callee9$(_context9) {
         while (1) {
           switch (_context9.prev = _context9.next) {
             case 0:
-              invocation = this._smcInstance.invokeContract('transfer', [to, Number(amount * Math.pow(10, this.decimals)).toLocaleString('fullwide', {
-                useGrouping: false
-              })]);
+              bnAmount = new BigNumber(amount);
+              bnDecimals = new BigNumber(Math.pow(10, this.decimals));
+              invocation = this._smcInstance.invokeContract('transfer', [to, bnAmount.multipliedBy(bnDecimals).toFixed(0, 1)]);
               defaultPayload = invocation.getDefaultTxPayload();
-              _context9.next = 4;
+              _context9.next = 6;
               return invocation.estimateGas(defaultPayload);
 
-            case 4:
+            case 6:
               estimatedGas = _context9.sent;
               return _context9.abrupt("return", estimatedGas * 2);
 
-            case 6:
+            case 8:
             case "end":
               return _context9.stop();
           }
