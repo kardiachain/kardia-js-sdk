@@ -187,11 +187,12 @@ class KRC20 {
     if (!checkAddressChecksum(to)) throw new Error('Invalid [to]');
     if (amount < 0) throw new Error('Invalid [amount]');
 
+    const bnAmount = new BigNumber(amount);
+    const bnDecimals = new BigNumber(10 ** this.decimals)
+
     const invocation = this._smcInstance.invokeContract('transfer', [
       to,
-      Number(amount * 10 ** this.decimals).toLocaleString('fullwide', {
-        useGrouping: false,
-      }),
+      bnAmount.multipliedBy(bnDecimals).toFixed(0, 1)
     ]);
 
     if (!transferPayload.gas) {
@@ -205,11 +206,12 @@ class KRC20 {
   }
 
   public async estimateGas(to: string, amount: number) {
+    const bnAmount = new BigNumber(amount);
+    const bnDecimals = new BigNumber(10 ** this.decimals)
+  
     const invocation = this._smcInstance.invokeContract('transfer', [
       to,
-      Number(amount * 10 ** this.decimals).toLocaleString('fullwide', {
-        useGrouping: false,
-      }),
+      bnAmount.multipliedBy(bnDecimals).toFixed(0, 1)
     ]);
 
     const defaultPayload = invocation.getDefaultTxPayload();
