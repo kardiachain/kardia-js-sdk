@@ -2637,7 +2637,7 @@ var WAIT_TIMEOUT = 300000;
 var DEFAULT_GAS_PRICE = 1000000000;
 
 var getVersion = function getVersion() {
-  return '0.3.11';
+  return '0.3.12';
 };
 
 var isExtensionEnabled = function isExtensionEnabled() {
@@ -4481,9 +4481,7 @@ var KRC20 = /*#__PURE__*/function () {
                 break;
               }
 
-              return _context4.abrupt("return", totalSupply.toLocaleString('fullwide', {
-                useGrouping: false
-              }));
+              return _context4.abrupt("return", new bignumber_js.BigNumber(totalSupply).toFixed());
 
             case 9:
               return _context4.abrupt("return", totalSupply);
