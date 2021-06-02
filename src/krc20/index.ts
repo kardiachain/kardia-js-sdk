@@ -129,7 +129,7 @@ class KRC20 {
       return new BigNumber(totalSupply);
     }
     if (format === 'string') {
-      return totalSupply.toLocaleString('fullwide', { useGrouping: false });
+      return (new BigNumber(totalSupply)).toFixed();
     }
     return totalSupply;
   }
