@@ -1,3 +1,3 @@
 export const getVersion = () => {
-  return '0.3.12';
+  return '0.3.13';
 }

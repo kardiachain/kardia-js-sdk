@@ -165,7 +165,7 @@ const decodeSingleOutput = (outputType: string, outputData: any): any => {
     return `0x${outputData.replace('0x', '')}`;
   }
   if (outputType.startsWith('uint') || outputType.startsWith('int')) {
-    return parseInt(outputData);
+    return outputData;
   }
   if (outputType === 'bool') {
     return outputData === 'true';
