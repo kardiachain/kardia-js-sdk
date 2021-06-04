@@ -2637,7 +2637,7 @@ var WAIT_TIMEOUT = 300000;
 var DEFAULT_GAS_PRICE = 1000000000;
 
 var getVersion = function getVersion() {
-  return '0.3.12';
+  return '0.3.13';
 };
 
 var isExtensionEnabled = function isExtensionEnabled() {
@@ -3424,7 +3424,7 @@ var decodeSingleOutput = function decodeSingleOutput(outputType, outputData) {
   }
 
   if (outputType.startsWith('uint') || outputType.startsWith('int')) {
-    return parseInt(outputData);
+    return outputData;
   }
 
   if (outputType === 'bool') {
