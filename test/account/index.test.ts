@@ -21,6 +21,7 @@ describe('Account module test', () => {
   });
 
   it('should get balance successfully', async () => {
+    jest.setTimeout(12000)
     const balance = await kardiaClient.account.getBalance(ACCOUNT.address);
     expect(balance).toBeTruthy();
   });

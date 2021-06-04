@@ -103,7 +103,7 @@ class KRC20 {
     if (decimals !== undefined) {
       this.decimals = decimals;
     }
-    return this.decimals;
+    return Number(this.decimals);
   }
 
   public async getSymbol(fetch?: boolean) {

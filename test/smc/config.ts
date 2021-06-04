@@ -182,7 +182,7 @@ export const SMC1 = {
     name: 'proposalsCount',
     param: [],
   },
-  EXPECTED_RESULT: 0,
+  EXPECTED_RESULT: "0",
 };
 
 export const SMC2 = {

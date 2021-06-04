@@ -24,6 +24,7 @@ describe('KAI module test', () => {
   });
 
   it("should check current node's validator status", async () => {
+    jest.setTimeout(12000)
     const isValidator = await kardiaClient.kaiChain.isValidator(
       VALIDATOR_ADDRESS
     );
