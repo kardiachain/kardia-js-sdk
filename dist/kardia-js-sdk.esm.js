@@ -1932,6 +1932,7 @@ var KardiaAccount = /*#__PURE__*/function () {
     return {
       address: addressStr,
       privateKey: privateKey,
+      mnemonic: wallet.mnemonic,
       balance: 0
     };
   };
@@ -2631,7 +2632,7 @@ var WAIT_TIMEOUT = 300000;
 var DEFAULT_GAS_PRICE = 1000000000;
 
 var getVersion = function getVersion() {
-  return '0.4.0';
+  return '0.4.1';
 };
 
 var isExtensionEnabled = function isExtensionEnabled() {

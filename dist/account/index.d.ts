@@ -1,4 +1,5 @@
 import { Client } from '@open-rpc/client-js';
+import { ethers } from 'ethers';
 interface KardiaAccountProps {
     client: Client;
 }
@@ -21,6 +22,7 @@ declare class KardiaAccount {
     static generateWallet(): {
         address: string;
         privateKey: string;
+        mnemonic: ethers.utils.Mnemonic;
         balance: number;
     };
     static toChecksumAddress(address: string): string;
