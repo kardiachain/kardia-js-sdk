@@ -81,6 +81,7 @@ class KardiaAccount {
     return {
       address: addressStr,
       privateKey,
+      mnemonic: wallet.mnemonic,
       balance: 0,
     };
   }

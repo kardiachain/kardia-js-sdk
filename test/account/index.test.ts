@@ -70,6 +70,10 @@ describe('Account module test', () => {
     expect(wallet.address).toBeTruthy();
     expect(wallet.privateKey).toBeTruthy();
     expect(wallet.balance).toEqual(0);
+    expect(wallet.mnemonic).toBeTruthy();
+    expect(wallet.mnemonic.phrase).toBeTruthy();
+    expect(wallet.mnemonic.path).toBeTruthy();
+    expect(wallet.mnemonic.locale).toBeTruthy();
   });
 
   it('should get correct checksum address', () => {
