@@ -14,7 +14,8 @@ const encodeSingle = (type: string, arg: any): string => {
   if (type === 'address') {
     return encodeSingle('uint160', parseNumber(arg));
   } else if (type === 'bool') {
-    return encodeSingle('uint8', arg ? 1 : 0);
+    const boolValue = Boolean(Number(arg))
+    return encodeSingle('uint8', boolValue ? 1 : 0);
   } else if (type === 'string') {
     return encodeSingle('bytes', Buffer.from(arg, 'utf8'));
   } else if (isArray(type)) {
