@@ -15,3 +15,8 @@ export const ACCOUNT2 = {
   privateKey:
     '0xc07bed6441a92d0c8b99da1c4a63a2ff1c6e233729e3bf9428eeee25b8b60996',
 };
+
+export const ACCOUNT3 = {
+  address: '0xf889b77F12e079BE3A905F21d161cab0A371CC93',
+  privateKey: '0xd63e83982c1466a54ba09a6b2a3b121f81d48a50083ed0f3a54c677d49500045'
+}

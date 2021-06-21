@@ -12,7 +12,7 @@ import { keccak256 } from '../util/hash';
 import { decode, encode } from '../util/rlp';
 import { isHexStrict, toHex } from '../util/string';
 import { sleep } from '../util/time';
-import { DEFAULT_GAS_PRICE, MAX_TX_GAS, WAIT_TIMEOUT } from './config';
+import { DEFAULT_GAS_PRICE, KARDIA_DEPLOYER, WAIT_TIMEOUT } from './config';
 import { getVersion } from '../util/helper';
 import KAIChain from '../kai';
 
@@ -278,12 +278,11 @@ class KardiaTransaction {
 
   public async estimateGas(txPayload: any, data: string) {
     const txObject = {
-      from: txPayload.from || '0x',
+      from: txPayload.from || KARDIA_DEPLOYER,
       to: txPayload.to || '0x',
       data,
       value: txPayload.value || 0,
-      gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE,
-      gas: txPayload.gas || MAX_TX_GAS
+      gasPrice: 0
     };
     return await this._rpcClient.request({
       method: 'kai_estimateGas',
