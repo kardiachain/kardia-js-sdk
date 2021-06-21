@@ -2630,9 +2630,10 @@ var sleep = function sleep(ms) {
 
 var WAIT_TIMEOUT = 300000;
 var DEFAULT_GAS_PRICE = 1000000000;
+var MAX_TX_GAS = 20000000;
 
 var getVersion = function getVersion() {
-  return '0.4.1';
+  return '0.4.3';
 };
 
 var isExtensionEnabled = function isExtensionEnabled() {
@@ -3162,7 +3163,8 @@ var KardiaTransaction = /*#__PURE__*/function () {
                 to: txPayload.to || '0x',
                 data: data,
                 value: txPayload.value || 0,
-                gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE
+                gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE,
+                gas: txPayload.gas || MAX_TX_GAS
               };
               _context7.next = 3;
               return this._rpcClient.request({
