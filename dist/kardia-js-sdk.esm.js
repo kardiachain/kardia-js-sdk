@@ -2630,10 +2630,10 @@ var sleep = function sleep(ms) {
 
 var WAIT_TIMEOUT = 300000;
 var DEFAULT_GAS_PRICE = 1000000000;
-var MAX_TX_GAS = 20000000;
+var KARDIA_DEPLOYER = '0x14191195F9BB6e54465a341CeC6cce4491599ccC';
 
 var getVersion = function getVersion() {
-  return '0.4.3';
+  return '0.4.4';
 };
 
 var isExtensionEnabled = function isExtensionEnabled() {
@@ -3159,12 +3159,11 @@ var KardiaTransaction = /*#__PURE__*/function () {
           switch (_context7.prev = _context7.next) {
             case 0:
               txObject = {
-                from: txPayload.from || '0x',
+                from: txPayload.from || KARDIA_DEPLOYER,
                 to: txPayload.to || '0x',
                 data: data,
                 value: txPayload.value || 0,
-                gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE,
-                gas: txPayload.gas || MAX_TX_GAS
+                gasPrice: 0
               };
               _context7.next = 3;
               return this._rpcClient.request({
