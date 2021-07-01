@@ -289,6 +289,13 @@ class KardiaTransaction {
       params: [txObject, 'latest'],
     });
   }
+
+  public async debugTransaction(txHash: string) {
+    return await this._rpcClient.request({
+      method: 'debug_traceTransaction',
+      params: [txHash],
+    });
+  }
 }
 
 export default KardiaTransaction;

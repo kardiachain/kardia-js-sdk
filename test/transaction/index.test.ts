@@ -2,6 +2,7 @@ import KardiaClient from '../../src';
 import { keccak256 } from '../../src/util/hash';
 import { ENDPOINT, ENDPOINT_PUBLIC } from '../config';
 import { ACCOUNT, ACCOUNT2 } from '../config/account';
+import { FAILED_TX_HASH } from './config';
 
 const endpoint = process.env.TEST_ENV === 'prod' ? ENDPOINT_PUBLIC : ENDPOINT;
 
@@ -37,5 +38,12 @@ describe('Transaction module test', () => {
       (tx: any) => tx.hash === txHash
     );
     expect(txDetail).toBeTruthy();
+  });
+
+  it('should debug transaction successfully', async () => {
+    const txDebug = await kardiaClient.transaction.debugTransaction(FAILED_TX_HASH);
+    expect(txDebug).toBeTruthy()
+    expect(txDebug.revertReason).toBeTruthy()
+    expect(txDebug.usedGas).toBeTruthy()
   });
 });
