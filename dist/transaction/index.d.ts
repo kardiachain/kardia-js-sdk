@@ -36,5 +36,6 @@ declare class KardiaTransaction {
      */
     sendTransaction(data: any, privateKey: string, waitUntilMined?: boolean, waitTimeOut?: number): Promise<any>;
     estimateGas(txPayload: any, data: string): Promise<any>;
+    debugTransaction(txHash: string): Promise<any>;
 }
 export default KardiaTransaction;
