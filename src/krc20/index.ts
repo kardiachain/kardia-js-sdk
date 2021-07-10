@@ -179,15 +179,16 @@ class KRC20 {
   public async transfer(
     privateKey: string,
     to: string,
-    amount: number,
+    amount: number | string,
     transferPayload: Record<string, any> = {},
     waitUntilMined = false
   ) {
     this.validateAddress();
     if (!checkAddressChecksum(to)) throw new Error('Invalid [to]');
-    if (amount < 0) throw new Error('Invalid [amount]');
-
     const bnAmount = new BigNumber(amount);
+
+    if (bnAmount.isLessThan(new BigNumber(0))) throw new Error('Invalid [amount]');
+    
     const bnDecimals = new BigNumber(10 ** this.decimals)
 
     const invocation = this._smcInstance.invokeContract('transfer', [
