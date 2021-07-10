@@ -4697,15 +4697,16 @@ var KRC20 = /*#__PURE__*/function () {
               throw new Error('Invalid [to]');
 
             case 5:
-              if (!(amount < 0)) {
-                _context8.next = 7;
+              bnAmount = new BigNumber(amount);
+
+              if (!bnAmount.isLessThan(new BigNumber(0))) {
+                _context8.next = 8;
                 break;
               }
 
               throw new Error('Invalid [amount]');
 
-            case 7:
-              bnAmount = new BigNumber(amount);
+            case 8:
               bnDecimals = new BigNumber(Math.pow(10, this.decimals));
               invocation = this._smcInstance.invokeContract('transfer', [to, bnAmount.multipliedBy(bnDecimals).toFixed(0, 1)]);
 
