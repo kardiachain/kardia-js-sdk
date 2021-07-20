@@ -2073,15 +2073,15 @@ var KAIChain = /*#__PURE__*/function () {
 
   var _proto = KAIChain.prototype;
 
-  _proto.getBlockNumber = /*#__PURE__*/function () {
-    var _getBlockNumber = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee() {
+  _proto.netVersion = /*#__PURE__*/function () {
+    var _netVersion = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee() {
       return runtime_1.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.next = 2;
               return this._rpcClient.request({
-                method: 'kai_blockNumber',
+                method: 'net_version',
                 params: []
               });
 
@@ -2096,6 +2096,36 @@ var KAIChain = /*#__PURE__*/function () {
       }, _callee, this);
     }));
 
+    function netVersion() {
+      return _netVersion.apply(this, arguments);
+    }
+
+    return netVersion;
+  }();
+
+  _proto.getBlockNumber = /*#__PURE__*/function () {
+    var _getBlockNumber = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2() {
+      return runtime_1.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.next = 2;
+              return this._rpcClient.request({
+                method: 'kai_blockNumber',
+                params: []
+              });
+
+            case 2:
+              return _context2.abrupt("return", _context2.sent);
+
+            case 3:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, this);
+    }));
+
     function getBlockNumber() {
       return _getBlockNumber.apply(this, arguments);
     }
@@ -2104,32 +2134,32 @@ var KAIChain = /*#__PURE__*/function () {
   }();
 
   _proto.isValidator = /*#__PURE__*/function () {
-    var _isValidator = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2(address) {
-      return runtime_1.wrap(function _callee2$(_context2) {
+    var _isValidator = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3(address) {
+      return runtime_1.wrap(function _callee3$(_context3) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
-              _context2.prev = 0;
-              _context2.next = 3;
+              _context3.prev = 0;
+              _context3.next = 3;
               return this._rpcClient.request({
                 method: 'kai_validator',
                 params: [address, false]
               });
 
             case 3:
-              return _context2.abrupt("return", true);
+              return _context3.abrupt("return", true);
 
             case 6:
-              _context2.prev = 6;
-              _context2.t0 = _context2["catch"](0);
-              return _context2.abrupt("return", false);
+              _context3.prev = 6;
+              _context3.t0 = _context3["catch"](0);
+              return _context3.abrupt("return", false);
 
             case 9:
             case "end":
-              return _context2.stop();
+              return _context3.stop();
           }
         }
-      }, _callee2, this, [[0, 6]]);
+      }, _callee3, this, [[0, 6]]);
     }));
 
     function isValidator(_x) {
@@ -2140,30 +2170,30 @@ var KAIChain = /*#__PURE__*/function () {
   }();
 
   _proto.getValidators = /*#__PURE__*/function () {
-    var _getValidators = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3(withDelegators) {
-      return runtime_1.wrap(function _callee3$(_context3) {
+    var _getValidators = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(withDelegators) {
+      return runtime_1.wrap(function _callee4$(_context4) {
         while (1) {
-          switch (_context3.prev = _context3.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
               if (withDelegators === void 0) {
                 withDelegators = false;
               }
 
-              _context3.next = 3;
+              _context4.next = 3;
               return this._rpcClient.request({
                 method: 'kai_validators',
                 params: [withDelegators]
               });
 
             case 3:
-              return _context3.abrupt("return", _context3.sent);
+              return _context4.abrupt("return", _context4.sent);
 
             case 4:
             case "end":
-              return _context3.stop();
+              return _context4.stop();
           }
         }
-      }, _callee3, this);
+      }, _callee4, this);
     }));
 
     function getValidators(_x2) {
@@ -2174,34 +2204,34 @@ var KAIChain = /*#__PURE__*/function () {
   }();
 
   _proto.getBlockByBlockNumber = /*#__PURE__*/function () {
-    var _getBlockByBlockNumber = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(blockNumber) {
-      return runtime_1.wrap(function _callee4$(_context4) {
+    var _getBlockByBlockNumber = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(blockNumber) {
+      return runtime_1.wrap(function _callee5$(_context5) {
         while (1) {
-          switch (_context4.prev = _context4.next) {
+          switch (_context5.prev = _context5.next) {
             case 0:
               if (!(blockNumber < 0)) {
-                _context4.next = 2;
+                _context5.next = 2;
                 break;
               }
 
               throw new Error('Invalid block number');
 
             case 2:
-              _context4.next = 4;
+              _context5.next = 4;
               return this._rpcClient.request({
                 method: 'kai_getBlockByNumber',
                 params: [blockNumber]
               });
 
             case 4:
-              return _context4.abrupt("return", _context4.sent);
+              return _context5.abrupt("return", _context5.sent);
 
             case 5:
             case "end":
-              return _context4.stop();
+              return _context5.stop();
           }
         }
-      }, _callee4, this);
+      }, _callee5, this);
     }));
 
     function getBlockByBlockNumber(_x3) {
@@ -2212,26 +2242,26 @@ var KAIChain = /*#__PURE__*/function () {
   }();
 
   _proto.getBlockByHash = /*#__PURE__*/function () {
-    var _getBlockByHash = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(blockHash) {
-      return runtime_1.wrap(function _callee5$(_context5) {
+    var _getBlockByHash = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee6(blockHash) {
+      return runtime_1.wrap(function _callee6$(_context6) {
         while (1) {
-          switch (_context5.prev = _context5.next) {
+          switch (_context6.prev = _context6.next) {
             case 0:
-              _context5.next = 2;
+              _context6.next = 2;
               return this._rpcClient.request({
                 method: 'kai_getBlockByHash',
                 params: [blockHash]
               });
 
             case 2:
-              return _context5.abrupt("return", _context5.sent);
+              return _context6.abrupt("return", _context6.sent);
 
             case 3:
             case "end":
-              return _context5.stop();
+              return _context6.stop();
           }
         }
-      }, _callee5, this);
+      }, _callee6, this);
     }));
 
     function getBlockByHash(_x4) {
@@ -2242,34 +2272,34 @@ var KAIChain = /*#__PURE__*/function () {
   }();
 
   _proto.getBlockHeaderByBlockNumber = /*#__PURE__*/function () {
-    var _getBlockHeaderByBlockNumber = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee6(blockNumber) {
-      return runtime_1.wrap(function _callee6$(_context6) {
+    var _getBlockHeaderByBlockNumber = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(blockNumber) {
+      return runtime_1.wrap(function _callee7$(_context7) {
         while (1) {
-          switch (_context6.prev = _context6.next) {
+          switch (_context7.prev = _context7.next) {
             case 0:
               if (!(blockNumber < 0)) {
-                _context6.next = 2;
+                _context7.next = 2;
                 break;
               }
 
               throw new Error('Invalid block number');
 
             case 2:
-              _context6.next = 4;
+              _context7.next = 4;
               return this._rpcClient.request({
                 method: 'kai_getBlockHeaderByNumber',
                 params: [blockNumber]
               });
 
             case 4:
-              return _context6.abrupt("return", _context6.sent);
+              return _context7.abrupt("return", _context7.sent);
 
             case 5:
             case "end":
-              return _context6.stop();
+              return _context7.stop();
           }
         }
-      }, _callee6, this);
+      }, _callee7, this);
     }));
 
     function getBlockHeaderByBlockNumber(_x5) {
@@ -2280,26 +2310,26 @@ var KAIChain = /*#__PURE__*/function () {
   }();
 
   _proto.getBlockHeaderByHash = /*#__PURE__*/function () {
-    var _getBlockHeaderByHash = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(blockHash) {
-      return runtime_1.wrap(function _callee7$(_context7) {
+    var _getBlockHeaderByHash = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee8(blockHash) {
+      return runtime_1.wrap(function _callee8$(_context8) {
         while (1) {
-          switch (_context7.prev = _context7.next) {
+          switch (_context8.prev = _context8.next) {
             case 0:
-              _context7.next = 2;
+              _context8.next = 2;
               return this._rpcClient.request({
                 method: 'kai_getBlockHeaderByHash',
                 params: [blockHash]
               });
 
             case 2:
-              return _context7.abrupt("return", _context7.sent);
+              return _context8.abrupt("return", _context8.sent);
 
             case 3:
             case "end":
-              return _context7.stop();
+              return _context8.stop();
           }
         }
-      }, _callee7, this);
+      }, _callee8, this);
     }));
 
     function getBlockHeaderByHash(_x6) {
@@ -2310,12 +2340,12 @@ var KAIChain = /*#__PURE__*/function () {
   }();
 
   _proto.newFilter = /*#__PURE__*/function () {
-    var _newFilter = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee8(_ref2) {
+    var _newFilter = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee9(_ref2) {
       var _ref2$fromBlock, fromBlock, _ref2$toBlock, toBlock, address, _ref2$topics, topics, param;
 
-      return runtime_1.wrap(function _callee8$(_context8) {
+      return runtime_1.wrap(function _callee9$(_context9) {
         while (1) {
-          switch (_context8.prev = _context8.next) {
+          switch (_context9.prev = _context9.next) {
             case 0:
               _ref2$fromBlock = _ref2.fromBlock, fromBlock = _ref2$fromBlock === void 0 ? 'latest' : _ref2$fromBlock, _ref2$toBlock = _ref2.toBlock, toBlock = _ref2$toBlock === void 0 ? 'latest' : _ref2$toBlock, address = _ref2.address, _ref2$topics = _ref2.topics, topics = _ref2$topics === void 0 ? [] : _ref2$topics;
               param = {
@@ -2324,21 +2354,21 @@ var KAIChain = /*#__PURE__*/function () {
               };
               if (address) param.address = address;
               if (topics && topics.length > 0) param.topics = topics;
-              _context8.next = 6;
+              _context9.next = 6;
               return this._rpcClient.request({
                 method: 'kai_newFilter',
                 params: [param]
               });
 
             case 6:
-              return _context8.abrupt("return", _context8.sent);
+              return _context9.abrupt("return", _context9.sent);
 
             case 7:
             case "end":
-              return _context8.stop();
+              return _context9.stop();
           }
         }
-      }, _callee8, this);
+      }, _callee9, this);
     }));
 
     function newFilter(_x7) {
@@ -2349,45 +2379,15 @@ var KAIChain = /*#__PURE__*/function () {
   }();
 
   _proto.newBlockFilter = /*#__PURE__*/function () {
-    var _newBlockFilter = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee9() {
-      return runtime_1.wrap(function _callee9$(_context9) {
-        while (1) {
-          switch (_context9.prev = _context9.next) {
-            case 0:
-              _context9.next = 2;
-              return this._rpcClient.request({
-                method: 'kai_newBlockFilter',
-                params: []
-              });
-
-            case 2:
-              return _context9.abrupt("return", _context9.sent);
-
-            case 3:
-            case "end":
-              return _context9.stop();
-          }
-        }
-      }, _callee9, this);
-    }));
-
-    function newBlockFilter() {
-      return _newBlockFilter.apply(this, arguments);
-    }
-
-    return newBlockFilter;
-  }();
-
-  _proto.uninstallFilter = /*#__PURE__*/function () {
-    var _uninstallFilter = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee10(filterId) {
+    var _newBlockFilter = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee10() {
       return runtime_1.wrap(function _callee10$(_context10) {
         while (1) {
           switch (_context10.prev = _context10.next) {
             case 0:
               _context10.next = 2;
               return this._rpcClient.request({
-                method: 'kai_uninstallFilter',
-                params: [filterId]
+                method: 'kai_newBlockFilter',
+                params: []
               });
 
             case 2:
@@ -2401,22 +2401,22 @@ var KAIChain = /*#__PURE__*/function () {
       }, _callee10, this);
     }));
 
-    function uninstallFilter(_x8) {
-      return _uninstallFilter.apply(this, arguments);
+    function newBlockFilter() {
+      return _newBlockFilter.apply(this, arguments);
     }
 
-    return uninstallFilter;
+    return newBlockFilter;
   }();
 
-  _proto.getFilterChanges = /*#__PURE__*/function () {
-    var _getFilterChanges = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee11(filterId) {
+  _proto.uninstallFilter = /*#__PURE__*/function () {
+    var _uninstallFilter = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee11(filterId) {
       return runtime_1.wrap(function _callee11$(_context11) {
         while (1) {
           switch (_context11.prev = _context11.next) {
             case 0:
               _context11.next = 2;
               return this._rpcClient.request({
-                method: 'kai_getFilterChanges',
+                method: 'kai_uninstallFilter',
                 params: [filterId]
               });
 
@@ -2431,22 +2431,22 @@ var KAIChain = /*#__PURE__*/function () {
       }, _callee11, this);
     }));
 
-    function getFilterChanges(_x9) {
-      return _getFilterChanges.apply(this, arguments);
+    function uninstallFilter(_x8) {
+      return _uninstallFilter.apply(this, arguments);
     }
 
-    return getFilterChanges;
+    return uninstallFilter;
   }();
 
-  _proto.getFilterLogs = /*#__PURE__*/function () {
-    var _getFilterLogs = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee12(filterId) {
+  _proto.getFilterChanges = /*#__PURE__*/function () {
+    var _getFilterChanges = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee12(filterId) {
       return runtime_1.wrap(function _callee12$(_context12) {
         while (1) {
           switch (_context12.prev = _context12.next) {
             case 0:
               _context12.next = 2;
               return this._rpcClient.request({
-                method: 'kai_getFilterLogs',
+                method: 'kai_getFilterChanges',
                 params: [filterId]
               });
 
@@ -2461,29 +2461,23 @@ var KAIChain = /*#__PURE__*/function () {
       }, _callee12, this);
     }));
 
-    function getFilterLogs(_x10) {
-      return _getFilterLogs.apply(this, arguments);
+    function getFilterChanges(_x9) {
+      return _getFilterChanges.apply(this, arguments);
     }
 
-    return getFilterLogs;
+    return getFilterChanges;
   }();
 
-  _proto.getLogs = /*#__PURE__*/function () {
-    var _getLogs = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee13(fromBlock, toBlock, address, topics, blockhash) {
+  _proto.getFilterLogs = /*#__PURE__*/function () {
+    var _getFilterLogs = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee13(filterId) {
       return runtime_1.wrap(function _callee13$(_context13) {
         while (1) {
           switch (_context13.prev = _context13.next) {
             case 0:
               _context13.next = 2;
               return this._rpcClient.request({
-                method: 'kai_getLogs',
-                params: [{
-                  fromBlock: fromBlock,
-                  toBlock: toBlock,
-                  address: address,
-                  topics: topics,
-                  blockhash: blockhash
-                }]
+                method: 'kai_getFilterLogs',
+                params: [filterId]
               });
 
             case 2:
@@ -2497,23 +2491,29 @@ var KAIChain = /*#__PURE__*/function () {
       }, _callee13, this);
     }));
 
-    function getLogs(_x11, _x12, _x13, _x14, _x15) {
-      return _getLogs.apply(this, arguments);
+    function getFilterLogs(_x10) {
+      return _getFilterLogs.apply(this, arguments);
     }
 
-    return getLogs;
+    return getFilterLogs;
   }();
 
-  _proto.getGasPrice = /*#__PURE__*/function () {
-    var _getGasPrice = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee14() {
+  _proto.getLogs = /*#__PURE__*/function () {
+    var _getLogs = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee14(fromBlock, toBlock, address, topics, blockhash) {
       return runtime_1.wrap(function _callee14$(_context14) {
         while (1) {
           switch (_context14.prev = _context14.next) {
             case 0:
               _context14.next = 2;
               return this._rpcClient.request({
-                method: 'kai_gasPrice',
-                params: []
+                method: 'kai_getLogs',
+                params: [{
+                  fromBlock: fromBlock,
+                  toBlock: toBlock,
+                  address: address,
+                  topics: topics,
+                  blockhash: blockhash
+                }]
               });
 
             case 2:
@@ -2525,6 +2525,36 @@ var KAIChain = /*#__PURE__*/function () {
           }
         }
       }, _callee14, this);
+    }));
+
+    function getLogs(_x11, _x12, _x13, _x14, _x15) {
+      return _getLogs.apply(this, arguments);
+    }
+
+    return getLogs;
+  }();
+
+  _proto.getGasPrice = /*#__PURE__*/function () {
+    var _getGasPrice = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee15() {
+      return runtime_1.wrap(function _callee15$(_context15) {
+        while (1) {
+          switch (_context15.prev = _context15.next) {
+            case 0:
+              _context15.next = 2;
+              return this._rpcClient.request({
+                method: 'kai_gasPrice',
+                params: []
+              });
+
+            case 2:
+              return _context15.abrupt("return", _context15.sent);
+
+            case 3:
+            case "end":
+              return _context15.stop();
+          }
+        }
+      }, _callee15, this);
     }));
 
     function getGasPrice() {

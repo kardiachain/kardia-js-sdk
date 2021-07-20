@@ -5,6 +5,7 @@ interface KAIProps {
 declare class KAIChain {
     private _rpcClient;
     constructor({ client }: KAIProps);
+    netVersion(): Promise<any>;
     getBlockNumber(): Promise<any>;
     isValidator(address: string): Promise<boolean>;
     getValidators(withDelegators?: boolean): Promise<any>;
