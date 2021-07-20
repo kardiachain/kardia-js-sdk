@@ -10,6 +10,13 @@ class KAIChain {
     this._rpcClient = client;
   }
 
+  public async netVersion() {
+    return await this._rpcClient.request({
+      method: 'net_version',
+      params: [],
+    });
+  }
+
   public async getBlockNumber() {
     return await this._rpcClient.request({
       method: 'kai_blockNumber',
