@@ -5,13 +5,14 @@ import {
   deployData,
   encodeArray,
   findFunctionFromAbi,
-  methodData,
+  // methodData,
   parseEvent,
 } from '../util/abi';
 import { parseOutput } from '../util/abi/parser';
 import { fromPrivate } from '../util/account';
 import { getVersion } from '../util/helper';
 import { isHexStrict, toHex } from '../util/string';
+import Web3 from 'web3';
 interface KardiaContractProps {
   client?: Client;
   provider?: string;
@@ -119,16 +120,22 @@ class KardiaContract {
 
   invokeContract(name: string, params: any[]) {
     const functionFromAbi = findFunctionFromAbi(this.abi, 'function', name);
-    const paramsDecorate = params.map(param => {
-      if (Array.isArray(param)) {
-        return encodeArray(param);
-      } else if (isHexStrict(param)) {
-        return param;
-      } else {
-        return toHex(param);
-      }
-    });
-    const data = methodData(functionFromAbi, paramsDecorate);
+    // const paramsDecorate = params.map(param => {
+    //   if (Array.isArray(param)) {
+    //     return encodeArray(param);
+    //   } else if (isHexStrict(param)) {
+    //     return param;
+    //   } else {
+    //     return toHex(param);
+    //   }
+    // });
+    // const data = methodData(functionFromAbi, paramsDecorate);
+    const web3 = new Web3();
+    const data = web3.eth.abi.encodeFunctionCall({
+      name,
+      type: 'function',
+      inputs: functionFromAbi.inputs
+    }, params);
     return {
       txData: () => data,
       getDefaultTxPayload: () => {
