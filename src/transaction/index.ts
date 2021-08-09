@@ -282,7 +282,7 @@ class KardiaTransaction {
       to: txPayload.to || '0x',
       data,
       value: txPayload.value || 0,
-      gasPrice: 0
+      // gasPrice: txPayload.gasPrice || 0
     };
     return await this._rpcClient.request({
       method: 'kai_estimateGas',
