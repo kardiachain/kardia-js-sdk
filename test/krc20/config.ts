@@ -1,8 +1,8 @@
 export const TOKEN1 = {
-  address: '0x9b8af677D6F9b286aF448AdB96Ee6360DFF21De5',
-  name: 'DOGE',
+  address: '0x087C82ea812a450C517D55961Dd76ED2cAc7D469',
+  name: 'Ether',
   decimals: 18,
-  symbol: 'DOGE',
+  symbol: 'ETH',
   totalSupply: '1000000000000000000000000000',
 };
 

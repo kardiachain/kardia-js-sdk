@@ -39,6 +39,7 @@ describe('KAI module test', () => {
   });
 
   it('should get validators list successfully', async () => {
+    jest.setTimeout(12000);
     const validators = await kardiaClient.kaiChain.getValidators();
     expect(validators).toBeTruthy();
     expect(Array.isArray(validators)).toEqual(true);
@@ -101,12 +102,10 @@ describe('KAI module test', () => {
   it('should create and get filter successfully', async () => {
     jest.setTimeout(500000);
     const topic = keccak256('Transfer(address,address,uint256)');
-
     const filterId = await kardiaClient.kaiChain.newFilter({
-      fromBlock: 200000,
+      fromBlock: 1800000,
       topics: [topic]
     })
-
     expect(filterId).toBeTruthy();
 
     const logs = await kardiaClient.kaiChain.getFilterLogs(filterId);
