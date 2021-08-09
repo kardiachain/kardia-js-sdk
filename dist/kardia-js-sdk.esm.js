@@ -2663,7 +2663,7 @@ var DEFAULT_GAS_PRICE = 1000000000;
 var KARDIA_DEPLOYER = '0x14191195F9BB6e54465a341CeC6cce4491599ccC';
 
 var getVersion = function getVersion() {
-  return '0.4.5';
+  return '0.4.8';
 };
 
 var isExtensionEnabled = function isExtensionEnabled() {
@@ -3192,8 +3192,7 @@ var KardiaTransaction = /*#__PURE__*/function () {
                 from: txPayload.from || KARDIA_DEPLOYER,
                 to: txPayload.to || '0x',
                 data: data,
-                value: txPayload.value || 0,
-                gasPrice: 0
+                value: txPayload.value || 0
               };
               _context7.next = 3;
               return this._rpcClient.request({
@@ -3424,30 +3423,6 @@ var encodeSingle = function encodeSingle(type, arg) {
   }
 
   throw new Error('Unsupported or invalid type: ' + type);
-};
-
-var methodData = function methodData(method, params) {
-  var methodSig = method.name + '(' + method.inputs.map(function (i) {
-    return i.type;
-  }).join(',') + ')';
-  var methodHash = keccak256s(methodSig).slice(0, 10);
-  var encodedParams = params.map(function (param, i) {
-    return encode$1(method.inputs[i].type, param);
-  });
-  var headBlock = '0x';
-  var dataBlock = '0x';
-
-  for (var i = 0; i < encodedParams.length; ++i) {
-    if (encodedParams[i].dynamic) {
-      var dataLoc = encodedParams.length * 32 + Bytes.length(dataBlock);
-      headBlock = Bytes.concat(headBlock, Bytes.pad(32, fromNumber(dataLoc)));
-      dataBlock = Bytes.concat(dataBlock, encodedParams[i].data);
-    } else {
-      headBlock = Bytes.concat(headBlock, encodedParams[i].data);
-    }
-  }
-
-  return Bytes.flatten([methodHash, headBlock, dataBlock]);
 };
 var decodeOutput = function decodeOutput(outputTypes, outputData) {
   if (outputTypes.length === 1) {
@@ -3813,17 +3788,23 @@ var KardiaContract = /*#__PURE__*/function () {
   _proto.invokeContract = function invokeContract(name, params) {
     var _this2 = this;
 
-    var functionFromAbi = findFunctionFromAbi(this.abi, 'function', name);
-    var paramsDecorate = params.map(function (param) {
-      if (Array.isArray(param)) {
-        return encodeArray(param);
-      } else if (isHexStrict(param)) {
-        return param;
-      } else {
-        return toHex(param);
-      }
-    });
-    var data = methodData(functionFromAbi, paramsDecorate);
+    var functionFromAbi = findFunctionFromAbi(this.abi, 'function', name); // const paramsDecorate = params.map(param => {
+    //   if (Array.isArray(param)) {
+    //     return encodeArray(param);
+    //   } else if (isHexStrict(param)) {
+    //     return param;
+    //   } else {
+    //     return toHex(param);
+    //   }
+    // });
+    // const data = methodData(functionFromAbi, paramsDecorate);
+
+    var web3 = new Web3();
+    var data = web3.eth.abi.encodeFunctionCall({
+      name: name,
+      type: 'function',
+      inputs: functionFromAbi.inputs
+    }, params);
     return {
       txData: function txData() {
         return data;
