@@ -2663,7 +2663,7 @@ var DEFAULT_GAS_PRICE = 1000000000;
 var KARDIA_DEPLOYER = '0x14191195F9BB6e54465a341CeC6cce4491599ccC';
 
 var getVersion = function getVersion() {
-  return '0.4.8';
+  return '0.4.9';
 };
 
 var isExtensionEnabled = function isExtensionEnabled() {
@@ -3192,7 +3192,8 @@ var KardiaTransaction = /*#__PURE__*/function () {
                 from: txPayload.from || KARDIA_DEPLOYER,
                 to: txPayload.to || '0x',
                 data: data,
-                value: txPayload.value || 0
+                value: txPayload.value || 0,
+                gasPrice: 0
               };
               _context7.next = 3;
               return this._rpcClient.request({
