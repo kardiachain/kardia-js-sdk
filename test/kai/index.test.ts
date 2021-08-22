@@ -39,7 +39,7 @@ describe('KAI module test', () => {
   });
 
   it('should get validators list successfully', async () => {
-    jest.setTimeout(12000);
+    jest.setTimeout(20000);
     const validators = await kardiaClient.kaiChain.getValidators();
     expect(validators).toBeTruthy();
     expect(Array.isArray(validators)).toEqual(true);
