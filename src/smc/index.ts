@@ -228,12 +228,12 @@ class KardiaContract {
     const tx = await transaction.getTransactionReceipt(txHash);
     // Parse event
     return tx.logs
-      ? tx.logs.map((item: any) => parseEvent(this.abi, item))
+      ? tx.logs.map((item: any) => this.parseEventFromLog(item))
       : [];
   }
 
-  localParseEvent(item: any) {
-    return parseEvent(this.abi, item);
+  parseEventFromLog(log: any) {
+    return parseEvent(this.abi, log);
   }
 }
 
