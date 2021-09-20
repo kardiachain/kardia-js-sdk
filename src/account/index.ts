@@ -19,6 +19,13 @@ class KardiaAccount {
     this._rpcClient = client;
   }
 
+  /**
+   * Get account balance
+   * @param address Address to get balance
+   * @param options
+   * @param options.blockHash Block hash to get balance
+   * @param options.blockHeight Block height to get balance. If both `blockHash` and `blockHeight` is specified, `blockHash` will be used.
+   */
   public async getBalance(address: string, options?: BlockQuery) {
     const params: any[] = [address];
 
@@ -36,6 +43,10 @@ class KardiaAccount {
     });
   }
 
+  /**
+   * Get account nonce
+   * @param address Address to get nonce
+   */
   public async getNonce(address: string) {
     return await this._rpcClient.request({
       method: 'account_nonce',
@@ -45,6 +56,10 @@ class KardiaAccount {
 
   // Static utility method
 
+  /**
+   * Get wallet from private key
+   * @param privateKey Private key to generate wallet
+   */
   public static getWalletFromPK(privateKey: string) {
     const privateKeyBuffer = EthUtil.toBuffer(privateKey);
     const wallet = EtherWallet.fromPrivateKey(privateKeyBuffer);
@@ -56,6 +71,10 @@ class KardiaAccount {
     };
   }
 
+  /**
+   * Get wallet from mnemonic phrase
+   * @param mnemonic Mnemonic phrase to generate
+   */
   public static async getWalletFromMnemonic(
     mnemonic: string
   ): Promise<Record<string, any> | boolean> {
@@ -69,10 +88,17 @@ class KardiaAccount {
     };
   }
 
+  /**
+   * Check if an address is valid
+   * @param address Address to validate
+   */
   public static isAddress(address: string) {
     return isAddress(address);
   }
 
+  /**
+   * Generate new wallet with mnemonic phrase
+   */
   public static generateWallet() {
     const wallet = ethers.Wallet.createRandom();
     const privateKey = wallet.privateKey;
@@ -86,6 +112,10 @@ class KardiaAccount {
     };
   }
 
+  /**
+   * Get checksum version from address
+   * @param address Original address
+   */
   public static toChecksumAddress(address: string) {
     return toChecksum(address);
   }
