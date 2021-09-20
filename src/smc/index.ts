@@ -231,6 +231,10 @@ class KardiaContract {
       ? tx.logs.map((item: any) => parseEvent(this.abi, item))
       : [];
   }
+
+  localParseEvent(item: any) {
+    return parseEvent(this.abi, item);
+  }
 }
 
 export default KardiaContract;
