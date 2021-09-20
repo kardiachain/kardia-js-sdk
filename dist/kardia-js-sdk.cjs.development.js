@@ -4006,7 +4006,7 @@ var KardiaContract = /*#__PURE__*/function () {
   };
 
   _proto.parseEvent = /*#__PURE__*/function () {
-    var _parseEvent2 = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(txHash) {
+    var _parseEvent = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(txHash) {
       var _this3 = this;
 
       var transaction, tx;
@@ -4024,7 +4024,7 @@ var KardiaContract = /*#__PURE__*/function () {
             case 3:
               tx = _context7.sent;
               return _context7.abrupt("return", tx.logs ? tx.logs.map(function (item) {
-                return parseEvent(_this3.abi, item);
+                return _this3.parseEventFromLog(item);
               }) : []);
 
             case 5:
@@ -4035,12 +4035,16 @@ var KardiaContract = /*#__PURE__*/function () {
       }, _callee7, this);
     }));
 
-    function parseEvent$1(_x13) {
-      return _parseEvent2.apply(this, arguments);
+    function parseEvent(_x13) {
+      return _parseEvent.apply(this, arguments);
     }
 
-    return parseEvent$1;
+    return parseEvent;
   }();
+
+  _proto.parseEventFromLog = function parseEventFromLog(log) {
+    return parseEvent(this.abi, log);
+  };
 
   return KardiaContract;
 }();
