@@ -316,6 +316,11 @@ class KardiaTransaction {
     return this.sendRawTransaction(signedTx.rawTransaction, waitUntilMined, waitTimeOut || WAIT_TIMEOUT)
   }
 
+  /**
+   * Estimate gas cost
+   * @param txPayload Transaction payload. For more information, refer to https://docs.kardiachain.io/js-sdk/reference/objects-reference#transaction-payload
+   * @param data Hex string represent transaction data
+   */
   public async estimateGas(txPayload: any, data: string) {
     const txObject = {
       from: txPayload.from || KARDIA_DEPLOYER,
@@ -330,6 +335,10 @@ class KardiaTransaction {
     });
   }
 
+  /**
+   * Debug transaction
+   * @param txHash Transaction hash to debug
+   */
   public async debugTransaction(txHash: string) {
     return await this._rpcClient.request({
       method: 'debug_traceTransaction',
