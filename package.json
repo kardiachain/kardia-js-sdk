@@ -50,7 +50,7 @@
     },
     {
       "path": "dist/kardia-js-sdk.esm.js",
-      "limit": "100 KB"
+      "limit": "500 KB"
     }
   ],
   "devDependencies": {
