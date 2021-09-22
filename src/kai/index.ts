@@ -10,6 +10,9 @@ class KAIChain {
     this._rpcClient = client;
   }
 
+  /**
+   * Get net version
+   */
   public async netVersion() {
     return await this._rpcClient.request({
       method: 'net_version',
@@ -17,6 +20,9 @@ class KAIChain {
     });
   }
 
+  /**
+   * Get current block number
+   */
   public async getBlockNumber() {
     return await this._rpcClient.request({
       method: 'kai_blockNumber',
@@ -24,6 +30,10 @@ class KAIChain {
     });
   }
 
+  /**
+   * Check if an address is a validator
+   * @param address Address to check
+   */
   public async isValidator(address: string) {
     try {
       await this._rpcClient.request({
@@ -36,6 +46,10 @@ class KAIChain {
     }
   }
 
+  /**
+   * Get list of current validators
+   * @param withDelegators Indicate if get delegators too
+   */
   public async getValidators(withDelegators: boolean = false) {
     return await this._rpcClient.request({
       method: 'kai_validators',
@@ -43,6 +57,10 @@ class KAIChain {
     });
   }
 
+  /**
+   * Get block data from block number
+   * @param blockNumber Block number to get data
+   */
   public async getBlockByBlockNumber(blockNumber: number) {
     if (blockNumber < 0) {
       throw new Error('Invalid block number');
@@ -53,6 +71,10 @@ class KAIChain {
     });
   }
 
+  /**
+   * Get block data from block hash
+   * @param blockHash Block hash to get data
+   */
   public async getBlockByHash(blockHash: string) {
     return await this._rpcClient.request({
       method: 'kai_getBlockByHash',
@@ -60,6 +82,10 @@ class KAIChain {
     });
   }
 
+  /**
+   * Get block header from block number
+   * @param blockNumber Block number to get header
+   */
   public async getBlockHeaderByBlockNumber(blockNumber: number) {
     if (blockNumber < 0) {
       throw new Error('Invalid block number');
@@ -70,6 +96,10 @@ class KAIChain {
     });
   }
 
+  /**
+   * Get block header from block hash
+   * @param blockHash Block number to get hash
+   */
   public async getBlockHeaderByHash(blockHash: string) {
     return await this._rpcClient.request({
       method: 'kai_getBlockHeaderByHash',

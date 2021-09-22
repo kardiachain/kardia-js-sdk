@@ -58,6 +58,9 @@ class KardiaTransaction {
     }
   }
 
+  /**
+   * Get transaction detail from transaction hash
+   */
   public async getTransaction(txHash: string) {
     return await this._rpcClient.request({
       method: 'tx_getTransaction',
@@ -65,6 +68,9 @@ class KardiaTransaction {
     });
   }
 
+  /**
+   * Get node's pending transactions
+   */
   public async getPendingTransaction() {
     return await this._rpcClient.request({
       method: 'tx_pendingTransactions',
@@ -72,6 +78,10 @@ class KardiaTransaction {
     });
   }
 
+  /**
+   * Get transaction receipt from transaction hash
+   * @param txHash Transaction hash
+   */
   public async getTransactionReceipt(txHash: string) {
     return await this._rpcClient.request({
       method: 'tx_getTransactionReceipt',
@@ -79,6 +89,12 @@ class KardiaTransaction {
     });
   }
 
+  /**
+   * Send transaction to Chrome extension for signing and sending to blockchain
+   * @param data transaction params
+   * @param waitUntilMined wait for transaction to complete or not
+   * @param waitTimeOut Time (in milliseconds) to wait for transaction to complete
+   */
   public async sendTransactionToExtension(
     data: any,
     waitUntilMined: boolean = false,
@@ -146,6 +162,11 @@ class KardiaTransaction {
     throw new Error(`Timeout: cannot get receipt after ${WAIT_TIMEOUT}ms`);
   }
 
+  /**
+   * Sign a transaction using provided private key
+   * @param tx Transaction payload. For more information, refer to https://docs.kardiachain.io/js-sdk/reference/objects-reference#transaction-payload
+   * @param privateKey Private key used for signing
+   */
   public signTransaction(tx: TxParams, privateKey: string) {
     const _privateKey = `0x${privateKey.replace('0x', '')}`;
     if (!tx.gas) {
@@ -195,6 +216,19 @@ class KardiaTransaction {
     return result;
   }
 
+  /**
+   * Generate a transaction object used for signing
+   * @param txParam Transaction's params
+   * @param txParam.receiver Transaction receiver
+   * @param txParam.to Alias of txParams.receiver
+   * @param txParam.amount Transaction amount
+   * @param txParam.value Alias of txParams.amount
+   * @param txParam.nonce Transaction nonce
+   * @param txParam.gasPrice Transaction gas price
+   * @param txParam.gas Transaction gas limit
+   * @param txParam.gasLimit Alias of amount txParams.gas
+   * @param txParam.data Transaction data
+   */
   public generateTransaction({
     // Receiver alias
     receiver = '0x',
@@ -223,6 +257,12 @@ class KardiaTransaction {
     };
   }
 
+  /**
+   * Send signed transaction to blockchain
+   * @param rawTx Hex string represent signed transaction
+   * @param waitUntilMined wait for transaction to complete or not
+   * @param waitTimeOut Time (in milliseconds) to wait for transaction to complete
+   */
   public async sendRawTransaction(rawTx: any, waitUntilMined: boolean = false, waitTimeOut: number = 0) {
     const txHash = await this._rpcClient.request({
       method: 'tx_sendRawTransaction',
@@ -249,7 +289,7 @@ class KardiaTransaction {
   }
 
   /**
-   *
+   * Sign and send transaction to blockchain
    * @param data transaction params
    * @param privateKey Private key used to sign transaction
    * @param waitUntilMined wait for transaction to complete or not
@@ -276,6 +316,11 @@ class KardiaTransaction {
     return this.sendRawTransaction(signedTx.rawTransaction, waitUntilMined, waitTimeOut || WAIT_TIMEOUT)
   }
 
+  /**
+   * Estimate gas cost
+   * @param txPayload Transaction payload. For more information, refer to https://docs.kardiachain.io/js-sdk/reference/objects-reference#transaction-payload
+   * @param data Hex string represent transaction data
+   */
   public async estimateGas(txPayload: any, data: string) {
     const txObject = {
       from: txPayload.from || KARDIA_DEPLOYER,
@@ -290,6 +335,10 @@ class KardiaTransaction {
     });
   }
 
+  /**
+   * Debug transaction
+   * @param txHash Transaction hash to debug
+   */
   public async debugTransaction(txHash: string) {
     return await this._rpcClient.request({
       method: 'debug_traceTransaction',

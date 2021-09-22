@@ -46,5 +46,6 @@ declare class KardiaContract {
         call: (contractAddress: string, txPayload?: Record<string, any>, blockHeight?: any) => Promise<any>;
     };
     parseEvent(txHash: string): Promise<any>;
+    parseEventFromLog(log: any): Record<string, any>;
 }
 export default KardiaContract;

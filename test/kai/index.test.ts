@@ -117,6 +117,11 @@ describe('KAI module test', () => {
     expect(gasPriceInHydro).toBeTruthy();
   });
 
+  it('should get net version successfully', async () => {
+    const rs = await kardiaClient.kaiChain.netVersion()
+    expect(rs).toBeTruthy()
+  })
+
   // Utility test
   it('should convert hydro to KAI correctly and vice versa', async () => {
     const kaiMount = KAIChain.KAIFromHydro(KAI_IN_HYDRO);

@@ -14,6 +14,7 @@ describe('Transaction module test', () => {
   });
 
   it('should send transaction successfully', async () => {
+    jest.setTimeout(150000);
     const nonce = await kardiaClient.account.getNonce(ACCOUNT2.address);
     const txData = {
       to: ACCOUNT.address,

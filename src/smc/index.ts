@@ -67,7 +67,7 @@ class KardiaContract {
       abi: this.abi,
     };
   }
-  deploy({ params }: SMCDeployObject) {
+  deploy({ params = [] }: SMCDeployObject) {
     const bytecode = this.bytecodes;
     const abi = this.abi;
     const constructorAbi = findFunctionFromAbi(abi, 'constructor');
@@ -228,8 +228,12 @@ class KardiaContract {
     const tx = await transaction.getTransactionReceipt(txHash);
     // Parse event
     return tx.logs
-      ? tx.logs.map((item: any) => parseEvent(this.abi, item))
+      ? tx.logs.map((item: any) => this.parseEventFromLog(item))
       : [];
+  }
+
+  parseEventFromLog(log: any) {
+    return parseEvent(this.abi, log);
   }
 }
 
