@@ -67,7 +67,7 @@ class KardiaContract {
       abi: this.abi,
     };
   }
-  deploy({ params }: SMCDeployObject) {
+  deploy({ params = [] }: SMCDeployObject) {
     const bytecode = this.bytecodes;
     const abi = this.abi;
     const constructorAbi = findFunctionFromAbi(abi, 'constructor');
