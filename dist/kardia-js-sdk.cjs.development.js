@@ -1810,10 +1810,20 @@ var KardiaAccount = /*#__PURE__*/function () {
     var client = _ref.client;
     this._rpcClient = client;
   }
+  /**
+   * Get account balance
+   * @param address Address to get balance
+   * @param options
+   * @param options.blockHash Block hash to get balance
+   * @param options.blockHeight Block height to get balance. If both `blockHash` and `blockHeight` is specified, `blockHash` will be used.
+   */
+
 
   var _proto = KardiaAccount.prototype;
 
-  _proto.getBalance = /*#__PURE__*/function () {
+  _proto.getBalance =
+  /*#__PURE__*/
+  function () {
     var _getBalance = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee(address, options) {
       var params;
       return runtime_1.wrap(function _callee$(_context) {
@@ -1852,9 +1862,16 @@ var KardiaAccount = /*#__PURE__*/function () {
     }
 
     return getBalance;
-  }();
+  }()
+  /**
+   * Get account nonce
+   * @param address Address to get nonce
+   */
+  ;
 
-  _proto.getNonce = /*#__PURE__*/function () {
+  _proto.getNonce =
+  /*#__PURE__*/
+  function () {
     var _getNonce = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2(address) {
       return runtime_1.wrap(function _callee2$(_context2) {
         while (1) {
@@ -1883,6 +1900,11 @@ var KardiaAccount = /*#__PURE__*/function () {
 
     return getNonce;
   }() // Static utility method
+
+  /**
+   * Get wallet from private key
+   * @param privateKey Private key to generate wallet
+   */
   ;
 
   KardiaAccount.getWalletFromPK = function getWalletFromPK(privateKey) {
@@ -1894,9 +1916,16 @@ var KardiaAccount = /*#__PURE__*/function () {
       privateKey: privateKey,
       balance: 0
     };
-  };
+  }
+  /**
+   * Get wallet from mnemonic phrase
+   * @param mnemonic Mnemonic phrase to generate
+   */
+  ;
 
-  KardiaAccount.getWalletFromMnemonic = /*#__PURE__*/function () {
+  KardiaAccount.getWalletFromMnemonic =
+  /*#__PURE__*/
+  function () {
     var _getWalletFromMnemonic = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3(mnemonic) {
       var wallet, privateKey, addressStr;
       return runtime_1.wrap(function _callee3$(_context3) {
@@ -1925,11 +1954,20 @@ var KardiaAccount = /*#__PURE__*/function () {
     }
 
     return getWalletFromMnemonic;
-  }();
+  }()
+  /**
+   * Check if an address is valid
+   * @param address Address to validate
+   */
+  ;
 
   KardiaAccount.isAddress = function isAddress$1(address) {
     return isAddress(address);
-  };
+  }
+  /**
+   * Generate new wallet with mnemonic phrase
+   */
+  ;
 
   KardiaAccount.generateWallet = function generateWallet() {
     var wallet = ethers.ethers.Wallet.createRandom();
@@ -1941,7 +1979,12 @@ var KardiaAccount = /*#__PURE__*/function () {
       mnemonic: wallet.mnemonic,
       balance: 0
     };
-  };
+  }
+  /**
+   * Get checksum version from address
+   * @param address Original address
+   */
+  ;
 
   KardiaAccount.toChecksumAddress = function toChecksumAddress(address) {
     return toChecksum(address);
@@ -2076,10 +2119,16 @@ var KAIChain = /*#__PURE__*/function () {
     var client = _ref.client;
     this._rpcClient = client;
   }
+  /**
+   * Get net version
+   */
+
 
   var _proto = KAIChain.prototype;
 
-  _proto.netVersion = /*#__PURE__*/function () {
+  _proto.netVersion =
+  /*#__PURE__*/
+  function () {
     var _netVersion = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee() {
       return runtime_1.wrap(function _callee$(_context) {
         while (1) {
@@ -2107,9 +2156,15 @@ var KAIChain = /*#__PURE__*/function () {
     }
 
     return netVersion;
-  }();
+  }()
+  /**
+   * Get current block number
+   */
+  ;
 
-  _proto.getBlockNumber = /*#__PURE__*/function () {
+  _proto.getBlockNumber =
+  /*#__PURE__*/
+  function () {
     var _getBlockNumber = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2() {
       return runtime_1.wrap(function _callee2$(_context2) {
         while (1) {
@@ -2137,9 +2192,16 @@ var KAIChain = /*#__PURE__*/function () {
     }
 
     return getBlockNumber;
-  }();
+  }()
+  /**
+   * Check if an address is a validator
+   * @param address Address to check
+   */
+  ;
 
-  _proto.isValidator = /*#__PURE__*/function () {
+  _proto.isValidator =
+  /*#__PURE__*/
+  function () {
     var _isValidator = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3(address) {
       return runtime_1.wrap(function _callee3$(_context3) {
         while (1) {
@@ -2173,9 +2235,16 @@ var KAIChain = /*#__PURE__*/function () {
     }
 
     return isValidator;
-  }();
+  }()
+  /**
+   * Get list of current validators
+   * @param withDelegators Indicate if get delegators too
+   */
+  ;
 
-  _proto.getValidators = /*#__PURE__*/function () {
+  _proto.getValidators =
+  /*#__PURE__*/
+  function () {
     var _getValidators = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(withDelegators) {
       return runtime_1.wrap(function _callee4$(_context4) {
         while (1) {
@@ -2207,9 +2276,16 @@ var KAIChain = /*#__PURE__*/function () {
     }
 
     return getValidators;
-  }();
+  }()
+  /**
+   * Get block data from block number
+   * @param blockNumber Block number to get data
+   */
+  ;
 
-  _proto.getBlockByBlockNumber = /*#__PURE__*/function () {
+  _proto.getBlockByBlockNumber =
+  /*#__PURE__*/
+  function () {
     var _getBlockByBlockNumber = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(blockNumber) {
       return runtime_1.wrap(function _callee5$(_context5) {
         while (1) {
@@ -2245,9 +2321,16 @@ var KAIChain = /*#__PURE__*/function () {
     }
 
     return getBlockByBlockNumber;
-  }();
+  }()
+  /**
+   * Get block data from block hash
+   * @param blockHash Block hash to get data
+   */
+  ;
 
-  _proto.getBlockByHash = /*#__PURE__*/function () {
+  _proto.getBlockByHash =
+  /*#__PURE__*/
+  function () {
     var _getBlockByHash = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee6(blockHash) {
       return runtime_1.wrap(function _callee6$(_context6) {
         while (1) {
@@ -2275,9 +2358,16 @@ var KAIChain = /*#__PURE__*/function () {
     }
 
     return getBlockByHash;
-  }();
+  }()
+  /**
+   * Get block header from block number
+   * @param blockNumber Block number to get header
+   */
+  ;
 
-  _proto.getBlockHeaderByBlockNumber = /*#__PURE__*/function () {
+  _proto.getBlockHeaderByBlockNumber =
+  /*#__PURE__*/
+  function () {
     var _getBlockHeaderByBlockNumber = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(blockNumber) {
       return runtime_1.wrap(function _callee7$(_context7) {
         while (1) {
@@ -2313,9 +2403,16 @@ var KAIChain = /*#__PURE__*/function () {
     }
 
     return getBlockHeaderByBlockNumber;
-  }();
+  }()
+  /**
+   * Get block header from block hash
+   * @param blockHash Block number to get hash
+   */
+  ;
 
-  _proto.getBlockHeaderByHash = /*#__PURE__*/function () {
+  _proto.getBlockHeaderByHash =
+  /*#__PURE__*/
+  function () {
     var _getBlockHeaderByHash = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee8(blockHash) {
       return runtime_1.wrap(function _callee8$(_context8) {
         while (1) {
@@ -2669,7 +2766,7 @@ var DEFAULT_GAS_PRICE = 1000000000;
 var KARDIA_DEPLOYER = '0x14191195F9BB6e54465a341CeC6cce4491599ccC';
 
 var getVersion = function getVersion() {
-  return '0.4.9';
+  return '0.5.0';
 };
 
 var isExtensionEnabled = function isExtensionEnabled() {
@@ -2703,10 +2800,16 @@ var KardiaTransaction = /*#__PURE__*/function () {
       throw new Error('Either [client] or [provider] must be provided');
     }
   }
+  /**
+   * Get transaction detail from transaction hash
+   */
+
 
   var _proto = KardiaTransaction.prototype;
 
-  _proto.getTransaction = /*#__PURE__*/function () {
+  _proto.getTransaction =
+  /*#__PURE__*/
+  function () {
     var _getTransaction = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee(txHash) {
       return runtime_1.wrap(function _callee$(_context) {
         while (1) {
@@ -2734,9 +2837,15 @@ var KardiaTransaction = /*#__PURE__*/function () {
     }
 
     return getTransaction;
-  }();
+  }()
+  /**
+   * Get node's pending transactions
+   */
+  ;
 
-  _proto.getPendingTransaction = /*#__PURE__*/function () {
+  _proto.getPendingTransaction =
+  /*#__PURE__*/
+  function () {
     var _getPendingTransaction = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2() {
       return runtime_1.wrap(function _callee2$(_context2) {
         while (1) {
@@ -2764,9 +2873,16 @@ var KardiaTransaction = /*#__PURE__*/function () {
     }
 
     return getPendingTransaction;
-  }();
+  }()
+  /**
+   * Get transaction receipt from transaction hash
+   * @param txHash Transaction hash
+   */
+  ;
 
-  _proto.getTransactionReceipt = /*#__PURE__*/function () {
+  _proto.getTransactionReceipt =
+  /*#__PURE__*/
+  function () {
     var _getTransactionReceipt = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3(txHash) {
       return runtime_1.wrap(function _callee3$(_context3) {
         while (1) {
@@ -2794,9 +2910,18 @@ var KardiaTransaction = /*#__PURE__*/function () {
     }
 
     return getTransactionReceipt;
-  }();
+  }()
+  /**
+   * Send transaction to Chrome extension for signing and sending to blockchain
+   * @param data transaction params
+   * @param waitUntilMined wait for transaction to complete or not
+   * @param waitTimeOut Time (in milliseconds) to wait for transaction to complete
+   */
+  ;
 
-  _proto.sendTransactionToExtension = /*#__PURE__*/function () {
+  _proto.sendTransactionToExtension =
+  /*#__PURE__*/
+  function () {
     var _sendTransactionToExtension = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(data, waitUntilMined, waitTimeOut) {
       var accounts, estimatedGas, _client, signPromise, txHash, _waitTimeOut, breakTimeout, receipt;
 
@@ -2945,7 +3070,13 @@ var KardiaTransaction = /*#__PURE__*/function () {
     }
 
     return sendTransactionToExtension;
-  }();
+  }()
+  /**
+   * Sign a transaction using provided private key
+   * @param tx Transaction payload. For more information, refer to https://docs.kardiachain.io/js-sdk/reference/objects-reference#transaction-payload
+   * @param privateKey Private key used for signing
+   */
+  ;
 
   _proto.signTransaction = function signTransaction(tx, privateKey) {
     var _privateKey = "0x" + privateKey.replace('0x', '');
@@ -2984,7 +3115,21 @@ var KardiaTransaction = /*#__PURE__*/function () {
       rawTransaction: rawTransaction
     };
     return result;
-  };
+  }
+  /**
+   * Generate a transaction object used for signing
+   * @param txParam Transaction's params
+   * @param txParam.receiver Transaction receiver
+   * @param txParam.to Alias of txParams.receiver
+   * @param txParam.amount Transaction amount
+   * @param txParam.value Alias of txParams.amount
+   * @param txParam.nonce Transaction nonce
+   * @param txParam.gasPrice Transaction gas price
+   * @param txParam.gas Transaction gas limit
+   * @param txParam.gasLimit Alias of amount txParams.gas
+   * @param txParam.data Transaction data
+   */
+  ;
 
   _proto.generateTransaction = function generateTransaction(_ref2) {
     var _ref2$receiver = _ref2.receiver,
@@ -3020,9 +3165,18 @@ var KardiaTransaction = /*#__PURE__*/function () {
       value: isHexStrict(_value) ? _value : toHex(_value),
       data: '0x' + data.toLowerCase().replace(/^0x/i, '')
     };
-  };
+  }
+  /**
+   * Send signed transaction to blockchain
+   * @param rawTx Hex string represent signed transaction
+   * @param waitUntilMined wait for transaction to complete or not
+   * @param waitTimeOut Time (in milliseconds) to wait for transaction to complete
+   */
+  ;
 
-  _proto.sendRawTransaction = /*#__PURE__*/function () {
+  _proto.sendRawTransaction =
+  /*#__PURE__*/
+  function () {
     var _sendRawTransaction = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(rawTx, waitUntilMined, waitTimeOut) {
       var txHash, _waitTimeOut, breakTimeout, receipt;
 
@@ -3114,7 +3268,7 @@ var KardiaTransaction = /*#__PURE__*/function () {
     return sendRawTransaction;
   }()
   /**
-   *
+   * Sign and send transaction to blockchain
    * @param data transaction params
    * @param privateKey Private key used to sign transaction
    * @param waitUntilMined wait for transaction to complete or not
@@ -3185,9 +3339,17 @@ var KardiaTransaction = /*#__PURE__*/function () {
     }
 
     return sendTransaction;
-  }();
+  }()
+  /**
+   * Estimate gas cost
+   * @param txPayload Transaction payload. For more information, refer to https://docs.kardiachain.io/js-sdk/reference/objects-reference#transaction-payload
+   * @param data Hex string represent transaction data
+   */
+  ;
 
-  _proto.estimateGas = /*#__PURE__*/function () {
+  _proto.estimateGas =
+  /*#__PURE__*/
+  function () {
     var _estimateGas = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(txPayload, data) {
       var txObject;
       return runtime_1.wrap(function _callee7$(_context7) {
@@ -3223,9 +3385,16 @@ var KardiaTransaction = /*#__PURE__*/function () {
     }
 
     return estimateGas;
-  }();
+  }()
+  /**
+   * Debug transaction
+   * @param txHash Transaction hash to debug
+   */
+  ;
 
-  _proto.debugTransaction = /*#__PURE__*/function () {
+  _proto.debugTransaction =
+  /*#__PURE__*/
+  function () {
     var _debugTransaction = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee8(txHash) {
       return runtime_1.wrap(function _callee8$(_context8) {
         while (1) {
@@ -3677,7 +3846,8 @@ var KardiaContract = /*#__PURE__*/function () {
   _proto.deploy = function deploy(_ref2) {
     var _this = this;
 
-    var params = _ref2.params;
+    var _ref2$params = _ref2.params,
+        params = _ref2$params === void 0 ? [] : _ref2$params;
     var bytecode = this.bytecodes;
     var abi = this.abi;
     var constructorAbi = findFunctionFromAbi(abi, 'constructor');
