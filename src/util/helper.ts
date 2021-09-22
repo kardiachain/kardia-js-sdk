@@ -1,3 +1,3 @@
 export const getVersion = () => {
-  return '0.4.9';
+  return '0.5.0';
 }
