@@ -35,8 +35,9 @@ declare class KardiaAccount {
     /**
      * Get wallet from mnemonic phrase
      * @param mnemonic Mnemonic phrase to generate
+     * @param path Mnemonic path
      */
-    static getWalletFromMnemonic(mnemonic: string): Promise<Record<string, any> | boolean>;
+    static getWalletFromMnemonic(mnemonic: string, path?: string): Promise<Record<string, any> | boolean>;
     /**
      * Check if an address is valid
      * @param address Address to validate

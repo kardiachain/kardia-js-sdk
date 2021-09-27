@@ -1920,19 +1920,20 @@ var KardiaAccount = /*#__PURE__*/function () {
   /**
    * Get wallet from mnemonic phrase
    * @param mnemonic Mnemonic phrase to generate
+   * @param path Mnemonic path
    */
   ;
 
   KardiaAccount.getWalletFromMnemonic =
   /*#__PURE__*/
   function () {
-    var _getWalletFromMnemonic = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3(mnemonic) {
+    var _getWalletFromMnemonic = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3(mnemonic, path) {
       var wallet, privateKey, addressStr;
       return runtime_1.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              wallet = ethers.ethers.Wallet.fromMnemonic(mnemonic.trim());
+              wallet = ethers.ethers.Wallet.fromMnemonic(mnemonic.trim(), path);
               privateKey = wallet.privateKey;
               addressStr = wallet.address;
               return _context3.abrupt("return", {
@@ -1949,7 +1950,7 @@ var KardiaAccount = /*#__PURE__*/function () {
       }, _callee3);
     }));
 
-    function getWalletFromMnemonic(_x4) {
+    function getWalletFromMnemonic(_x4, _x5) {
       return _getWalletFromMnemonic.apply(this, arguments);
     }
 
@@ -2766,7 +2767,7 @@ var DEFAULT_GAS_PRICE = 1000000000;
 var KARDIA_DEPLOYER = '0x14191195F9BB6e54465a341CeC6cce4491599ccC';
 
 var getVersion = function getVersion() {
-  return '0.5.0';
+  return '0.5.1';
 };
 
 var isExtensionEnabled = function isExtensionEnabled() {
