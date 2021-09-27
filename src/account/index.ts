@@ -74,11 +74,13 @@ class KardiaAccount {
   /**
    * Get wallet from mnemonic phrase
    * @param mnemonic Mnemonic phrase to generate
+   * @param path Mnemonic path
    */
   public static async getWalletFromMnemonic(
-    mnemonic: string
+    mnemonic: string,
+    path?: string
   ): Promise<Record<string, any> | boolean> {
-    const wallet = ethers.Wallet.fromMnemonic(mnemonic.trim());
+    const wallet = ethers.Wallet.fromMnemonic(mnemonic.trim(), path);
     const privateKey = wallet.privateKey;
     const addressStr = wallet.address;
     return {
