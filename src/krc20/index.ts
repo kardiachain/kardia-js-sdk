@@ -69,6 +69,10 @@ class KRC20 {
     }
   }
 
+  /**
+   * Set custom ABI to use KRC20 token
+   * @param abi Custom ABI
+   */
   public setCustomABI(abi: Record<string, any>[]) {
     this.abi = abi;
   }
@@ -78,10 +82,17 @@ class KRC20 {
       throw new Error('Invalid [address]');
   }
 
+  /**
+   * Get contract instance to use custom function
+   */
   public getContractInstance() {
     return this._smcInstance;
   }
 
+  /**
+   * Get token name
+   * @param fetch Flag to indicate if get from network or from local cache
+   */
   public async getName(fetch?: boolean) {
     if (!fetch) return this.name;
     this.validateAddress();
@@ -94,6 +105,10 @@ class KRC20 {
     return this.name;
   }
 
+  /**
+   * Get token decimals
+   * @param fetch Flag to indicate if get from network or from local cache
+   */
   public async getDecimals(fetch?: boolean) {
     if (!fetch) return this.decimals;
     this.validateAddress();
@@ -106,6 +121,10 @@ class KRC20 {
     return Number(this.decimals);
   }
 
+  /**
+   * Get token symbol
+   * @param fetch Flag to indicate if get from network or from local cache
+   */
   public async getSymbol(fetch?: boolean) {
     if (!fetch) return this.symbol;
     this.validateAddress();
@@ -118,6 +137,10 @@ class KRC20 {
     return this.symbol;
   }
 
+  /**
+   * Get token total supply
+   * @param format Format to return, can be "string", "BigNumber" or "number"
+   */
   public async getTotalSupply(
     format: 'string' | 'BigNumber' | 'number' = 'string'
   ) {
@@ -134,6 +157,10 @@ class KRC20 {
     return totalSupply;
   }
 
+  /**
+   * Get data from network to save to local cache
+   * @param address Contract address
+   */
   public async getFromAddress(address: string) {
     if (!checkAddressChecksum(address)) throw new Error('Invalid [address]');
     this.address = address;
@@ -142,6 +169,10 @@ class KRC20 {
     await this.getSymbol(true);
   }
 
+  /**
+   * Get balance of address
+   * @param address Address to get balance
+   */
   public async balanceOf(address: string) {
     if (!checkAddressChecksum(address)) throw new Error('Invalid [address]');
     const balance = await this._smcInstance
@@ -150,6 +181,14 @@ class KRC20 {
     return balance;
   }
 
+  /**
+   * Transfer raw amount of token
+   * @param privateKey Private key of wallet to send
+   * @param to Receiver's address
+   * @param amount Raw amount of token to transfer 
+   * @param transferPayload Custom tx payload
+   * @param waitUntilMined Wait for tx to be mined or not
+   */
   public async transferRaw(
     privateKey: string,
     to: string,
@@ -176,6 +215,14 @@ class KRC20 {
     return invocation.send(privateKey, this.address, transferPayload, waitUntilMined);
   }
 
+  /**
+   * Transfer token
+   * @param privateKey Private key of wallet to send
+   * @param to Receiver's address
+   * @param amount Amount of token to transfer 
+   * @param transferPayload Custom tx payload
+   * @param waitUntilMined Wait for tx to be mined or not
+   */
   public async transfer(
     privateKey: string,
     to: string,
@@ -206,6 +253,11 @@ class KRC20 {
     return invocation.send(privateKey, this.address, transferPayload, waitUntilMined);
   }
 
+  /**
+   * Estimate gas for tx
+   * @param to Receiver's address
+   * @param amount Amount of token to transfer
+   */
   public async estimateGas(to: string, amount: number) {
     const bnAmount = new BigNumber(amount);
     const bnDecimals = new BigNumber(10 ** this.decimals)
