@@ -55,18 +55,40 @@ class KardiaContract {
     this.abi = abi || [];
   }
 
+  /**
+   * Update contract ABI
+   * @param abi Contract ABI to update
+   */
   updateAbi(abi: any[]) {
     this.abi = abi;
   }
+
+  /**
+   * Update contract bytecode
+   * @param bytecode Contract bytecode to update
+   */
   updateByteCode(bytecodes: string) {
     this.bytecodes = bytecodes;
   }
+
+  /**
+   * Get contract ABI and bytecode
+   * @param bytecode Contract bytecode to update
+   */
   info() {
     return {
       byteCode: this.bytecodes,
       abi: this.abi,
     };
   }
+
+  /**
+   * Deploy contract to network
+   * @param deployOptions Deploy options
+   * @param deployOptions.gasLimit Gas limit for deploy transaction
+   * @param deployOptions.gasPrice Gas price for deploy transaction
+   * @param deployOptions.params Params for contract initialization
+   */
   deploy({ params = [] }: SMCDeployObject) {
     const bytecode = this.bytecodes;
     const abi = this.abi;
@@ -83,7 +105,13 @@ class KardiaContract {
     });
     const data = deployData(decorBycode, constructorAbi, paramsDecorate);
     return {
+      /**
+       * Get deploy tx data
+       */
       txData: () => data,
+      /**
+       * Get deploy tx default payload
+       */
       getDefaultTxPayload: () => {
         return {
           amount: 0,
@@ -92,9 +120,19 @@ class KardiaContract {
           gas: DEFAULT_GAS,
         };
       },
+      /**
+       * Estimate gas for deploy tx
+       * @param txPayload Custom tx payload for estimation
+       */
       estimateGas: async (txPayload: Record<string, any> = {}) => {
         return await this.txModule.estimateGas(txPayload, data);
       },
+      /**
+       * Send deploy tx
+       * @param privateKey Private key of wallet to deploy
+       * @param txPayload Custom tx payload
+       * @param waitUntilMined Wait for tx to be mined or not
+       */
       send: async (privateKey: string, txPayload: Record<string, any> = {}, waitUntilMined = false) => {
         const senderAccount = fromPrivate(privateKey);
 
@@ -118,18 +156,13 @@ class KardiaContract {
     };
   }
 
+  /**
+   * Invoke contract function
+   * @param name Function name
+   * @param params Function params
+   */
   invokeContract(name: string, params: any[]) {
     const functionFromAbi = findFunctionFromAbi(this.abi, 'function', name);
-    // const paramsDecorate = params.map(param => {
-    //   if (Array.isArray(param)) {
-    //     return encodeArray(param);
-    //   } else if (isHexStrict(param)) {
-    //     return param;
-    //   } else {
-    //     return toHex(param);
-    //   }
-    // });
-    // const data = methodData(functionFromAbi, paramsDecorate);
     const web3 = new Web3();
     const data = web3.eth.abi.encodeFunctionCall({
       name,
@@ -137,7 +170,13 @@ class KardiaContract {
       inputs: functionFromAbi.inputs
     }, params);
     return {
+      /**
+       * Get tx data
+       */
       txData: () => data,
+      /**
+       * Get invoke tx default payload
+       */
       getDefaultTxPayload: () => {
         return {
           amount: 0,
@@ -146,9 +185,16 @@ class KardiaContract {
           data,
         };
       },
+      /**
+       * Estimate gas for invoke tx
+       * @param txPayload Custom tx payload for estimation
+       */
       estimateGas: async (txPayload: Record<string, any>) => {
         return await this.txModule.estimateGas(txPayload, data);
       },
+      /**
+       * Get full tx object
+       */
       getTxObject: async () => {
         const defaultPayload: any = {
           amount: 0,
@@ -162,6 +208,13 @@ class KardiaContract {
         defaultPayload.gas = estimatedGas;
         return defaultPayload;
       },
+      /**
+       * Send invocation, used when the invoked function would change state of contract
+       * @param privateKey Private key of wallet to deploy
+       * @param contractAddress Contract address to invoke
+       * @param txPayload Custom tx payload
+       * @param waitUntilMined Wait for tx to be mined or not
+       */
       send: async (
         privateKey: string,
         contractAddress: string,
@@ -198,6 +251,12 @@ class KardiaContract {
         };
         return result;
       },
+      /**
+       * Call invocation, used when the invoked function only get data and keep the state of contract
+       * @param contractAddress Contract address to invoke
+       * @param txPayload Custom tx payload
+       * @param blockHeight Block to invoke
+       */
       call: async (
         contractAddress: string,
         txPayload: Record<string, any> = {},
@@ -222,6 +281,10 @@ class KardiaContract {
     };
   }
 
+  /**
+   * Parse tx events using contract's ABI
+   * @param txHash Hash of tx to parse
+   */
   async parseEvent(txHash: string) {
     // Get Tx receipt
     const transaction = new KardiaTransaction({ client: this._rpcClient });
