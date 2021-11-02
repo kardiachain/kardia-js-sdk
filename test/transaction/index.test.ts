@@ -44,7 +44,7 @@ describe('Transaction module test', () => {
   it('should debug transaction successfully', async () => {
     const txDebug = await kardiaClient.transaction.debugTransaction(FAILED_TX_HASH);
     expect(txDebug).toBeTruthy()
-    expect(txDebug.revertReason).toBeTruthy()
-    expect(txDebug.usedGas).toBeTruthy()
+    expect(txDebug.failed).toBeTruthy()
+    expect(txDebug.gas).toBeTruthy()
   });
 });

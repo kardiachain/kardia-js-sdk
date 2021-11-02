@@ -100,15 +100,17 @@ describe('KAI module test', () => {
   });
 
   it('should create and get filter successfully', async () => {
-    jest.setTimeout(500000);
+    jest.setTimeout(50000);
     const topic = keccak256('Transfer(address,address,uint256)');
+    const latestBlock = await kardiaClient.kaiChain.getBlockNumber();
     const filterId = await kardiaClient.kaiChain.newFilter({
-      fromBlock: 1800000,
+      fromBlock: latestBlock - 10000,
       topics: [topic]
     })
     expect(filterId).toBeTruthy();
 
     const logs = await kardiaClient.kaiChain.getFilterLogs(filterId);
+    await kardiaClient.kaiChain.uninstallFilter(filterId)
     expect(logs).toBeTruthy();
   });
 
