@@ -107,6 +107,14 @@ class KAIChain {
     });
   }
 
+  /**
+   * Create new filter to listen for contract's events. Reference: https://docs.kardiachain.io/js-sdk/guides/smart-contract-module#listen-for-smart-contracts-event
+   * @param options Filter options
+   * @param options.fromBlock Block to start listening for event
+   * @param options.toBlock Block to end listening for event
+   * @param options.address Contract address
+   * @param options.topics Array of topics to listen for
+   */
   public async newFilter({
     fromBlock = 'latest',
     toBlock = 'latest',
@@ -130,6 +138,9 @@ class KAIChain {
     });
   }
 
+  /**
+   * Create new filter to listen for new blocks.
+   */
   public async newBlockFilter() {
     return await this._rpcClient.request({
       method: 'kai_newBlockFilter',
@@ -137,6 +148,10 @@ class KAIChain {
     });
   }
 
+  /**
+   * Remove a filter after used
+   * @param fitlerID Filter ID to remove
+   */
   public async uninstallFilter(filterId: string) {
     return await this._rpcClient.request({
       method: 'kai_uninstallFilter',
@@ -144,6 +159,10 @@ class KAIChain {
     });
   }
 
+  /**
+   * Get filter changes
+   * @param fitlerID Filter ID to get changes
+   */
   public async getFilterChanges(filterId: string) {
     return await this._rpcClient.request({
       method: 'kai_getFilterChanges',
@@ -151,6 +170,10 @@ class KAIChain {
     });
   }
 
+  /**
+   * Get filter logs
+   * @param fitlerID Filter ID to get changes
+   */
   public async getFilterLogs(filterId: string) {
     return await this._rpcClient.request({
       method: 'kai_getFilterLogs',
@@ -158,6 +181,15 @@ class KAIChain {
     });
   }
 
+  /**
+   * Get all logs matching a given filter object.
+   * @param options Filter options
+   * @param options.fromBlock Block to start listening for event
+   * @param options.toBlock Block to end listening for event
+   * @param options.address Contract address
+   * @param options.topics Array of topics to listen for
+   * @param options.blockhash block hash which restricts the logs returned to the single block with the 32-byte hash blockHash. Using blockHash is equivalent to fromBlock = toBlock = the block number with hash blockHash. If blockHash is present in in the filter criteria, then neither fromBlock nor toBlock are allowed.
+   */
   public async getLogs(
     fromBlock?: 'latest' | number,
     toBlock?: 'latest' | number,
@@ -179,6 +211,9 @@ class KAIChain {
     });
   }
 
+  /**
+   * Get recommended gas price
+   */
   public async getGasPrice() {
     return await this._rpcClient.request({
       method: 'kai_gasPrice',
@@ -187,11 +222,19 @@ class KAIChain {
   }
 
   // Static utility method
-
+  
+  /**
+   * Convert from Hydro to KAI
+   * @param hydroValue Hydro value to convert
+   */
   public static KAIFromHydro(hydroValue: any): number {
     return fromHydro(hydroValue, 'kai');
   }
 
+  /**
+   * Convert from KAI to Hydro
+   * @param kaiValue KAI value to convert
+   */
   public static HydroFromKAI(kaiValue: any) {
     return toHydro(kaiValue, 'kai');
   }
