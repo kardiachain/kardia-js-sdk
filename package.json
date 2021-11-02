@@ -1,5 +1,5 @@
 {
-  "version": "0.5.1",
+  "version": "0.5.2",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -46,11 +46,11 @@
   "size-limit": [
     {
       "path": "dist/kardia-js-sdk.cjs.production.min.js",
-      "limit": "100 KB"
+      "limit": "1 MB"
     },
     {
       "path": "dist/kardia-js-sdk.esm.js",
-      "limit": "500 KB"
+      "limit": "5 MB"
     }
   ],
   "devDependencies": {
