@@ -2441,9 +2441,20 @@ var KAIChain = /*#__PURE__*/function () {
     }
 
     return getBlockHeaderByHash;
-  }();
+  }()
+  /**
+   * Create new filter to listen for contract's events. Reference: https://docs.kardiachain.io/js-sdk/guides/smart-contract-module#listen-for-smart-contracts-event
+   * @param options Filter options
+   * @param options.fromBlock Block to start listening for event
+   * @param options.toBlock Block to end listening for event
+   * @param options.address Contract address
+   * @param options.topics Array of topics to listen for
+   */
+  ;
 
-  _proto.newFilter = /*#__PURE__*/function () {
+  _proto.newFilter =
+  /*#__PURE__*/
+  function () {
     var _newFilter = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee9(_ref2) {
       var _ref2$fromBlock, fromBlock, _ref2$toBlock, toBlock, address, _ref2$topics, topics, param;
 
@@ -2480,9 +2491,15 @@ var KAIChain = /*#__PURE__*/function () {
     }
 
     return newFilter;
-  }();
+  }()
+  /**
+   * Create new filter to listen for new blocks.
+   */
+  ;
 
-  _proto.newBlockFilter = /*#__PURE__*/function () {
+  _proto.newBlockFilter =
+  /*#__PURE__*/
+  function () {
     var _newBlockFilter = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee10() {
       return runtime_1.wrap(function _callee10$(_context10) {
         while (1) {
@@ -2510,9 +2527,16 @@ var KAIChain = /*#__PURE__*/function () {
     }
 
     return newBlockFilter;
-  }();
+  }()
+  /**
+   * Remove a filter after used
+   * @param fitlerID Filter ID to remove
+   */
+  ;
 
-  _proto.uninstallFilter = /*#__PURE__*/function () {
+  _proto.uninstallFilter =
+  /*#__PURE__*/
+  function () {
     var _uninstallFilter = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee11(filterId) {
       return runtime_1.wrap(function _callee11$(_context11) {
         while (1) {
@@ -2540,9 +2564,16 @@ var KAIChain = /*#__PURE__*/function () {
     }
 
     return uninstallFilter;
-  }();
+  }()
+  /**
+   * Get filter changes
+   * @param fitlerID Filter ID to get changes
+   */
+  ;
 
-  _proto.getFilterChanges = /*#__PURE__*/function () {
+  _proto.getFilterChanges =
+  /*#__PURE__*/
+  function () {
     var _getFilterChanges = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee12(filterId) {
       return runtime_1.wrap(function _callee12$(_context12) {
         while (1) {
@@ -2570,9 +2601,16 @@ var KAIChain = /*#__PURE__*/function () {
     }
 
     return getFilterChanges;
-  }();
+  }()
+  /**
+   * Get filter logs
+   * @param fitlerID Filter ID to get changes
+   */
+  ;
 
-  _proto.getFilterLogs = /*#__PURE__*/function () {
+  _proto.getFilterLogs =
+  /*#__PURE__*/
+  function () {
     var _getFilterLogs = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee13(filterId) {
       return runtime_1.wrap(function _callee13$(_context13) {
         while (1) {
@@ -2600,9 +2638,21 @@ var KAIChain = /*#__PURE__*/function () {
     }
 
     return getFilterLogs;
-  }();
+  }()
+  /**
+   * Get all logs matching a given filter object.
+   * @param options Filter options
+   * @param options.fromBlock Block to start listening for event
+   * @param options.toBlock Block to end listening for event
+   * @param options.address Contract address
+   * @param options.topics Array of topics to listen for
+   * @param options.blockhash block hash which restricts the logs returned to the single block with the 32-byte hash blockHash. Using blockHash is equivalent to fromBlock = toBlock = the block number with hash blockHash. If blockHash is present in in the filter criteria, then neither fromBlock nor toBlock are allowed.
+   */
+  ;
 
-  _proto.getLogs = /*#__PURE__*/function () {
+  _proto.getLogs =
+  /*#__PURE__*/
+  function () {
     var _getLogs = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee14(fromBlock, toBlock, address, topics, blockhash) {
       return runtime_1.wrap(function _callee14$(_context14) {
         while (1) {
@@ -2636,9 +2686,15 @@ var KAIChain = /*#__PURE__*/function () {
     }
 
     return getLogs;
-  }();
+  }()
+  /**
+   * Get recommended gas price
+   */
+  ;
 
-  _proto.getGasPrice = /*#__PURE__*/function () {
+  _proto.getGasPrice =
+  /*#__PURE__*/
+  function () {
     var _getGasPrice = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee15() {
       return runtime_1.wrap(function _callee15$(_context15) {
         while (1) {
@@ -2667,11 +2723,21 @@ var KAIChain = /*#__PURE__*/function () {
 
     return getGasPrice;
   }() // Static utility method
+
+  /**
+   * Convert from Hydro to KAI
+   * @param hydroValue Hydro value to convert
+   */
   ;
 
   KAIChain.KAIFromHydro = function KAIFromHydro(hydroValue) {
     return fromHydro(hydroValue, 'kai');
-  };
+  }
+  /**
+   * Convert from KAI to Hydro
+   * @param kaiValue KAI value to convert
+   */
+  ;
 
   KAIChain.HydroFromKAI = function HydroFromKAI(kaiValue) {
     return toHydro(kaiValue, 'kai');
@@ -2767,7 +2833,7 @@ var DEFAULT_GAS_PRICE = 1000000000;
 var KARDIA_DEPLOYER = '0x14191195F9BB6e54465a341CeC6cce4491599ccC';
 
 var getVersion = function getVersion() {
-  return '0.5.1';
+  return '0.5.2';
 };
 
 var isExtensionEnabled = function isExtensionEnabled() {
@@ -3826,23 +3892,46 @@ var KardiaContract = /*#__PURE__*/function () {
     if (abi && !Array.isArray(abi)) throw new Error('Invalid [abi]');
     this.abi = abi || [];
   }
+  /**
+   * Update contract ABI
+   * @param abi Contract ABI to update
+   */
+
 
   var _proto = KardiaContract.prototype;
 
   _proto.updateAbi = function updateAbi(abi) {
     this.abi = abi;
-  };
+  }
+  /**
+   * Update contract bytecode
+   * @param bytecode Contract bytecode to update
+   */
+  ;
 
   _proto.updateByteCode = function updateByteCode(bytecodes) {
     this.bytecodes = bytecodes;
-  };
+  }
+  /**
+   * Get contract ABI and bytecode
+   * @param bytecode Contract bytecode to update
+   */
+  ;
 
   _proto.info = function info() {
     return {
       byteCode: this.bytecodes,
       abi: this.abi
     };
-  };
+  }
+  /**
+   * Deploy contract to network
+   * @param deployOptions Deploy options
+   * @param deployOptions.gasLimit Gas limit for deploy transaction
+   * @param deployOptions.gasPrice Gas price for deploy transaction
+   * @param deployOptions.params Params for contract initialization
+   */
+  ;
 
   _proto.deploy = function deploy(_ref2) {
     var _this = this;
@@ -3864,9 +3953,16 @@ var KardiaContract = /*#__PURE__*/function () {
     });
     var data = deployData(decorBycode, constructorAbi, paramsDecorate);
     return {
+      /**
+       * Get deploy tx data
+       */
       txData: function txData() {
         return data;
       },
+
+      /**
+       * Get deploy tx default payload
+       */
       getDefaultTxPayload: function getDefaultTxPayload() {
         return {
           amount: 0,
@@ -3875,6 +3971,11 @@ var KardiaContract = /*#__PURE__*/function () {
           gas: DEFAULT_GAS
         };
       },
+
+      /**
+       * Estimate gas for deploy tx
+       * @param txPayload Custom tx payload for estimation
+       */
       estimateGas: function () {
         var _estimateGas = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee(txPayload) {
           return runtime_1.wrap(function _callee$(_context) {
@@ -3905,6 +4006,13 @@ var KardiaContract = /*#__PURE__*/function () {
 
         return estimateGas;
       }(),
+
+      /**
+       * Send deploy tx
+       * @param privateKey Private key of wallet to deploy
+       * @param txPayload Custom tx payload
+       * @param waitUntilMined Wait for tx to be mined or not
+       */
       send: function () {
         var _send = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2(privateKey, txPayload, waitUntilMined) {
           var senderAccount, account, accountNonce, transaction, result;
@@ -3961,22 +4069,18 @@ var KardiaContract = /*#__PURE__*/function () {
         return send;
       }()
     };
-  };
+  }
+  /**
+   * Invoke contract function
+   * @param name Function name
+   * @param params Function params
+   */
+  ;
 
   _proto.invokeContract = function invokeContract(name, params) {
     var _this2 = this;
 
-    var functionFromAbi = findFunctionFromAbi(this.abi, 'function', name); // const paramsDecorate = params.map(param => {
-    //   if (Array.isArray(param)) {
-    //     return encodeArray(param);
-    //   } else if (isHexStrict(param)) {
-    //     return param;
-    //   } else {
-    //     return toHex(param);
-    //   }
-    // });
-    // const data = methodData(functionFromAbi, paramsDecorate);
-
+    var functionFromAbi = findFunctionFromAbi(this.abi, 'function', name);
     var web3 = new Web3();
     var data = web3.eth.abi.encodeFunctionCall({
       name: name,
@@ -3984,9 +4088,16 @@ var KardiaContract = /*#__PURE__*/function () {
       inputs: functionFromAbi.inputs
     }, params);
     return {
+      /**
+       * Get tx data
+       */
       txData: function txData() {
         return data;
       },
+
+      /**
+       * Get invoke tx default payload
+       */
       getDefaultTxPayload: function getDefaultTxPayload() {
         return {
           amount: 0,
@@ -3995,6 +4106,11 @@ var KardiaContract = /*#__PURE__*/function () {
           data: data
         };
       },
+
+      /**
+       * Estimate gas for invoke tx
+       * @param txPayload Custom tx payload for estimation
+       */
       estimateGas: function () {
         var _estimateGas2 = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3(txPayload) {
           return runtime_1.wrap(function _callee3$(_context3) {
@@ -4021,6 +4137,10 @@ var KardiaContract = /*#__PURE__*/function () {
 
         return estimateGas;
       }(),
+
+      /**
+       * Get full tx object
+       */
       getTxObject: function () {
         var _getTxObject = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4() {
           var defaultPayload, estimatedGas;
@@ -4055,6 +4175,14 @@ var KardiaContract = /*#__PURE__*/function () {
 
         return getTxObject;
       }(),
+
+      /**
+       * Send invocation, used when the invoked function would change state of contract
+       * @param privateKey Private key of wallet to deploy
+       * @param contractAddress Contract address to invoke
+       * @param txPayload Custom tx payload
+       * @param waitUntilMined Wait for tx to be mined or not
+       */
       send: function () {
         var _send2 = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(privateKey, contractAddress, txPayload, waitUntilMined) {
           var senderAccount, account, accountNonce, transaction, txResult, events, result;
@@ -4125,6 +4253,13 @@ var KardiaContract = /*#__PURE__*/function () {
 
         return send;
       }(),
+
+      /**
+       * Call invocation, used when the invoked function only get data and keep the state of contract
+       * @param contractAddress Contract address to invoke
+       * @param txPayload Custom tx payload
+       * @param blockHeight Block to invoke
+       */
       call: function () {
         var _call = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee6(contractAddress, txPayload, blockHeight) {
           var callObject, result;
@@ -4174,9 +4309,16 @@ var KardiaContract = /*#__PURE__*/function () {
         return call;
       }()
     };
-  };
+  }
+  /**
+   * Parse tx events using contract's ABI
+   * @param txHash Hash of tx to parse
+   */
+  ;
 
-  _proto.parseEvent = /*#__PURE__*/function () {
+  _proto.parseEvent =
+  /*#__PURE__*/
+  function () {
     var _parseEvent = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(txHash) {
       var _this3 = this;
 
@@ -4526,6 +4668,11 @@ var KRC20 = /*#__PURE__*/function () {
       this.abi = abi;
     }
   }
+  /**
+   * Set custom ABI to use KRC20 token
+   * @param abi Custom ABI
+   */
+
 
   var _proto = KRC20.prototype;
 
@@ -4535,13 +4682,24 @@ var KRC20 = /*#__PURE__*/function () {
 
   _proto.validateAddress = function validateAddress() {
     if (!checkAddressChecksum(this.address)) throw new Error('Invalid [address]');
-  };
+  }
+  /**
+   * Get contract instance to use custom function
+   */
+  ;
 
   _proto.getContractInstance = function getContractInstance() {
     return this._smcInstance;
-  };
+  }
+  /**
+   * Get token name
+   * @param fetch Flag to indicate if get from network or from local cache
+   */
+  ;
 
-  _proto.getName = /*#__PURE__*/function () {
+  _proto.getName =
+  /*#__PURE__*/
+  function () {
     var _getName = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee(fetch) {
       var name;
       return runtime_1.wrap(function _callee$(_context) {
@@ -4582,9 +4740,16 @@ var KRC20 = /*#__PURE__*/function () {
     }
 
     return getName;
-  }();
+  }()
+  /**
+   * Get token decimals
+   * @param fetch Flag to indicate if get from network or from local cache
+   */
+  ;
 
-  _proto.getDecimals = /*#__PURE__*/function () {
+  _proto.getDecimals =
+  /*#__PURE__*/
+  function () {
     var _getDecimals = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2(fetch) {
       var decimals;
       return runtime_1.wrap(function _callee2$(_context2) {
@@ -4625,9 +4790,16 @@ var KRC20 = /*#__PURE__*/function () {
     }
 
     return getDecimals;
-  }();
+  }()
+  /**
+   * Get token symbol
+   * @param fetch Flag to indicate if get from network or from local cache
+   */
+  ;
 
-  _proto.getSymbol = /*#__PURE__*/function () {
+  _proto.getSymbol =
+  /*#__PURE__*/
+  function () {
     var _getSymbol = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3(fetch) {
       var symbol;
       return runtime_1.wrap(function _callee3$(_context3) {
@@ -4668,9 +4840,16 @@ var KRC20 = /*#__PURE__*/function () {
     }
 
     return getSymbol;
-  }();
+  }()
+  /**
+   * Get token total supply
+   * @param format Format to return, can be "string", "BigNumber" or "number"
+   */
+  ;
 
-  _proto.getTotalSupply = /*#__PURE__*/function () {
+  _proto.getTotalSupply =
+  /*#__PURE__*/
+  function () {
     var _getTotalSupply = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(format) {
       var totalSupply;
       return runtime_1.wrap(function _callee4$(_context4) {
@@ -4719,9 +4898,16 @@ var KRC20 = /*#__PURE__*/function () {
     }
 
     return getTotalSupply;
-  }();
+  }()
+  /**
+   * Get data from network to save to local cache
+   * @param address Contract address
+   */
+  ;
 
-  _proto.getFromAddress = /*#__PURE__*/function () {
+  _proto.getFromAddress =
+  /*#__PURE__*/
+  function () {
     var _getFromAddress = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(address) {
       return runtime_1.wrap(function _callee5$(_context5) {
         while (1) {
@@ -4760,9 +4946,16 @@ var KRC20 = /*#__PURE__*/function () {
     }
 
     return getFromAddress;
-  }();
+  }()
+  /**
+   * Get balance of address
+   * @param address Address to get balance
+   */
+  ;
 
-  _proto.balanceOf = /*#__PURE__*/function () {
+  _proto.balanceOf =
+  /*#__PURE__*/
+  function () {
     var _balanceOf = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee6(address) {
       var balance;
       return runtime_1.wrap(function _callee6$(_context6) {
@@ -4797,9 +4990,20 @@ var KRC20 = /*#__PURE__*/function () {
     }
 
     return balanceOf;
-  }();
+  }()
+  /**
+   * Transfer raw amount of token
+   * @param privateKey Private key of wallet to send
+   * @param to Receiver's address
+   * @param amount Raw amount of token to transfer
+   * @param transferPayload Custom tx payload
+   * @param waitUntilMined Wait for tx to be mined or not
+   */
+  ;
 
-  _proto.transferRaw = /*#__PURE__*/function () {
+  _proto.transferRaw =
+  /*#__PURE__*/
+  function () {
     var _transferRaw = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(privateKey, to, amount, transferPayload, waitUntilMined) {
       var invocation, defaultPayload, estimatedGas;
       return runtime_1.wrap(function _callee7$(_context7) {
@@ -4863,9 +5067,20 @@ var KRC20 = /*#__PURE__*/function () {
     }
 
     return transferRaw;
-  }();
+  }()
+  /**
+   * Transfer token
+   * @param privateKey Private key of wallet to send
+   * @param to Receiver's address
+   * @param amount Amount of token to transfer
+   * @param transferPayload Custom tx payload
+   * @param waitUntilMined Wait for tx to be mined or not
+   */
+  ;
 
-  _proto.transfer = /*#__PURE__*/function () {
+  _proto.transfer =
+  /*#__PURE__*/
+  function () {
     var _transfer = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee8(privateKey, to, amount, transferPayload, waitUntilMined) {
       var bnAmount, bnDecimals, invocation, defaultPayload, estimatedGas;
       return runtime_1.wrap(function _callee8$(_context8) {
@@ -4932,9 +5147,17 @@ var KRC20 = /*#__PURE__*/function () {
     }
 
     return transfer;
-  }();
+  }()
+  /**
+   * Estimate gas for tx
+   * @param to Receiver's address
+   * @param amount Amount of token to transfer
+   */
+  ;
 
-  _proto.estimateGas = /*#__PURE__*/function () {
+  _proto.estimateGas =
+  /*#__PURE__*/
+  function () {
     var _estimateGas = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee9(to, amount) {
       var bnAmount, bnDecimals, invocation, defaultPayload, estimatedGas;
       return runtime_1.wrap(function _callee9$(_context9) {
