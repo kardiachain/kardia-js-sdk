@@ -8,3 +8,4 @@ export const MNEMONIC =
   'ginger monitor stay various salon logic wasp program swallow claim pipe system';
 
 export const ADDRESS_LOWERCASE = '0x3cE95D1995E2C86B400c3f36E8d09b2C422ff1ae';
+export const CONTRACT_ADDRESS = '0x087C82ea812a450C517D55961Dd76ED2cAc7D469'

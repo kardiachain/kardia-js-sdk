@@ -8,6 +8,7 @@ import {
   VALID_ADDRESS,
   MNEMONIC,
   ADDRESS_LOWERCASE,
+  CONTRACT_ADDRESS,
 } from './config';
 import KardiaAccount from '../../src/account';
 
@@ -80,4 +81,9 @@ describe('Account module test', () => {
     const checksum = KardiaAccount.toChecksumAddress(ADDRESS_LOWERCASE);
     expect(checksum).toEqual(VALID_ADDRESS);
   });
+
+  it('should check if address is contract', () => {
+    const isContract = kardiaClient.account.isContract(CONTRACT_ADDRESS)
+    expect(isContract).toBeTruthy()
+  })
 });
