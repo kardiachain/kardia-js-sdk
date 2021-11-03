@@ -121,6 +121,16 @@ class KardiaAccount {
   public static toChecksumAddress(address: string) {
     return toChecksum(address);
   }
+
+  public async isContract(address: string) {
+    const checksumAddress = KardiaAccount.toChecksumAddress(address)
+    const code = await this._rpcClient.request({
+      method: 'account_getCode',
+      params: [checksumAddress],
+    });
+
+    return code !== '0x'
+  }
 }
 
 export default KardiaAccount;
