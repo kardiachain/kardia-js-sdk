@@ -122,6 +122,10 @@ class KardiaAccount {
     return toChecksum(address);
   }
 
+  /**
+   * Check if address is a contract or not
+   * @param address Address to check
+   */
   public async isContract(address: string) {
     const checksumAddress = KardiaAccount.toChecksumAddress(address)
     const code = await this._rpcClient.request({
