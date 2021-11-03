@@ -130,7 +130,7 @@ class KardiaAccount {
     const checksumAddress = KardiaAccount.toChecksumAddress(address)
     const code = await this._rpcClient.request({
       method: 'account_getCode',
-      params: [checksumAddress],
+      params: [checksumAddress, "latest"],
     });
 
     return code !== '0x'
