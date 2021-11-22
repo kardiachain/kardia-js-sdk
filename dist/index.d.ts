@@ -3,6 +3,7 @@ import KAIChain from './kai';
 import KardiaContract from './smc';
 import KardiaTransaction from './transaction';
 import KRC20 from './krc20';
+import KardiaConnect from './kardiaConnect';
 interface KardiaClientProps {
     endpoint: string;
 }
@@ -15,6 +16,6 @@ declare class KardiaClient {
     krc20: KRC20;
     constructor({ endpoint }: KardiaClientProps);
 }
-export { KardiaTransaction, KardiaAccount, KAIChain, KRC20, KardiaContract };
+export { KardiaTransaction, KardiaAccount, KAIChain, KRC20, KardiaContract, KardiaConnect };
 export { KardiaUtils } from './util';
 export default KardiaClient;
