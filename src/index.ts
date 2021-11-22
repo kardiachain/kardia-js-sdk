@@ -4,6 +4,7 @@ import KAIChain from './kai';
 import KardiaContract from './smc';
 import KardiaTransaction from './transaction';
 import KRC20 from './krc20';
+import KardiaConnect from './kardiaConnect';
 import { getVersion } from './util/helper';
 
 interface KardiaClientProps {
@@ -35,6 +36,6 @@ class KardiaClient {
   }
 }
 
-export { KardiaTransaction, KardiaAccount, KAIChain, KRC20, KardiaContract };
+export { KardiaTransaction, KardiaAccount, KAIChain, KRC20, KardiaContract, KardiaConnect };
 export { KardiaUtils } from './util'
 export default KardiaClient;
