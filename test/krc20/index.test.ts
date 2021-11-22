@@ -91,5 +91,5 @@ describe('KRC20 module test', () => {
     );
     expect(tx).toBeTruthy();
     expect(typeof tx === 'string').toBeTruthy()
-  })
+  });
 });

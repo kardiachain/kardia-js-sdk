@@ -57,5 +57,10 @@ declare class KardiaAccount {
      * @param address Original address
      */
     static toChecksumAddress(address: string): string;
+    /**
+     * Check if address is a contract or not
+     * @param address Address to check
+     */
+    isContract(address: string): Promise<boolean>;
 }
 export default KardiaAccount;

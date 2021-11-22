@@ -267,10 +267,10 @@ class KardiaContract {
           to: contractAddress,
           data: data,
           value: txPayload.amount || 0,
-          gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE,
+          // gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE,
+          gasPrice: 0,
           gas: txPayload.gas || DEFAULT_GAS,
         };
-        // const result = await api.callSmartContract(callObject, blockHeight);
         const result = await this._rpcClient.request({
           method: 'kai_kardiaCall',
           params: [callObject, blockHeight],

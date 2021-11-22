@@ -1983,7 +1983,47 @@ var KardiaAccount = /*#__PURE__*/function () {
 
   KardiaAccount.toChecksumAddress = function toChecksumAddress(address) {
     return toChecksum(address);
-  };
+  }
+  /**
+   * Check if address is a contract or not
+   * @param address Address to check
+   */
+  ;
+
+  _proto.isContract =
+  /*#__PURE__*/
+  function () {
+    var _isContract = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(address) {
+      var checksumAddress, code;
+      return runtime_1.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              checksumAddress = KardiaAccount.toChecksumAddress(address);
+              _context4.next = 3;
+              return this._rpcClient.request({
+                method: 'account_getCode',
+                params: [checksumAddress, "latest"]
+              });
+
+            case 3:
+              code = _context4.sent;
+              return _context4.abrupt("return", code !== '0x');
+
+            case 5:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, this);
+    }));
+
+    function isContract(_x6) {
+      return _isContract.apply(this, arguments);
+    }
+
+    return isContract;
+  }();
 
   return KardiaAccount;
 }();
@@ -2823,11 +2863,12 @@ var sleep = function sleep(ms) {
 };
 
 var WAIT_TIMEOUT = 300000;
+var DEFAULT_GAS = 900000;
 var DEFAULT_GAS_PRICE = 1000000000;
 var KARDIA_DEPLOYER = '0x14191195F9BB6e54465a341CeC6cce4491599ccC';
 
 var getVersion = function getVersion() {
-  return '0.5.2';
+  return '0.5.3';
 };
 
 var isExtensionEnabled = function isExtensionEnabled() {
@@ -3856,7 +3897,7 @@ var findFunctionFromAbi = function findFunctionFromAbi(abi, type, name) {
   });
 };
 
-var DEFAULT_GAS = 900000;
+var DEFAULT_GAS$1 = 900000;
 var DEFAULT_GAS_PRICE$1 = 1000000000;
 
 var KardiaContract = /*#__PURE__*/function () {
@@ -3962,7 +4003,7 @@ var KardiaContract = /*#__PURE__*/function () {
           amount: 0,
           data: data,
           gasPrice: DEFAULT_GAS_PRICE$1,
-          gas: DEFAULT_GAS
+          gas: DEFAULT_GAS$1
         };
       },
 
@@ -4040,7 +4081,7 @@ var KardiaContract = /*#__PURE__*/function () {
                     amount: txPayload.amount || 0,
                     nonce: txPayload.nonce || accountNonce,
                     gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE$1,
-                    gas: txPayload.gas || DEFAULT_GAS,
+                    gas: txPayload.gas || DEFAULT_GAS$1,
                     data: data
                   }, privateKey, waitUntilMined);
 
@@ -4210,7 +4251,7 @@ var KardiaContract = /*#__PURE__*/function () {
                     amount: txPayload.amount || 0,
                     nonce: txPayload.nonce || accountNonce,
                     gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE$1,
-                    gas: txPayload.gas || DEFAULT_GAS,
+                    gas: txPayload.gas || DEFAULT_GAS$1,
                     data: data
                   }, privateKey, waitUntilMined);
 
@@ -4274,10 +4315,10 @@ var KardiaContract = /*#__PURE__*/function () {
                     to: contractAddress,
                     data: data,
                     value: txPayload.amount || 0,
-                    gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE$1,
-                    gas: txPayload.gas || DEFAULT_GAS
-                  }; // const result = await api.callSmartContract(callObject, blockHeight);
-
+                    // gasPrice: txPayload.gasPrice || DEFAULT_GAS_PRICE,
+                    gasPrice: 0,
+                    gas: txPayload.gas || DEFAULT_GAS$1
+                  };
                   _context6.next = 5;
                   return _this2._rpcClient.request({
                     method: 'kai_kardiaCall',
@@ -5187,6 +5228,66 @@ var KRC20 = /*#__PURE__*/function () {
   return KRC20;
 }();
 
+var APP_PREFIX = 'kardiachainwallet://';
+
+var getApproveMessage = function getApproveMessage(callbackSchema) {
+  return "approve|" + callbackSchema;
+};
+
+var getAddressFromSignature = function getAddressFromSignature(signature, schema) {
+  var web3 = new Web3();
+  return web3.eth.accounts.recover(getApproveMessage(schema), signature);
+};
+
+var verifySignature = function verifySignature(signature, schema, walletAddress) {
+  return getAddressFromSignature(signature, schema).toLowerCase() === walletAddress.toLowerCase();
+};
+/**
+ * Module to work with KardiaConnect (in development)
+ */
+
+
+var KardiaConnect = /*#__PURE__*/function () {
+  function KardiaConnect(props) {
+    this.address = '';
+    this._signature = '';
+    this._schema = '';
+
+    if (!props.schema) {
+      throw new Error('[schema] must be provided');
+    }
+
+    if (!props.address) {
+      throw new Error('[address] must be provided');
+    }
+
+    if (!props.signature) {
+      throw new Error('[signature] must be provided');
+    }
+
+    if (!verifySignature(props.signature, props.schema, props.address)) {
+      throw new Error('Invalid signature');
+    }
+
+    this.address = props.address;
+    this._signature = props.signature;
+    this._schema = props.schema;
+  }
+
+  KardiaConnect.getAuthorizeURL = function getAuthorizeURL(appName, callbackSchema, callbackPath) {
+    return APP_PREFIX + "authorize/" + appName + "/" + callbackSchema + "/" + callbackPath;
+  };
+
+  var _proto = KardiaConnect.prototype;
+
+  _proto.requestSignTxURL = function requestSignTxURL(txMeta, callbackPath) {
+    var parsedTxMeta = txMeta.from + "|" + txMeta.to + "|" + txMeta.value + "|" + (txMeta.gas || DEFAULT_GAS) + "|" + (txMeta.gasPrice || DEFAULT_GAS_PRICE) + "|" + (txMeta.data || '');
+    return APP_PREFIX + "signTx/" + this._signature + "/" + parsedTxMeta + "/" + this._schema + "/" + callbackPath;
+  };
+
+  return KardiaConnect;
+}();
+
 var KardiaUtils = {
   fromHydro: fromHydro,
   toHydro: toHydro,
@@ -5225,5 +5326,5 @@ var KardiaClient = function KardiaClient(_ref) {
 };
 
 export default KardiaClient;
-export { KAIChain, KRC20, KardiaAccount, KardiaContract, KardiaTransaction, KardiaUtils };
+export { KAIChain, KRC20, KardiaAccount, KardiaConnect, KardiaContract, KardiaTransaction, KardiaUtils };
 //# sourceMappingURL=kardia-js-sdk.esm.js.map
