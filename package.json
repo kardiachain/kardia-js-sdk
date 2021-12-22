@@ -13,7 +13,7 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
-    "test": "tsdx test",
+    "test": "cross-env TEST_ENV=prod tsdx test",
     "test-public": "cross-env TEST_ENV=prod tsdx test",
     "test-account": "cross-env TEST_ENV=prod tsdx test ./test/account",
     "test-transaction": "cross-env TEST_ENV=prod tsdx test ./test/transaction",
