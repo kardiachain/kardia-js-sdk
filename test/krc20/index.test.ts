@@ -57,7 +57,7 @@ describe('KRC20 module test', () => {
     const tx = await krc20Instance.transfer(
       ACCOUNT1.privateKey,
       ACCOUNT2.address,
-      1,
+      '1200000000000000000000',
       {},
       true
     );

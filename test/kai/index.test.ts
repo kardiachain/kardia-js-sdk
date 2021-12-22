@@ -24,7 +24,7 @@ describe('KAI module test', () => {
   });
 
   it("should check current node's validator status", async () => {
-    jest.setTimeout(20000)
+    jest.setTimeout(300000)
     const isValidator = await kardiaClient.kaiChain.isValidator(
       VALIDATOR_ADDRESS
     );
@@ -39,7 +39,7 @@ describe('KAI module test', () => {
   });
 
   it('should get validators list successfully', async () => {
-    jest.setTimeout(60000);
+    jest.setTimeout(300000);
     const validators = await kardiaClient.kaiChain.getValidators();
     expect(validators).toBeTruthy();
     expect(Array.isArray(validators)).toEqual(true);
@@ -99,7 +99,7 @@ describe('KAI module test', () => {
     expect(blockHeader.hash).toEqual(block.hash);
   });
 
-  it('should create and get filter successfully', async () => {
+  it.only('should create and get filter successfully', async () => {
     jest.setTimeout(50000);
     const topic = keccak256('Transfer(address,address,uint256)');
     const latestBlock = await kardiaClient.kaiChain.getBlockNumber();

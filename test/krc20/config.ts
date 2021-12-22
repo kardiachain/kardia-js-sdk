@@ -1,9 +1,9 @@
 export const TOKEN1 = {
-  address: '0x087C82ea812a450C517D55961Dd76ED2cAc7D469',
-  name: 'Ether',
+  address: '0xA756A80e628d13b0fA8faDac9689B2d1f9eD0D10',
+  name: 'test token',
   decimals: 18,
-  symbol: 'ETH',
-  totalSupply: '1000000000000000000000000000',
+  symbol: 'ABCXYZ',
+  totalSupply: '300000000000000000000000000',
 };
 
 export const ACCOUNT1 = {
