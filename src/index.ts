@@ -9,6 +9,7 @@ import { getVersion } from './util/helper';
 
 interface KardiaClientProps {
   endpoint: string;
+  chainId?: number;
 }
 
 class KardiaClient {
@@ -18,7 +19,7 @@ class KardiaClient {
   public kaiChain: KAIChain;
   public contract: KardiaContract;
   public krc20: KRC20;
-  constructor({ endpoint }: KardiaClientProps) {
+  constructor({ endpoint, chainId = 24 }: KardiaClientProps) {
     // Init RPC client
     const transport = new HTTPTransport(endpoint, {
       headers: {
@@ -29,10 +30,10 @@ class KardiaClient {
 
     // Init sub module
     this.account = new KardiaAccount({ client: this._rpcClient });
-    this.transaction = new KardiaTransaction({ client: this._rpcClient });
+    this.transaction = new KardiaTransaction({ client: this._rpcClient, chainId });
     this.kaiChain = new KAIChain({ client: this._rpcClient });
-    this.contract = new KardiaContract({ client: this._rpcClient });
-    this.krc20 = new KRC20({ client: this._rpcClient });
+    this.contract = new KardiaContract({ client: this._rpcClient, chainId });
+    this.krc20 = new KRC20({ client: this._rpcClient, chainId });
   }
 }
 

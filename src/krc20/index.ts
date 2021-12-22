@@ -14,6 +14,7 @@ interface KRC20Props {
   symbol?: string;
   decimals?: number;
   abi?: Record<string, any>[];
+  chainId?: number;
 }
 
 class KRC20 {
@@ -34,6 +35,7 @@ class KRC20 {
     symbol,
     provider,
     abi,
+    chainId = 24
   }: KRC20Props) {
     if (client) {
       this._rpcClient = client;
@@ -48,7 +50,7 @@ class KRC20 {
       throw new Error('Either [client] or [provider] must be provided');
     }
 
-    this._smcInstance = new KardiaContract({ client: this._rpcClient });
+    this._smcInstance = new KardiaContract({ client: this._rpcClient, chainId });
     this._smcInstance.updateAbi(krc20ABI);
 
     if (address) {
