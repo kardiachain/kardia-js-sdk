@@ -8,6 +8,7 @@ interface KRC20Props {
     symbol?: string;
     decimals?: number;
     abi?: Record<string, any>[];
+    chainId?: number;
 }
 declare class KRC20 {
     private _rpcClient;
@@ -17,7 +18,7 @@ declare class KRC20 {
     symbol: string;
     abi: Record<string, any>[];
     private _smcInstance;
-    constructor({ client, address, name, decimals, symbol, provider, abi, }: KRC20Props);
+    constructor({ client, address, name, decimals, symbol, provider, abi, chainId }: KRC20Props);
     /**
      * Set custom ABI to use KRC20 token
      * @param abi Custom ABI

@@ -2,6 +2,7 @@ import { Client } from '@open-rpc/client-js';
 interface KardiaTransactionProps {
     client?: Client;
     provider?: string;
+    chainId?: number;
 }
 interface TxParams {
     nonce: any;
@@ -13,7 +14,8 @@ interface TxParams {
 }
 declare class KardiaTransaction {
     private _rpcClient;
-    constructor({ client, provider }: KardiaTransactionProps);
+    chainId: number;
+    constructor({ client, provider, chainId }: KardiaTransactionProps);
     /**
      * Get transaction detail from transaction hash
      */

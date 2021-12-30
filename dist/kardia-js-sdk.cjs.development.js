@@ -2874,7 +2874,7 @@ var DEFAULT_GAS_PRICE = 1000000000;
 var KARDIA_DEPLOYER = '0x14191195F9BB6e54465a341CeC6cce4491599ccC';
 
 var getVersion = function getVersion() {
-  return '0.5.3';
+  return '0.6.0';
 };
 
 var isExtensionEnabled = function isExtensionEnabled() {
@@ -2893,7 +2893,10 @@ var isExtensionEnabled = function isExtensionEnabled() {
 var KardiaTransaction = /*#__PURE__*/function () {
   function KardiaTransaction(_ref) {
     var client = _ref.client,
-        provider = _ref.provider;
+        provider = _ref.provider,
+        _ref$chainId = _ref.chainId,
+        chainId = _ref$chainId === void 0 ? 24 : _ref$chainId;
+    this.chainId = 24;
 
     if (client) {
       this._rpcClient = client;
@@ -2907,6 +2910,8 @@ var KardiaTransaction = /*#__PURE__*/function () {
     } else {
       throw new Error('Either [client] or [provider] must be provided');
     }
+
+    this.chainId = chainId;
   }
   /**
    * Get transaction detail from transaction hash
@@ -3217,7 +3222,7 @@ var KardiaTransaction = /*#__PURE__*/function () {
     var values = decode(rawTransaction);
     var result = {
       messageHash: hash,
-      v: trimLeadingZero(values[6].toString()),
+      v: trimLeadingZero((values[6] + this.chainId * 2 + 35).toString()),
       r: trimLeadingZero(values[7].toString()),
       s: trimLeadingZero(values[8].toString()),
       rawTransaction: rawTransaction
@@ -3911,7 +3916,9 @@ var KardiaContract = /*#__PURE__*/function () {
     var client = _ref.client,
         bytecodes = _ref.bytecodes,
         abi = _ref.abi,
-        provider = _ref.provider;
+        provider = _ref.provider,
+        _ref$chainId = _ref.chainId,
+        chainId = _ref$chainId === void 0 ? 24 : _ref$chainId;
 
     if (client) {
       this._rpcClient = client;
@@ -3927,7 +3934,8 @@ var KardiaContract = /*#__PURE__*/function () {
     }
 
     this.txModule = new KardiaTransaction({
-      client: this._rpcClient
+      client: this._rpcClient,
+      chainId: chainId
     });
     this.bytecodes = bytecodes || '';
     if (abi && !Array.isArray(abi)) throw new Error('Invalid [abi]');
@@ -4662,7 +4670,9 @@ var KRC20 = /*#__PURE__*/function () {
         decimals = _ref.decimals,
         symbol = _ref.symbol,
         provider = _ref.provider,
-        abi = _ref.abi;
+        abi = _ref.abi,
+        _ref$chainId = _ref.chainId,
+        chainId = _ref$chainId === void 0 ? 24 : _ref$chainId;
     this.address = '';
     this.name = '';
     this.decimals = 18;
@@ -4683,7 +4693,8 @@ var KRC20 = /*#__PURE__*/function () {
     }
 
     this._smcInstance = new KardiaContract({
-      client: this._rpcClient
+      client: this._rpcClient,
+      chainId: chainId
     });
 
     this._smcInstance.updateAbi(krc20ABI);
@@ -5305,7 +5316,9 @@ var KardiaUtils = {
 };
 
 var KardiaClient = function KardiaClient(_ref) {
-  var endpoint = _ref.endpoint;
+  var endpoint = _ref.endpoint,
+      _ref$chainId = _ref.chainId,
+      chainId = _ref$chainId === void 0 ? 24 : _ref$chainId;
   // Init RPC client
   var transport = new clientJs.HTTPTransport(endpoint, {
     headers: {
@@ -5318,16 +5331,19 @@ var KardiaClient = function KardiaClient(_ref) {
     client: this._rpcClient
   });
   this.transaction = new KardiaTransaction({
-    client: this._rpcClient
+    client: this._rpcClient,
+    chainId: chainId
   });
   this.kaiChain = new KAIChain({
     client: this._rpcClient
   });
   this.contract = new KardiaContract({
-    client: this._rpcClient
+    client: this._rpcClient,
+    chainId: chainId
   });
   this.krc20 = new KRC20({
-    client: this._rpcClient
+    client: this._rpcClient,
+    chainId: chainId
   });
 };
 

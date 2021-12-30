@@ -4,6 +4,7 @@ interface KardiaContractProps {
     provider?: string;
     bytecodes?: string;
     abi?: any[];
+    chainId?: number;
 }
 interface SMCDeployObject {
     gasLimit?: number;
@@ -15,7 +16,7 @@ declare class KardiaContract {
     bytecodes: string;
     abi: any[];
     private txModule;
-    constructor({ client, bytecodes, abi, provider }: KardiaContractProps);
+    constructor({ client, bytecodes, abi, provider, chainId }: KardiaContractProps);
     /**
      * Update contract ABI
      * @param abi Contract ABI to update

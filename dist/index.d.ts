@@ -6,6 +6,7 @@ import KRC20 from './krc20';
 import KardiaConnect from './kardiaConnect';
 interface KardiaClientProps {
     endpoint: string;
+    chainId?: number;
 }
 declare class KardiaClient {
     private _rpcClient;
@@ -14,7 +15,7 @@ declare class KardiaClient {
     kaiChain: KAIChain;
     contract: KardiaContract;
     krc20: KRC20;
-    constructor({ endpoint }: KardiaClientProps);
+    constructor({ endpoint, chainId }: KardiaClientProps);
 }
 export { KardiaTransaction, KardiaAccount, KAIChain, KRC20, KardiaContract, KardiaConnect };
 export { KardiaUtils } from './util';
