@@ -18,6 +18,7 @@ interface KardiaContractProps {
   provider?: string;
   bytecodes?: string;
   abi?: any[];
+  chainId?: number;
 }
 
 interface SMCDeployObject {
@@ -34,7 +35,7 @@ class KardiaContract {
   public bytecodes: string;
   public abi: any[];
   private txModule: KardiaTransaction;
-  constructor({ client, bytecodes, abi, provider }: KardiaContractProps) {
+  constructor({ client, bytecodes, abi, provider, chainId = 24 }: KardiaContractProps) {
     if (client) {
       this._rpcClient = client;
     } else if (provider) {
@@ -48,7 +49,7 @@ class KardiaContract {
       throw new Error('Either [client] or [provider] must be provided');
     }
 
-    this.txModule = new KardiaTransaction({ client: this._rpcClient });
+    this.txModule = new KardiaTransaction({ client: this._rpcClient, chainId });
 
     this.bytecodes = bytecodes || '';
     if (abi && !Array.isArray(abi)) throw new Error('Invalid [abi]');

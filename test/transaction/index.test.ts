@@ -21,7 +21,7 @@ describe('Transaction module test', () => {
       gas: 50000,
       nonce,
       // gasPrice: 1000000000,
-      value: 22093,
+      value: 22093000000,
       data: keccak256(Date.now().toString()),
     };
 

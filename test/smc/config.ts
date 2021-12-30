@@ -1140,4 +1140,4 @@ export const DEPLOY_ACCOUNT = {
 };
 
 export const TX_TO_GET_EVENTS =
-  '0x8f87b19fe7bd7efcf0b86c4c0d5a4395b9c964784ce20b3e1d3f39a46ce31806';
+  '0x66faebf3d6f8ac80402532b805a96b8a229f7399ee05a9bb8e09b73abe9759d6';

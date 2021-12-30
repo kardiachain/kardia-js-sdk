@@ -19,6 +19,7 @@ import KAIChain from '../kai';
 interface KardiaTransactionProps {
   client?: Client;
   provider?: string;
+  chainId?: number;
 }
 
 interface TxParams {
@@ -43,7 +44,8 @@ const isExtensionEnabled = () => {
 
 class KardiaTransaction {
   private _rpcClient: Client;
-  constructor({ client, provider }: KardiaTransactionProps) {
+  public chainId = 24;
+  constructor({ client, provider, chainId = 24 }: KardiaTransactionProps) {
     if (client) {
       this._rpcClient = client;
     } else if (provider) {
@@ -56,6 +58,8 @@ class KardiaTransaction {
     } else {
       throw new Error('Either [client] or [provider] must be provided');
     }
+
+    this.chainId = chainId;
   }
 
   /**
@@ -208,7 +212,7 @@ class KardiaTransaction {
     const values = decode(rawTransaction);
     const result = {
       messageHash: hash,
-      v: trimLeadingZero(values[6].toString()),
+      v: trimLeadingZero((values[6] + this.chainId * 2 + 35).toString()),
       r: trimLeadingZero(values[7].toString()),
       s: trimLeadingZero(values[8].toString()),
       rawTransaction: rawTransaction,
