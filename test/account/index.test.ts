@@ -28,6 +28,7 @@ describe('Account module test', () => {
   });
 
   it('should get balance with block hash successfully', async () => {
+    jest.setTimeout(30000)
     const balance = await kardiaClient.account.getBalance(ACCOUNT.address, {
       blockHash: BLOCK_HASH,
     });
